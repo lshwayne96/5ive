@@ -454,6 +454,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 393a7672bb1a44b4688509b870970176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!1001 &581818986
 Prefab:
   m_ObjectHideFlags: 0

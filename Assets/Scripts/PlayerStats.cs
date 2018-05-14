@@ -23,6 +23,9 @@ public class PlayerStats : MonoBehaviour {
 
 	private void OnTriggerExit2D(Collider2D collision)
 	{
-        room = Physics2D.OverlapPoint(transform.position, roomLayer).transform;
+        Collider2D roomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
+        if (roomCollider) {
+            room = roomCollider.transform;
+        }
 	}
 }
