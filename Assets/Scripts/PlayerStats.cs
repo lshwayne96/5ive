@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour {
     public static Transform room;
+    public LayerMask roomLayer;
 
 	// Use this for initialization
 	void Start () {
-		
+        room = Physics2D.OverlapPoint(transform.position, roomLayer).transform;
 	}
 	
 	// Update is called once per frame
@@ -17,6 +18,11 @@ public class PlayerStats : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-        room = collision.transform;
+        //room = collision.transform;
+	}
+
+	private void OnTriggerExit2D(Collider2D collision)
+	{
+        room = Physics2D.OverlapPoint(transform.position, roomLayer).transform;
 	}
 }
