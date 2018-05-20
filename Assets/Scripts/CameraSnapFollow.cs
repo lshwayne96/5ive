@@ -2,15 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraSnapFollow : MonoBehaviour {
+public class CameraSnapFollow : MonoBehaviour
+{
 
 	// Use this for initialization
-	void Start () {
-        
+	void Start()
+	{
+
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
-        transform.position = new Vector3(PlayerStats.room.position.x, PlayerStats.room.position.y, -10f);
+	void Update()
+	{
+		gameObject.transform.position = new Vector3(PlayerStats.currentRoom.position.x,
+													PlayerStats.currentRoom.position.y,
+													-10f);
 	}
 }
