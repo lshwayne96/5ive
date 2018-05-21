@@ -488,7 +488,7 @@ GameObject:
   - component: {fileID: 356000087}
   - component: {fileID: 356000088}
   m_Layer: 10
-  m_Name: GameObject
+  m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -649,7 +649,7 @@ GameObject:
   m_Component:
   - component: {fileID: 478360899}
   - component: {fileID: 478360900}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Room2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -871,34 +871,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 393a7672bb1a44b4688509b870970176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomLayer:
-    serializedVersion: 2
-    m_Bits: 256
---- !u!61 &562911615
-BoxCollider2D:
+--- !u!4 &562911613 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 400002, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
+  m_PrefabInternal: {fileID: 656847788}
+--- !u!114 &562911614
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 562911603}
   m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 1
-  m_Offset: {x: 0.008387208, y: -0.052053213}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.375, y: 1.375}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.5123593, y: 1.2188396}
-  m_EdgeRadius: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce50002b726b7f148b4529a50acd7be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  roomLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1001 &581818986
 Prefab:
   m_ObjectHideFlags: 0
@@ -999,11 +990,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
       propertyPath: m_Layer
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 6100000, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
       propertyPath: m_Offset.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 87a2357765801c34292d6718d8b4d770, type: 2}
@@ -1132,7 +1131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 959938808}
   - component: {fileID: 959938809}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: Room1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1369,6 +1368,7 @@ GameObject:
   - component: {fileID: 1155784675}
   - component: {fileID: 1155784676}
   - component: {fileID: 1155784677}
+  - component: {fileID: 1155784678}
   m_Layer: 12
   m_Name: Ball
   m_TagString: TeleportationBall
@@ -1461,6 +1461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57ac821ef46454372ac9864b7e738bc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 562911613}
+  speed: 10
 --- !u!50 &1155784677
 Rigidbody2D:
   serializedVersion: 4
@@ -1481,6 +1483,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1155784678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1155784672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce50002b726b7f148b4529a50acd7be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentRoom: {fileID: 0}
+  roomLayer:
+    serializedVersion: 2
+    m_Bits: 512
 --- !u!1001 &1233431902
 Prefab:
   m_ObjectHideFlags: 0

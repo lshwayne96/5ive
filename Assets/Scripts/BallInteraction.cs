@@ -11,8 +11,9 @@ using UnityEngine;
 
 public class BallInteraction : MonoBehaviour
 {
-	private Transform player;
+	public Transform player;
 	private bool playerHasBall;
+    public float speed = 10f;
 
 	// Use this for initialization
 	void Start()
@@ -23,6 +24,12 @@ public class BallInteraction : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+        if (playerHasBall)
+        {
+            Vector3 targetPosition = player.position;
+            GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
+        }
+
 		if (Input.GetKeyUp(KeyCode.H) && playerHasBall)
 		{
 			PlayerDropsBall();
@@ -35,28 +42,27 @@ public class BallInteraction : MonoBehaviour
 		{
 			if (Input.GetKeyUp(KeyCode.G) && !playerHasBall)
 			{
-				PlayerPicksUpBall(collision);
+				PlayerPicksUpBall();
 			}
 		}
 	}
 
-	private void PlayerPicksUpBall(Collider2D collision)
+	private void PlayerPicksUpBall()
 	{
-		// Get the transform of the player.
-		player = collision.gameObject.transform;
 
 		// Set the parent of the ball transform to the player transform.
-		transform.parent = player;
+		//transform.parent = player;
 
-		transform.position = collision.gameObject.transform.position + new Vector3(2, 0, 0);
-		GetComponent<Rigidbody2D>().isKinematic = true;
+		transform.position = player.position + new Vector3(0, 0, 0);
+        //GetComponent<Rigidbody2D>().isKinematic = true;
+        GetComponent<Rigidbody2D>().gravityScale = 0f;
 
-		/*
+        /*
          * Set isTrigger to false to prevent the ball from
          * going through the wall.
          */
-		GetComponent<CircleCollider2D>().isTrigger = false;
-		playerHasBall = true;
+        //GetComponent<CircleCollider2D>().isTrigger = false;
+        playerHasBall = true;
 
 		// Debug.Log("Ball picked up");
 	}
@@ -64,11 +70,13 @@ public class BallInteraction : MonoBehaviour
 	private void PlayerDropsBall()
 	{
 		// To release the ball from the player
-		transform.parent = null;
+		//transform.parent = null;
 
-		// Return the ball to being a trigger.
-		GetComponent<CircleCollider2D>().isTrigger = true;
-		playerHasBall = false;
+        // Return the ball to being a trigger.
+        //GetComponent<CircleCollider2D>().isTrigger = true;
+        //GetComponent<Rigidbody2D>().isKinematic = false;
+        GetComponent<Rigidbody2D>().gravityScale = 1f;
+        playerHasBall = false;
 
 		// Debug.Log("Ball dropped");
 	}
