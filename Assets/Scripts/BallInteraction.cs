@@ -2,53 +2,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-/** Functionality **/
-
-/*
- * 1. Picking up of ball
- * 2. Dropping of ball
- */
-
-public class BallInteraction : MonoBehaviour
-{
+public class BallInteraction : MonoBehaviour {
 	public Transform player;
 	private bool playerHasBall;
 	public float speed = 10f;
 
 	// Use this for initialization
-	void Start()
-	{
+	void Start() {
 
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
-		if (playerHasBall)
-		{
+	void Update() {
+		if (playerHasBall) {
 			Vector3 targetPosition = player.position;
 			GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
 		}
 
-		if (Input.GetKeyUp(KeyCode.H) && playerHasBall)
-		{
+		if (Input.GetKeyUp(KeyCode.H) && playerHasBall) {
 			PlayerDropsBall();
 		}
 	}
 
-	private void OnTriggerStay2D(Collider2D collision)
-	{
-		if (collision.gameObject.CompareTag("Player"))
-		{
-			if (Input.GetKeyUp(KeyCode.G) && !playerHasBall)
-			{
+	private void OnTriggerStay2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag("Player")) {
+			if (Input.GetKeyUp(KeyCode.G) && !playerHasBall) {
 				PlayerPicksUpBall();
 			}
 		}
 	}
 
-	private void PlayerPicksUpBall()
-	{
+	private void PlayerPicksUpBall() {
 
 		// Set the parent of the ball transform to the player transform.
 		//transform.parent = player;
@@ -67,8 +51,7 @@ public class BallInteraction : MonoBehaviour
 		// Debug.Log("Ball picked up");
 	}
 
-	private void PlayerDropsBall()
-	{
+	private void PlayerDropsBall() {
 		// To release the ball from the player
 		//transform.parent = null;
 

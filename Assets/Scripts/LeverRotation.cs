@@ -2,18 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LeverRotation : MonoBehaviour
-{
+public class LeverRotation : MonoBehaviour {
 	private bool startRotation;
 	private Vector3 currentAngle;
 	private Vector3 targetAngle;
-
-	// How much the lever should rotate
-	private float ANGLE;
+	private float ANGLE; // How much the lever should rotate
 
 	// Use this for initialization
-	void Start()
-	{
+	void Start() {
 		ANGLE = 90f;
 
 		// Cache both the currentAngle and targetAngle for convenience
@@ -22,21 +18,16 @@ public class LeverRotation : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
-	{
-		if (startRotation)
-		{
+	void Update() {
+		if (startRotation) {
 			RotateLever();
 		}
 	}
 
 
-	private void OnTriggerStay2D(Collider2D collision)
-	{
-		if (collision.gameObject.CompareTag("Player"))
-		{
-			if (Input.GetKeyUp(KeyCode.R))
-			{
+	private void OnTriggerStay2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag("Player")) {
+			if (Input.GetKeyUp(KeyCode.R)) {
 				startRotation = true;
 
 				// Debug.Log("Start rotation");
@@ -44,8 +35,7 @@ public class LeverRotation : MonoBehaviour
 		}
 	}
 
-	private void RotateLever()
-	{
+	private void RotateLever() {
 		transform.eulerAngles = Vector3.Lerp(currentAngle, targetAngle, 1);
 		startRotation = false;
 
