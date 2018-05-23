@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BallInteraction : MonoBehaviour {
 	public Transform player;
-	private bool playerHasBall;
 	public float speed = 10f;
+
+	private bool playerHasBall;
 
 	// Use this for initialization
 	void Start() {
