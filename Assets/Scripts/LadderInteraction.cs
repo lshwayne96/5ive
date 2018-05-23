@@ -56,6 +56,7 @@ public class LadderInteraction : MonoBehaviour {
 	private void OnTriggerExit2D(Collider2D collision) {
 		if (collision.gameObject.CompareTag("Player")) {
 			canClimb = false;
+			rb.velocity = Vector2.zero;
 			rb.gravityScale = originalGravityScale; // Revert back so the player doesn't go flying
 		}
 	}
