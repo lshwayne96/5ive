@@ -6,15 +6,18 @@ public class LadderInteraction : MonoBehaviour {
 	public GameObject player;
 	public float CLIMBING_SPEED;
 
-	private bool canClimb;
-	private Rigidbody2D rb;
+	public static bool canClimb;
+	public static bool outsideLadder;
+	private Rigidbody2D playerRigidBody;
+	public static BoxCollider2D ladderBoxCollider;
 	private float originalGravityScale;
 
 	// Use this for initialization
 	void Start() {
 		CLIMBING_SPEED = 6;
-		rb = player.GetComponent<Rigidbody2D>();
-		originalGravityScale = rb.gravityScale;
+		playerRigidBody = player.GetComponent<Rigidbody2D>();
+		ladderBoxCollider = GetComponent<BoxCollider2D>();
+		originalGravityScale = playerRigidBody.gravityScale;
 	}
 
 	// Update is called once per frame
@@ -22,42 +25,38 @@ public class LadderInteraction : MonoBehaviour {
 
 	}
 
+	// While on the ladder
 	private void FixedUpdate() {
 		if (canClimb) {
-			rb.gravityScale = originalGravityScale;
-			float currentX = rb.velocity.x; // x-component of velocity
+			playerRigidBody.gravityScale = originalGravityScale;
+			float currentX = playerRigidBody.velocity.x; // x-component of velocity
 
 			if (Input.GetKey(KeyCode.UpArrow)) { // Moving up
-				rb.velocity = new Vector2(currentX, CLIMBING_SPEED);
-
-				// Debug.Log("Climbing up");
+				playerRigidBody.velocity = new Vector2(currentX, CLIMBING_SPEED);
 
 			} else if (Input.GetKey(KeyCode.DownArrow)) { // Moving down
-				rb.velocity = new Vector2(currentX, -CLIMBING_SPEED);
-
-				// Debug.Log("Climbing down");
+				playerRigidBody.velocity = new Vector2(currentX, -CLIMBING_SPEED);
 
 			} else { // Stopping on the leader
-				rb.velocity = new Vector2(currentX, 0);
-				rb.gravityScale = 0;
-
-				// Debug.Log("Stopping");
+				playerRigidBody.velocity = new Vector2(currentX, 0);
+				playerRigidBody.gravityScale = 0;
 			}
 		}
 	}
 
-	private void OnTriggerStay2D(Collider2D collision) {
-
+	// When entering the ladder
+	private void OnTriggerEnter2D(Collider2D collision) {
 		if (collision.gameObject.CompareTag("Player")) {
 			canClimb = true;
+			outsideLadder = false;
 		}
 	}
 
 	private void OnTriggerExit2D(Collider2D collision) {
 		if (collision.gameObject.CompareTag("Player")) {
 			canClimb = false;
-			rb.velocity = Vector2.zero;
-			rb.gravityScale = originalGravityScale; // Revert back so the player doesn't go flying
+			playerRigidBody.gravityScale = originalGravityScale; // Revert back so the player doesn't go flying
+			outsideLadder = true;
 		}
 	}
 }
