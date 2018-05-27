@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TopOfLadder : MonoBehaviour {
-	private bool nearTop;
-	private Ladder ladderScript;
-	public static BoxCollider2D ladderBoxCollider;
+	private bool nearTop; // Whether the player is nearing or at the top
+	private Ladder ladderScript; // The Ladder script
+	private BoxCollider2D ladderBoxCollider;
 
 	// Use this for initialization
 	void Start() {

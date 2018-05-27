@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Ladder : MonoBehaviour {
-	public GameObject player;
 	public float climbingSpeed;
 
 	// Used in TopOfLadderScript
 	public BoxCollider2D boxCollider;
 	public bool outsideLadder;
 
-	private bool canClimb; // Can the player climb?
-	private bool isPassingThrough; // Is the player simply passing through the ladder?
-	private bool wasClimbing; // Was the player climbing (and has now stopped on it)?
-	private float originalGravityScale;
-	private Rigidbody2D playerRigidBody;
+	public bool canClimb; // Can the player climb?
+	public bool isPassingThrough; // Is the player simply passing through the ladder?
+	public bool wasClimbing; // Was the player climbing (and has now stopped on it)?
+	public float originalGravityScale;
+	private GameObject player;
+	public Rigidbody2D playerRigidBody;
 
 	// Initialises boxCollider first so that TopOfLadder can reference it properly
 	private void Awake() {
@@ -24,9 +24,11 @@ public class Ladder : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		climbingSpeed = 6;
+		player = GameObject.FindWithTag("Player");
 		playerRigidBody = player.GetComponent<Rigidbody2D>();
 		originalGravityScale = playerRigidBody.gravityScale;
 		isPassingThrough = true;
+		outsideLadder = true;
 	}
 
 	// Update is called once per frame
@@ -51,6 +53,7 @@ public class Ladder : MonoBehaviour {
 				if (!isPassingThrough) {
 					playerRigidBody.velocity = new Vector2(currentX, 0);
 					playerRigidBody.gravityScale = 0; // Remove the effects of gravity on the player
+
 				} else {
 					wasClimbing = false;
 				}
