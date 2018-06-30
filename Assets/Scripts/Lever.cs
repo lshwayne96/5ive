@@ -14,6 +14,7 @@ public class Lever : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        interactableState = interactable.activeSelf;
         ANGLE = 90f;
 
         // Cache both the currentAngle and targetAngle for convenience
@@ -49,7 +50,7 @@ public class Lever : MonoBehaviour {
     }
 
     private void ChangeInteractableState() {
-        interactable.SetActive(interactableState);
+        interactable.SetActive(!interactableState);
         interactableState = !interactableState;
     }
 }

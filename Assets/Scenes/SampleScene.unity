@@ -167,23 +167,6 @@ Transform:
   m_Father: {fileID: 1754968067}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &109946633 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1237685685565618, guid: 9764ab1789e5a445bbe3913810296b94,
-    type: 2}
-  m_PrefabInternal: {fileID: 1385764950}
---- !u!114 &109946634
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 109946633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13917ab946e184cd2a0f360f60f1c823, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactable: {fileID: 1754968065}
 --- !u!4 &109946637 stripped
 Transform:
   m_PrefabParentObject: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94,
@@ -2872,41 +2855,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
-    - target: {fileID: 1237685685565618, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
-      propertyPath: m_Name
-      value: Lever
-      objectReference: {fileID: 0}
-    - target: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 135
-      objectReference: {fileID: 0}
-    - target: {fileID: 61967544457223210, guid: 9764ab1789e5a445bbe3913810296b94,
+    - target: {fileID: 114434026552761218, guid: 9764ab1789e5a445bbe3913810296b94,
         type: 2}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 61967544457223210, guid: 9764ab1789e5a445bbe3913810296b94,
-        type: 2}
-      propertyPath: m_Size.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 61967544457223210, guid: 9764ab1789e5a445bbe3913810296b94,
-        type: 2}
-      propertyPath: m_Size.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1237685685565618, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
-      propertyPath: m_Layer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 0.100000046
-      objectReference: {fileID: 0}
+      propertyPath: interactable
+      value: 
+      objectReference: {fileID: 1754968065}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
   m_IsPrefabParent: 0
