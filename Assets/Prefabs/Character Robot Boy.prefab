@@ -60,7 +60,7 @@ GameObject:
   - component: {fileID: 114539056295374042}
   - component: {fileID: 114835821086794568}
   m_Layer: 8
-  m_Name: CharacterRobotBoy
+  m_Name: Character Robot Boy
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

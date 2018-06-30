@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Lever : MonoBehaviour {
+    public GameObject interactable;
+
     private bool hasRotated;
-    private GameObject ladder;
-    private bool ladderState;
+    private bool interactableState;
     private bool startRotation;
     private Vector3 currentAngle;
     private Vector3 targetAngle;
@@ -13,7 +14,6 @@ public class Lever : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        ladder = GameObject.Find("Ladder");
         ANGLE = 90f;
 
         // Cache both the currentAngle and targetAngle for convenience
@@ -25,7 +25,7 @@ public class Lever : MonoBehaviour {
     void Update() {
         if (startRotation) {
             RotateLever();
-            ChangeLadderState();
+            ChangeInteractableState();
         }
     }
 
@@ -48,8 +48,8 @@ public class Lever : MonoBehaviour {
         targetAngle = temp;
     }
 
-    private void ChangeLadderState() {
-        ladder.SetActive(ladderState);
-        ladderState = !ladderState;
+    private void ChangeInteractableState() {
+        interactable.SetActive(interactableState);
+        interactableState = !interactableState;
     }
 }
