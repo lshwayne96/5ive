@@ -180,7 +180,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 109946633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed496f1a83f4e4e64a919b52f4a3d884, type: 3}
+  m_Script: {fileID: 11500000, guid: 13917ab946e184cd2a0f360f60f1c823, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &109946637 stripped
@@ -3117,7 +3117,7 @@ GameObject:
   m_Layer: 8
   m_Name: CeilingCheck
   m_TagString: Untagged
-  m_Icon: {fileID: -2065832391, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -3380,6 +3380,7 @@ GameObject:
   - component: {fileID: 1754968067}
   - component: {fileID: 1754968066}
   - component: {fileID: 1754968068}
+  - component: {fileID: 1754968069}
   m_Layer: 0
   m_Name: Ladder
   m_TagString: Untagged
@@ -3464,6 +3465,17 @@ MonoBehaviour:
   wasClimbing: 0
   originalGravityScale: 0
   playerRigidBody: {fileID: 0}
+--- !u!114 &1754968069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1754968065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77ad3ca9da8594a10ada724b7f97d149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1814640386
 Prefab:
   m_ObjectHideFlags: 0
@@ -4009,7 +4021,7 @@ GameObject:
   m_Layer: 8
   m_Name: GroundCheck
   m_TagString: Untagged
-  m_Icon: {fileID: -2065832391, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

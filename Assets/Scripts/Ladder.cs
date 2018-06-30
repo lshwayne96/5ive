@@ -14,8 +14,9 @@ public class Ladder : MonoBehaviour {
     public bool isPassingThrough; // Is the player simply passing through the ladder?
     public bool wasClimbing; // Was the player climbing (and has now stopped on it)?
     public float originalGravityScale;
-    private GameObject player;
     public Rigidbody2D playerRigidBody;
+
+    private GameObject player;
 
     // Initialises boxCollider first so that TopOfLadder can reference it properly
     private void Awake() {
