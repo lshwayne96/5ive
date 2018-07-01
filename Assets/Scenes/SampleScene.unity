@@ -1827,59 +1827,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4164333956145802, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
       propertyPath: m_RootOrder
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1737363236423934, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
-      propertyPath: m_Name
-      value: Trap Door
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Color.r
-      value: 0.18039216
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Color.g
-      value: 0.8588236
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Color.b
-      value: 0.21568629
-      objectReference: {fileID: 0}
-    - target: {fileID: 4164333956145802, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
-      propertyPath: m_LocalScale.x
-      value: 1.0001459
-      objectReference: {fileID: 0}
-    - target: {fileID: 4164333956145802, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
-      propertyPath: m_LocalScale.y
-      value: 1.0001459
-      objectReference: {fileID: 0}
-    - target: {fileID: 4164333956145802, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
-      propertyPath: m_LocalScale.z
-      value: 0.43397474
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 58b8561842af64ee88625b717ce292af,
-        type: 3}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Size.x
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_Size.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 212599312890118196, guid: 6694b6f1910cc45f282a8d0bac94836e,
-        type: 2}
-      propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6694b6f1910cc45f282a8d0bac94836e, type: 2}
@@ -1996,10 +1944,10 @@ Transform:
   - {fileID: 1836473017}
   - {fileID: 558152305}
   - {fileID: 141991821}
+  - {fileID: 900054564}
   - {fileID: 109946637}
   - {fileID: 1754968067}
   - {fileID: 420605642}
-  - {fileID: 900054564}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2353,7 +2301,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1237685685565618, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
       propertyPath: m_Name
@@ -2853,7 +2801,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4998064668213372, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114434026552761218, guid: 9764ab1789e5a445bbe3913810296b94,
         type: 2}
@@ -3602,7 +3550,7 @@ Transform:
   - {fileID: 1385554332}
   - {fileID: 70603384}
   m_Father: {fileID: 959938808}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1754968068
 MonoBehaviour:
