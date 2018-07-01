@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerTeleportRoom : MonoBehaviour {
-    public MeshRenderer preview;
+    private MeshRenderer preview;
+    private GameObject mainCamera;
 
     // Use this for initialization
     void Start() {
-
+        mainCamera = GameObject.FindWithTag("MainCamera");
+        preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
