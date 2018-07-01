@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityStandardAssets._2D;
 using UnityEngine;
 
 public class Pause : MonoBehaviour {
     private GameObject player;
     private GameObject ball;
-    private Rigidbody2D playerRb;
+    private Platformer2DUserControl playerMovementScript;
     private Rigidbody2D ballRb;
     private bool isPaused;
 
@@ -13,7 +14,7 @@ public class Pause : MonoBehaviour {
     void Start() {
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
-        playerRb = player.GetComponent<Rigidbody2D>();
+        playerMovementScript = player.GetComponent<Platformer2DUserControl>();
         ballRb = ball.GetComponent<Rigidbody2D>();
     }
 
@@ -21,22 +22,14 @@ public class Pause : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             if (!isPaused) {
-                playerRb.Sleep();
                 ballRb.Sleep();
 
             } else {
-                playerRb.WakeUp();
                 ballRb.WakeUp();
-                Debug.Log("Awake");
             }
 
+            playerMovementScript.enabled = !playerMovementScript.enabled;
             isPaused = !isPaused;
-        }
-
-        if (isPaused) {
-            if (Input.anyKey) {
-                playerRb.Sleep();
-            }
         }
     }
 }
