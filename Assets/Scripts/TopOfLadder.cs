@@ -21,7 +21,9 @@ public class TopOfLadder : MonoBehaviour {
 			} else {
 				ladderBoxCollider.isTrigger = false;
 			}
-		}
+		} else {
+            ladderBoxCollider.isTrigger = true;
+        }
 	}
 
 	private bool AtTopOfLadder() {
