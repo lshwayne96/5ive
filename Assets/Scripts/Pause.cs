@@ -7,14 +7,17 @@ public class Pause : MonoBehaviour {
     private GameObject player;
     private GameObject ball;
     private Platformer2DUserControl playerMovementScript;
+    private Rigidbody2D playerRb;
     private Rigidbody2D ballRb;
     private bool isPaused;
+    private Vector2 prevVelocity;
 
     // Use this for initialization
     void Start() {
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
         playerMovementScript = player.GetComponent<Platformer2DUserControl>();
+        playerRb = player.GetComponent<Rigidbody2D>();
         ballRb = ball.GetComponent<Rigidbody2D>();
     }
 
@@ -22,9 +25,13 @@ public class Pause : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             if (!isPaused) {
+                prevVelocity = playerRb.velocity;
+                playerRb.Sleep();
                 ballRb.Sleep();
 
             } else {
+                playerRb.velocity = prevVelocity;
+                playerRb.WakeUp();
                 ballRb.WakeUp();
             }
 
