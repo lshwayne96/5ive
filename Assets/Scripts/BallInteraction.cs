@@ -3,65 +3,67 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BallInteraction : MonoBehaviour {
-	public Transform player;
-	public float speed = 10f;
+    public float speed = 10f;
 
-	private bool playerHasBall;
+    private GameObject player;
+    private Transform playerTf;
+    private bool playerHasBall;
 
-	// Use this for initialization
-	void Start() {
+    // Use this for initialization
+    void Start() {
+        player = GameObject.FindWithTag("Player");
+        playerTf = player.transform;
+    }
 
-	}
+    // Update is called once per frame
+    void Update() {
+        if (playerHasBall) {
+            Vector3 targetPosition = playerTf.position;
+            GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
+        }
 
-	// Update is called once per frame
-	void Update() {
-		if (playerHasBall) {
-			Vector3 targetPosition = player.position;
-			GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
-		}
+        if (Input.GetKeyUp(KeyCode.H) && playerHasBall) {
+            PlayerDropsBall();
+        }
+    }
 
-		if (Input.GetKeyUp(KeyCode.H) && playerHasBall) {
-			PlayerDropsBall();
-		}
-	}
+    private void OnTriggerStay2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player")) {
+            if (Input.GetKeyUp(KeyCode.G) && !playerHasBall) {
+                PlayerPicksUpBall();
+            }
+        }
+    }
 
-	private void OnTriggerStay2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag("Player")) {
-			if (Input.GetKeyUp(KeyCode.G) && !playerHasBall) {
-				PlayerPicksUpBall();
-			}
-		}
-	}
+    private void PlayerPicksUpBall() {
 
-	private void PlayerPicksUpBall() {
+        // Set the parent of the ball transform to the player transform.
+        //transform.parent = player;
 
-		// Set the parent of the ball transform to the player transform.
-		//transform.parent = player;
+        transform.position = playerTf.position;
+        //GetComponent<Rigidbody2D>().isKinematic = true;
+        GetComponent<Rigidbody2D>().gravityScale = 0f;
 
-		transform.position = player.position;
-		//GetComponent<Rigidbody2D>().isKinematic = true;
-		GetComponent<Rigidbody2D>().gravityScale = 0f;
-
-		/*
+        /*
          * Set isTrigger to false to prevent the ball from
          * going through the wall.
          */
-		//GetComponent<CircleCollider2D>().isTrigger = false;
-		playerHasBall = true;
+        //GetComponent<CircleCollider2D>().isTrigger = false;
+        playerHasBall = true;
 
-		// Debug.Log("Ball picked up");
-	}
+        // Debug.Log("Ball picked up");
+    }
 
-	private void PlayerDropsBall() {
-		// To release the ball from the player
-		//transform.parent = null;
+    private void PlayerDropsBall() {
+        // To release the ball from the player
+        //transform.parent = null;
 
-		// Return the ball to being a trigger.
-		// GetComponent<CircleCollider2D>().isTrigger = true;
-		// GetComponent<Rigidbody2D>().isKinematic = false;
-		GetComponent<Rigidbody2D>().gravityScale = 1f;
-		playerHasBall = false;
+        // Return the ball to being a trigger.
+        // GetComponent<CircleCollider2D>().isTrigger = true;
+        // GetComponent<Rigidbody2D>().isKinematic = false;
+        GetComponent<Rigidbody2D>().gravityScale = 1f;
+        playerHasBall = false;
 
-		// Debug.Log("Ball dropped");
-	}
+        // Debug.Log("Ball dropped");
+    }
 }

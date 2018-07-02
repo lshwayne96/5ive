@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerTeleportRoom : MonoBehaviour {
-    public MeshRenderer preview;
+    private MeshRenderer preview;
+    private GameObject mainCamera;
 
     // Use this for initialization
     void Start() {
-
+        mainCamera = GameObject.FindWithTag("MainCamera");
+        preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -23,7 +25,7 @@ public class PlayerTeleportRoom : MonoBehaviour {
 
     private void Teleport() {
         // Swap the Player's and ball's rooms
-        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentRoom.position;
+        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentPlayerRoom.position;
         transform.position += positionDifference;
         SetCurrentRoom.ball.transform.position -= positionDifference;
 

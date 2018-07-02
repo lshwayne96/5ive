@@ -12,8 +12,8 @@ public class PlayerCameraSnapFollow : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         gameObject.transform.position =
-            new Vector3(SetCurrentRoom.currentRoom.position.x,
-                        SetCurrentRoom.currentRoom.position.y,
+            new Vector3(SetCurrentRoom.currentPlayerRoom.position.x,
+                        SetCurrentRoom.currentPlayerRoom.position.y,
                         -10f);
     }
 }
