@@ -25,7 +25,7 @@ public class PlayerTeleportRoom : MonoBehaviour {
 
     private void Teleport() {
         // Swap the Player's and ball's rooms
-        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentRoom.position;
+        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentPlayerRoom.position;
         transform.position += positionDifference;
         SetCurrentRoom.ball.transform.position -= positionDifference;
 

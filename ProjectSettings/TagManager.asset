@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - TeleportationBall
+  - PauseControl
   layers:
   - Default
   - TransparentFX
