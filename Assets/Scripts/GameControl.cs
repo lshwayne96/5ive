@@ -24,7 +24,6 @@ public class GameControl : MonoBehaviour {
 
     private void Start() {
         saveFile = Application.persistentDataPath;
-        Debug.Log(saveFile);
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
     }
