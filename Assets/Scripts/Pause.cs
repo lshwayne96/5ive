@@ -51,10 +51,4 @@ public class Pause : MonoBehaviour {
             isPaused = !isPaused;
         }
     }
-
-    public void OpenPauseMenu() {
-
-    }
-
-
 }
