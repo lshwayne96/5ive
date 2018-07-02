@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Lever : MonoBehaviour {
     public GameObject interactable;
-
     private bool hasRotated;
     private bool interactableState;
     private bool startRotation;
