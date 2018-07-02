@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class GameControl : MonoBehaviour {
     public static GameControl gameControl;
-    private String saveFile = Application.persistentDataPath;
+    private String saveFile;
     private static GameObject player;
     private static GameObject ball;
 
@@ -23,6 +23,8 @@ public class GameControl : MonoBehaviour {
     }
 
     private void Start() {
+        saveFile = Application.persistentDataPath;
+        Debug.Log(saveFile);
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
     }
@@ -33,7 +35,7 @@ public class GameControl : MonoBehaviour {
 
     public void Save() {
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream = File.Create(saveFile);
+        FileStream fileStream = File.Create(saveFile + "/player_info.data");
         GameData gameData = new GameData();
         gameData.add();
         binaryFormatter.Serialize(fileStream, gameData);
@@ -43,7 +45,7 @@ public class GameControl : MonoBehaviour {
     public void Load() {
         try {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            FileStream fileStream = File.Open(saveFile, FileMode.Open);
+            FileStream fileStream = File.Open(saveFile + "/player_info.data", FileMode.Open);
             GameData gameData = (GameData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
         } catch (FileNotFoundException) {
