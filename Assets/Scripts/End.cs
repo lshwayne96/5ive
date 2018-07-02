@@ -4,6 +4,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class End : MonoBehaviour {
+    public int scene;
 
     // Use this for initialization
     void Start() {
@@ -17,7 +18,7 @@ public class End : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(scene);
         }
     }
 }

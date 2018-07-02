@@ -9,9 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: 85fbbdeaf0ae64ff3a27d984b5bee1e9
   - enabled: 1
-    path: Assets/Scenes/Sample Scene.unity
+    path: Assets/Scenes/Playground.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/Gabriel 1.unity
     guid: 61f5a9e94ee7844c3ab81058c36da2f5
+  - enabled: 1
+    path: Assets/Scenes/Shaft Test.unity
+    guid: bc84e17a76243124f9feb188cd81660c
   m_configObjects: {}

@@ -1790,6 +1790,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 114605694011388108, guid: 4a3613492906e466a82f890f94bb17c6,
+        type: 2}
+      propertyPath: scene
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 4a3613492906e466a82f890f94bb17c6, type: 2}
   m_IsPrefabParent: 0
@@ -1845,6 +1850,10 @@ Prefab:
       propertyPath: interactable
       value: 
       objectReference: {fileID: 1577914832}
+    - target: {fileID: 1237685685565618, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9764ab1789e5a445bbe3913810296b94, type: 2}
   m_IsPrefabParent: 0
