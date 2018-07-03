@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityStandardAssets._2D;
 using UnityEngine;
 
-public class Pause : MonoBehaviour {
+public class PauseGame : MonoBehaviour {
     private GameObject pauseMenu;
     private GameObject player;
     private GameObject ball;
