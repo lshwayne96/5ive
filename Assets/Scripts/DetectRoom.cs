@@ -5,10 +5,11 @@ using UnityEngine;
 public class DetectRoom : MonoBehaviour {
     public Transform currentRoom; // The room that the current object is in
     public LayerMask roomLayer; // Acts as a trigger
+    private Collider2D currentRoomCollider;
 
     private void Awake() {
-        // Initialise the current room
-        currentRoom = Physics2D.OverlapPoint(transform.position, roomLayer).transform;
+        // Initialise currentRoom
+        GetCurrentRoom();
     }
 
     // Use this for initialization
@@ -22,10 +23,22 @@ public class DetectRoom : MonoBehaviour {
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        Collider2D currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
+        // Update currentRoom
+        GetCurrentRoom();
+
+        /*
         if (currentRoomCollider) {
             // Set the current room of the player to this room.
             currentRoom = currentRoomCollider.transform;
         }
+        */
+    }
+
+    public void GetCurrentRoom() {
+        // Get collider of current room
+        currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
+
+        // Update currentRoom
+        currentRoom = currentRoomCollider.transform;
     }
 }

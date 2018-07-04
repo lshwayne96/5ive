@@ -21,10 +21,15 @@ public class SaveGame : MonoBehaviour {
         //Debug.Log("Called Saved()");
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream = File.Create(saveFile + "/player_info.data");
+        FileStream fileStream = File.Create(saveFile + "/player_info.dat");
 
         Scene scene = SceneManager.GetActiveScene();
+        LevelData levelData = new LevelData(scene, player, ball);
 
+        binaryFormatter.Serialize(fileStream, levelData);
+        fileStream.Close();
+
+        /*
         Debug.Log("Velocity");
         Vector2 vector = player.GetComponent<Rigidbody2D>().velocity;
         Debug.Log(vector.x);
@@ -35,10 +40,6 @@ public class SaveGame : MonoBehaviour {
         Debug.Log(vector1.x);
         Debug.Log(vector1.y);
         Debug.Log(vector1.z);
-
-        LevelData levelData = new LevelData(scene, player, ball);
-
-        binaryFormatter.Serialize(fileStream, levelData);
-        fileStream.Close();
+        */
     }
 }

@@ -21,7 +21,7 @@ public class LoadGame : MonoBehaviour {
         //Debug.Log("Called Load()");
         try {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            FileStream fileStream = File.Open(saveFile + "/player_info.data", FileMode.Open);
+            FileStream fileStream = File.Open(saveFile + "/player_info.dat", FileMode.Open);
             LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
 
@@ -30,7 +30,8 @@ public class LoadGame : MonoBehaviour {
             }
 
             SceneManager.LoadScene(levelData.sceneBuildIndex);
-            Debug.Log("Scene loaded");
+
+            //Debug.Log("Scene loaded");
 
         } catch (FileNotFoundException) {
             Console.WriteLine("Cannot load game. Game file has been deleted or moved.");

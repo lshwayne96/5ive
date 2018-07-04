@@ -34,13 +34,18 @@ public class RestoreGame : MonoBehaviour {
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
 
+        // Restore player data
         PlayerData playerData = levelData.playerData;
         player.GetComponent<Rigidbody2D>().velocity = playerData.velocity();
         player.transform.position = playerData.position();
 
+        // Restore ball data
         BallData ballData = levelData.ballData;
         ball.GetComponent<Rigidbody2D>().velocity = ballData.velocity();
         ball.transform.localPosition = ballData.position();
+
+        // Restore player camera
+        player.GetComponent<DetectRoom>().GetCurrentRoom();
 
         /*
         Debug.Log("Velocity");
