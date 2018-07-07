@@ -26,6 +26,7 @@ public class DetectRoom : MonoBehaviour {
         // Update currentRoom
         GetCurrentRoom();
 
+
         /*
         if (currentRoomCollider) {
             // Set the current room of the player to this room.

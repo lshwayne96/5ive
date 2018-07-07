@@ -4,15 +4,20 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class SaveGame : MonoBehaviour {
-    private String saveFile;
+    public InputField inputField;
+    private String saveFilePath;
+    private String saveDirectoryPath;
     private GameObject player;
     private GameObject ball;
 
     private void Start() {
-        saveFile = Application.persistentDataPath;
+        saveFilePath = Application.persistentDataPath;
+        saveDirectoryPath = saveFilePath + "/Saved Games";
+
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
     }
@@ -21,7 +26,11 @@ public class SaveGame : MonoBehaviour {
         //Debug.Log("Called Saved()");
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        FileStream fileStream = File.Create(saveFile + "/player_info.dat");
+        DirectoryInfo directoryInfo = Directory.CreateDirectory(saveDirectoryPath);
+        FileStream fileStream = File.Create(saveDirectoryPath + "/" + inputField.text + ".dat");
+
+        //Debug.Log(directoryInfo.FullName);
+        //Debug.Log(saveFile);
 
         Scene scene = SceneManager.GetActiveScene();
         LevelData levelData = new LevelData(scene, player, ball);
