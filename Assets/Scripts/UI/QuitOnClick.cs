@@ -1,5 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script quits the game upon
+ * interacting with the attached gameObject.
+ */
+
 using UnityEngine;
 
 public class QuitOnClick : MonoBehaviour {

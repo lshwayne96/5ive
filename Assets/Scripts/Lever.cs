@@ -1,27 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script encapsulates the functionality of a lever.
+ * It requires the gameObject of interest to be dragged to interactable.
+ */
+
 using UnityEngine;
 
 public class Lever : MonoBehaviour {
+
+    // Expose the interactable variable to the editor
     public GameObject interactable;
+
     private bool hasRotated;
     private bool interactableState;
     private bool hasEnteredTrigger;
     private Vector3 currentAngle;
     private Vector3 targetAngle;
-    private float ANGLE; // How much the lever should rotate
+    private float angleOfRotation;
 
-    // Use this for initialization
     void Start() {
         interactableState = interactable.activeSelf;
-        ANGLE = 90f;
+        angleOfRotation = 90f;
 
         // Cache both the currentAngle and targetAngle for convenience
         currentAngle = transform.eulerAngles;
-        targetAngle = transform.eulerAngles + Vector3.back * ANGLE;
+        targetAngle = transform.eulerAngles + Vector3.back * angleOfRotation;
     }
 
-    // Update is called once per frame
+    /* 
+     * If the player is within the collider boundaries of the lever
+     * and the R key is pressed, the lever will rotate and
+     * and the interactable gameObject will disappear.
+    */
     void Update() {
         if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
             RotateLever();
@@ -29,12 +38,14 @@ public class Lever : MonoBehaviour {
         }
     }
 
+    // When the player enters the lever
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             hasEnteredTrigger = true;
         }
     }
 
+    // When the player leaves the lever
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             hasEnteredTrigger = false;

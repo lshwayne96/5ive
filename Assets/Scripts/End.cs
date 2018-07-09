@@ -1,20 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script is attached to the End gameObject
+ * to allow the player to get to the next scene.
+ */
+
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class End : MonoBehaviour {
+
+    // Expose the scene variable to the editor
     public int scene;
-
-    // Use this for initialization
-    void Start() {
-
-    }
-
-    // Update is called once per frame
-    void Update() {
-
-    }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {

@@ -1,44 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script is attached to an empty gameObject
+ * at the top of a ladder.
+ * It checks to see if the player has climbed up the ladder fully,
+ * has begun descending it or is simplying standing at the top.
+ */
+
 using UnityEngine;
 
 public class TopOfLadder : MonoBehaviour {
-	private bool nearTop; // Whether the player is nearing or at the top
-	private Ladder ladderScript; // The Ladder script
-	private BoxCollider2D ladderBoxCollider;
 
-	// Use this for initialization
-	void Start() {
-		ladderScript = GetComponentInParent<Ladder>();
-		ladderBoxCollider = ladderScript.boxCollider;
-	}
+    // Whether the player is nearing or at the top
+    private bool isNearTop;
+    private Ladder ladderScript;
+    private BoxCollider2D ladderBoxCollider;
 
-	// Update is called once per frame
-	void Update() {
-		if (AtTopOfLadder()) {
-			if (Input.GetKey(KeyCode.DownArrow)) {
-				ladderBoxCollider.isTrigger = true;
-			} else {
-				ladderBoxCollider.isTrigger = false;
-			}
-		} else {
+    void Start() {
+        ladderScript = GetComponentInParent<Ladder>();
+        ladderBoxCollider = ladderScript.GetComponent<BoxCollider2D>();
+    }
+
+    void Update() {
+        if (AtTopOfLadder()) {
+            if (Input.GetKey(KeyCode.DownArrow)) {
+                ladderBoxCollider.isTrigger = true;
+            } else {
+                ladderBoxCollider.isTrigger = false;
+            }
+        } else {
             ladderBoxCollider.isTrigger = true;
         }
-	}
+    }
 
-	private bool AtTopOfLadder() {
-		return ladderScript.outsideLadder && nearTop;
-	}
+    private bool AtTopOfLadder() {
+        return ladderScript.IsOutsideLadder() && isNearTop;
+    }
 
-	private void OnTriggerStay2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag("Player")) {
-			nearTop = true;
-		}
-	}
+    // When the player is standing or moving nearby the top
+    private void OnTriggerStay2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player")) {
+            isNearTop = true;
+        }
+    }
 
-	private void OnTriggerExit2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag("Player")) {
-			nearTop = false;
-		}
-	}
+    // When the player has begun descending the ladder or walked away from the top
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player")) {
+            isNearTop = false;
+        }
+    }
 }

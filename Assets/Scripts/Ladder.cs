@@ -1,30 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿/*
+ * This script enables the attached gameObject,
+ * namely a ladder, to interact with the player.
+ * The interactions include climbing up and down,
+ * and simply walking through it.
+ */
 using UnityEngine;
 
 public class Ladder : MonoBehaviour {
+
+    // Expose the climbingSpeed variable to the editor
     public float climbingSpeed;
 
-    // Used in TopOfLadderScript
-    public BoxCollider2D boxCollider;
-    public bool outsideLadder;
+    // Is the player simply passing through the ladder?
+    private bool isPassingThrough;
+    // Was the player climbing (and has now stopped on it)?
+    private bool wasClimbing;
+    private bool outsideLadder;
+    private bool canClimb;
 
-    public bool canClimb; // Can the player climb?
-    public bool isPassingThrough; // Is the player simply passing through the ladder?
-    public bool wasClimbing; // Was the player climbing (and has now stopped on it)?
-    public float originalGravityScale;
-    public Rigidbody2D playerRigidBody;
+    private float originalGravityScale;
 
+    private Rigidbody2D playerRigidBody;
     private GameObject player;
 
-    // Initialises boxCollider first so that TopOfLadder can reference it properly
-    private void Awake() {
-        boxCollider = GetComponent<BoxCollider2D>();
-    }
-
-    // Use this for initialization
     void Start() {
+        // Start the climbing speed to a default 6
         climbingSpeed = 6;
         player = GameObject.FindWithTag("Player");
         playerRigidBody = player.GetComponent<Rigidbody2D>();
@@ -33,15 +33,11 @@ public class Ladder : MonoBehaviour {
         outsideLadder = true;
     }
 
-    // Update is called once per frame
-    void Update() {
-
-    }
-
     // While on the ladder
     private void FixedUpdate() {
         if (canClimb) {
-            float currentX = playerRigidBody.velocity.x; // x-component of velocity
+            // Get the x of the velocity since only the y should change
+            float currentX = playerRigidBody.velocity.x;
             playerRigidBody.gravityScale = originalGravityScale;
             wasClimbing = true;
 
@@ -51,10 +47,11 @@ public class Ladder : MonoBehaviour {
             } else if (Input.GetKey(KeyCode.DownArrow)) { // Moving down
                 playerRigidBody.velocity = new Vector2(currentX, -climbingSpeed);
 
-            } else { // Stopping on the leader
+            } else { // Stopping in or on the leader
                 if (!isPassingThrough) {
                     playerRigidBody.velocity = new Vector2(currentX, 0);
-                    playerRigidBody.gravityScale = 0; // Remove the effects of gravity on the player
+                    // Remove the effects of gravity on the player
+                    playerRigidBody.gravityScale = 0;
 
                 } else {
                     wasClimbing = false;
@@ -74,6 +71,7 @@ public class Ladder : MonoBehaviour {
         }
     }
 
+    // When on the ladder
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             canClimb = true;
@@ -92,7 +90,12 @@ public class Ladder : MonoBehaviour {
             outsideLadder = true;
             wasClimbing = false;
             isPassingThrough = true;
-            playerRigidBody.gravityScale = originalGravityScale; // Revert back so the player doesn't go flying
+            // Revert back so the player doesn't go flying
+            playerRigidBody.gravityScale = originalGravityScale;
         }
+    }
+
+    public bool IsOutsideLadder() {
+        return outsideLadder;
     }
 }

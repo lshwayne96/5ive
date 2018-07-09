@@ -1,13 +1,17 @@
-﻿using System;
+﻿/*
+ * This script is used to save the game.
+ * It requires an InputField gameObject to be ragged to inputField.
+ */
+
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
 public class SaveGame : MonoBehaviour {
+
     public InputField inputField;
     private String saveFilePath;
     private String saveDirectoryPath;
@@ -15,40 +19,31 @@ public class SaveGame : MonoBehaviour {
     private GameObject ball;
 
     private void Start() {
-        saveFilePath = Application.persistentDataPath;
-        saveDirectoryPath = saveFilePath + "/Saved Games";
-
+        saveDirectoryPath = Application.persistentDataPath + "/Saved Games";
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
     }
 
+    // Serialise the game data and save it into a file as named by the user
     public void Save() {
-        //Debug.Log("Called Saved()");
+        //Debug.Log("In Save()");
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        DirectoryInfo directoryInfo = Directory.CreateDirectory(saveDirectoryPath);
-        FileStream fileStream = File.Create(saveDirectoryPath + "/" + inputField.text + ".dat");
+        // Directory to save file into
+        Directory.CreateDirectory(saveDirectoryPath);
+        // Path of the file to be used for saving
+        saveFilePath = saveDirectoryPath + "/" + inputField.text + ".dat";
+        FileStream fileStream = File.Create(saveFilePath);
+        // Clear the input field
+        inputField.text = "";
 
-        //Debug.Log(directoryInfo.FullName);
-        //Debug.Log(saveFile);
-
+        // Get the current scene
         Scene scene = SceneManager.GetActiveScene();
+        // Package the game data into a LevelData instance
         LevelData levelData = new LevelData(scene, player, ball);
 
+        // Serialise levelData
         binaryFormatter.Serialize(fileStream, levelData);
         fileStream.Close();
-
-        /*
-        Debug.Log("Velocity");
-        Vector2 vector = player.GetComponent<Rigidbody2D>().velocity;
-        Debug.Log(vector.x);
-        Debug.Log(vector.y);
-
-        Debug.Log("Position");
-        Vector3 vector1 = player.transform.localPosition;
-        Debug.Log(vector1.x);
-        Debug.Log(vector1.y);
-        Debug.Log(vector1.z);
-        */
     }
 }

@@ -1,23 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FallThrough : MonoBehaviour {
 
-    private BoxCollider2D collider;
+    private BoxCollider2D boxCollider2D;
 
-	// Use this for initialization
-	void Start () {
-        collider = GetComponent<BoxCollider2D>();
+    void Start() {
+        boxCollider2D = GetComponent<BoxCollider2D>();
 
     }
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKey(KeyCode.DownArrow)) {
-            collider.isTrigger = true;
+
+    void Update() {
+        if (Input.GetKey(KeyCode.DownArrow)) {
+            boxCollider2D.isTrigger = true;
         } else {
-            collider.isTrigger = false;
+            boxCollider2D.isTrigger = false;
         }
-	}
+    }
 }

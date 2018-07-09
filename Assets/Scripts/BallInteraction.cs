@@ -1,69 +1,68 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script enables interaction with the
+ * attached gameObject, namely a ball gameObject.
+ * Interaction includes picking and dropping the ball.
+ */
+
 using UnityEngine;
 
 public class BallInteraction : MonoBehaviour {
+
+    // Expose the speed variable to the editor
     public float speed = 10f;
 
     private GameObject player;
     private Transform playerTf;
     private bool playerHasBall;
+    private bool canPickUpBall;
 
-    // Use this for initialization
     void Start() {
         player = GameObject.FindWithTag("Player");
         playerTf = player.transform;
     }
 
-    // Update is called once per frame
     void Update() {
+        // Enable the ball to follow slightly behind the player when picked up
         if (playerHasBall) {
             Vector3 targetPosition = playerTf.position;
             GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
         }
 
+        // If the player has entered the ball's trigger, the player can pick it up
+        if (canPickUpBall) {
+            if (Input.GetKeyUp(KeyCode.G) && !playerHasBall) {
+                PlayerPicksUpBall();
+            }
+        }
+
+        // Enable the ball to be dropped anytime
         if (Input.GetKeyUp(KeyCode.H) && playerHasBall) {
             PlayerDropsBall();
         }
     }
 
-    private void OnTriggerStay2D(Collider2D collision) {
+    private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            if (Input.GetKeyUp(KeyCode.G) && !playerHasBall) {
-                PlayerPicksUpBall();
-            }
+            canPickUpBall = true;
         }
     }
 
-    private void PlayerPicksUpBall() {
-
-        // Set the parent of the ball transform to the player transform.
-        //transform.parent = player;
-
-        transform.position = playerTf.position;
-        //GetComponent<Rigidbody2D>().isKinematic = true;
-        GetComponent<Rigidbody2D>().gravityScale = 0f;
-
-        /*
-         * Set isTrigger to false to prevent the ball from
-         * going through the wall.
-         */
-        //GetComponent<CircleCollider2D>().isTrigger = false;
-        playerHasBall = true;
-
-        // Debug.Log("Ball picked up");
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("Player")) {
+            canPickUpBall = false;
+        }
     }
 
-    private void PlayerDropsBall() {
-        // To release the ball from the player
-        //transform.parent = null;
+    // Allow the player to pick up the ball
+    private void PlayerPicksUpBall() {
+        transform.position = playerTf.position;
+        GetComponent<Rigidbody2D>().gravityScale = 0f;
+        playerHasBall = true;
+    }
 
-        // Return the ball to being a trigger.
-        // GetComponent<CircleCollider2D>().isTrigger = true;
-        // GetComponent<Rigidbody2D>().isKinematic = false;
+    // Allow the player to drop the ball
+    private void PlayerDropsBall() {
         GetComponent<Rigidbody2D>().gravityScale = 1f;
         playerHasBall = false;
-
-        // Debug.Log("Ball dropped");
     }
 }

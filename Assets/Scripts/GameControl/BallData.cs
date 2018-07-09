@@ -1,16 +1,22 @@
-﻿using System;
+﻿/*
+ * This class represents a ball and is used to restore
+ * a ball to its saved position and velocity in the saved game.
+ */
+
+using System;
 using UnityEngine;
 
 [Serializable]
 public class BallData {
+
     // Vector2 velocity
-    public float vX;
-    public float vY;
+    private float vX;
+    private float vY;
 
     // Vector3 position
-    public float pX;
-    public float pY;
-    public float pZ;
+    private float pX;
+    private float pY;
+    private float pZ;
 
     public BallData(Vector2 velocity, Vector3 position) {
         this.vX = velocity.x;
@@ -21,13 +27,13 @@ public class BallData {
         this.pZ = position.z;
     }
 
-    // Reconstruct velocity
-    public Vector2 velocity() {
+    // Reconstruct the velocity
+    public Vector2 GetVelocity() {
         return new Vector2(vX, vY);
     }
 
-    // Reconstruct position
-    public Vector3 position() {
+    // Reconstruct the position
+    public Vector3 GetPosition() {
         return new Vector3(pX, pY, pZ);
     }
 }

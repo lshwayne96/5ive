@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * The script attached to the camera pointing at the ball.
+ * The camera knows where the ball is by using the currentBallRoom
+ * from the SetCurrentRoom script.
+ */
+
 using UnityEngine;
 
 public class BallCameraSnapFollow : MonoBehaviour {
 
-    // Use this for initialization
-    void Start() {
-
-    }
-
-    // Update is called once per frame
     void Update() {
         gameObject.transform.position =
             new Vector3(SetCurrentRoom.currentBallRoom.position.x,

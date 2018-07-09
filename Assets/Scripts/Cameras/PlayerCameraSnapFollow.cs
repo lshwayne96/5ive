@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script is attached to the camera pointing at the player.
+ * The camera knows where the player is by using the currentPlayerRoom
+ * from the SetCurrentRoom script.
+ */
+
 using UnityEngine;
 
 public class PlayerCameraSnapFollow : MonoBehaviour {
 
-    // Use this for initialization
-    void Start() {
-
-    }
-
-    // Update is called once per frame
     void Update() {
         gameObject.transform.position =
             new Vector3(SetCurrentRoom.currentPlayerRoom.position.x,

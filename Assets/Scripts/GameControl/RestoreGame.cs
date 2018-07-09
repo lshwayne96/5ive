@@ -1,14 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script is for a Singleton object which will not be destroyed
+ * when a new scene is loaded.
+ * It restores the game data from a saved game file after
+ * the scene of the game file is loaded.
+ */
+
 using UnityEngine;
 
 public class RestoreGame : MonoBehaviour {
+
+    // The Singleton RestoreGame instance
     public static RestoreGame restoreGame;
     private LevelData levelData;
     private GameObject player;
     private GameObject ball;
     private bool hasSavedGame;
 
+    // Ensures that there is only one RestoreGame instancd
     private void Awake() {
         if (restoreGame == null) {
             DontDestroyOnLoad(gameObject);
@@ -21,6 +29,7 @@ public class RestoreGame : MonoBehaviour {
         }
     }
 
+    // Caches data from the LoadGame script
     public void Take(LevelData levelData, GameObject player, GameObject ball) {
         this.levelData = levelData;
         this.player = player;
@@ -28,39 +37,29 @@ public class RestoreGame : MonoBehaviour {
         this.hasSavedGame = true;
     }
 
+    // Restores the previous game data
     public void Restore() {
-        // Debug.Log("Restore");
-
+        /*
+         * The player and ball references are made here and not in
+         * Awake() or Start() since references are lost if
+         * a saved game is loaded from a scene different
+         * from the saved game's
+         */
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
 
         // Restore player data
-        PlayerData playerData = levelData.playerData;
-        player.GetComponent<Rigidbody2D>().velocity = playerData.velocity();
-        player.transform.position = playerData.position();
+        PlayerData playerData = levelData.GetPlayerData();
+        player.GetComponent<Rigidbody2D>().velocity = playerData.GetVelocity();
+        player.transform.position = playerData.GetPosition();
 
         // Restore ball data
-        BallData ballData = levelData.ballData;
-        ball.GetComponent<Rigidbody2D>().velocity = ballData.velocity();
-        ball.transform.localPosition = ballData.position();
+        BallData ballData = levelData.GetBallData();
+        ball.GetComponent<Rigidbody2D>().velocity = ballData.GetVelocity();
+        ball.transform.localPosition = ballData.GetPosition();
 
         // Restore player camera
         player.GetComponent<DetectRoom>().GetCurrentRoom();
-
-        /*
-        Debug.Log("Velocity");
-
-        Vector2 vector = player.GetComponent<Rigidbody2D>().velocity;
-        Debug.Log(vector.x);
-        Debug.Log(vector.y);
-
-        Debug.Log("Position");
-
-        Vector3 vector1 = player.transform.localPosition;
-        Debug.Log(vector1.x);
-        Debug.Log(vector1.y);
-        Debug.Log(vector1.z);
-        */
     }
 
     private void OnLevelWasLoaded(int level) {

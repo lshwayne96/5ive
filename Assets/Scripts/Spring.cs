@@ -1,28 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This scripts allows a gameObject that comes into contact
+ * with the attached gameObject to bounce on it.
+ * The bouncing gameObject will experience reduced bounces until
+ * it stops bouncing.
+ */
+
 using UnityEngine;
 
 public class Spring : MonoBehaviour {
-	public float springForce; // Multiplier for how high spring will bounce
-	public float velocityCap; // Maximum velocity spring should allow
 
-	// Use this for initialization
-	void Start() {
+    // Exposes both springForce and velocityCap to the editor
+    // Multiplier for how high spring will bounce
+    public float springForce;
+    // Maximum velocity spring should allow
+    public float velocityCap;
 
-	}
+    void OnTriggerEnter2D(Collider2D collision) {
+        Rigidbody2D rbody = collision.GetComponent<Rigidbody2D>();
+        // Get downward component of velocity
+        float verticalSpeed = Vector2.Dot(rbody.velocity, Vector2.down);
 
-	// Update is called once per frame
-	void Update() {
-
-	}
-
-	void OnTriggerEnter2D(Collider2D collision) {
-		Rigidbody2D rbody = collision.GetComponent<Rigidbody2D>();
-		float verticalSpeed = Vector2.Dot(rbody.velocity, Vector2.down); // Get downward component of velocity
-		if (verticalSpeed > 0) // Only bounce if object was falling
-		{
-			float bounceVelocity = Mathf.Min(verticalSpeed * springForce, velocityCap); // Cap the velocity
-			rbody.velocity = Vector2.up * bounceVelocity;
-		}
-	}
+        // Only bounce if object was falling
+        if (verticalSpeed > 0) {
+            // Cap the velocity
+            float bounceVelocity = Mathf.Min(verticalSpeed * springForce, velocityCap);
+            rbody.velocity = Vector2.up * bounceVelocity;
+        }
+    }
 }

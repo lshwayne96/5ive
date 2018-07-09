@@ -1,5 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ * This script looks a specified scene upon
+ * interacting with the attached gameObject.
+ */
+
 using UnityEngine.SceneManagement;
 using UnityEngine;
 

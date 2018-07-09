@@ -6,6 +6,8 @@ TagManager:
   tags:
   - TeleportationBall
   - PauseControl
+  - SaveMenu
+  - LoadMenu
   layers:
   - Default
   - TransparentFX

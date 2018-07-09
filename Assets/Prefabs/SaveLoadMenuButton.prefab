@@ -75,6 +75,8 @@ GameObject:
   - component: {fileID: 114562661328957656}
   - component: {fileID: 114270556773802326}
   - component: {fileID: 114428540809778632}
+  - component: {fileID: 114589662341674770}
+  - component: {fileID: 114907580484488472}
   m_Layer: 5
   m_Name: SaveLoadMenuButton
   m_TagString: Untagged
@@ -267,6 +269,18 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114589662341674770
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1700463753885506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c7675667cd34fa8babaef466855a90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputField: {fileID: 0}
 --- !u!114 &114751012003586610
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -300,6 +314,17 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: New Text
+--- !u!114 &114907580484488472
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1700463753885506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c13f1507ff4335975effb09bfc2b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114938444437029458
 MonoBehaviour:
   m_ObjectHideFlags: 1
