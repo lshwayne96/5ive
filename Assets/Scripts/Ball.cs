@@ -1,12 +1,12 @@
 ﻿/*
  * This script enables interaction with the
  * attached gameObject, namely a ball gameObject.
- * Interaction includes picking and dropping the ball.
+ * Interactions includes picking and dropping the ball.
  */
 
 using UnityEngine;
 
-public class BallInteraction : MonoBehaviour {
+public class Ball : MonoBehaviour {
 
     // Expose the speed variable to the editor
     public float speed = 10f;

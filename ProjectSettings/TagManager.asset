@@ -8,6 +8,10 @@ TagManager:
   - PauseControl
   - SaveMenu
   - LoadMenu
+  - DeleteButton
+  - BackButton
+  - GameObjectPool
+  - DeleteAllButton
   layers:
   - Default
   - TransparentFX
