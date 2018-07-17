@@ -11,12 +11,10 @@ using UnityEngine;
 public class LoadGame : MonoBehaviour {
 
     private String saveFilePath;
-    private String saveDirectoryPath;
     private GameObject player;
     private GameObject ball;
 
     private void Start() {
-        saveDirectoryPath = Application.persistentDataPath + "/Saved Games";
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
     }
@@ -28,7 +26,7 @@ public class LoadGame : MonoBehaviour {
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             // Path of the file to be accessed and it's data deserialised
-            saveFilePath = saveDirectoryPath + "/" + fileName + ".dat";
+            saveFilePath = GameFile.ConvertToPath(GameFile.AddIdentifier(fileName));
             FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
             // Deserialised data is stored into levelData
             LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);

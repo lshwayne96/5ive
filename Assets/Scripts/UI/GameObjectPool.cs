@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class SimpleObjectPool : MonoBehaviour {
+public class GameObjectPool : MonoBehaviour {
     // the prefab that this object pool returns instances of
     public GameObject prefab;
     // collection of currently inactive instances of the prefab
@@ -56,5 +56,5 @@ public class SimpleObjectPool : MonoBehaviour {
 
 // a component that simply identifies the pool that a GameObject came from
 public class PooledObject : MonoBehaviour {
-    public SimpleObjectPool pool;
+    public GameObjectPool pool;
 }
