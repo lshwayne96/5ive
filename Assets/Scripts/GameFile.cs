@@ -9,12 +9,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 public class GameFile {
+
     // The standard directory path where game files will be saved
     private static string saveDirectoryPath =
         Application.persistentDataPath + "/Saved Games/";
     private static string fileNameExtension = ".dat";
-    // An identifier added to saved game files to allow for distinguish them from others
-    private static string fileNameIdentifier = "UNITY";
+    // A tag added to saved game files to allow for distinguish them from others
+    private static string tag = "Unity";
 
     // Hide the constructor
     private GameFile() {
@@ -23,6 +24,7 @@ public class GameFile {
     // Get the full path of the file
     public static string ConvertToPath(string fileName) {
         return saveDirectoryPath + fileName + fileNameExtension;
+
     }
 
     // Get the name of the file from its path
@@ -31,31 +33,36 @@ public class GameFile {
         filePath = filePath.Substring(0, filePath.Length - 4);
         // Trim the file path of it's directory path
         return filePath.Substring(saveDirectoryPath.Length,
-                                  filePath.Length - saveDirectoryPath.Length);
+                                   filePath.Length - saveDirectoryPath.Length);
     }
 
-    // Add the identifier
-    public static string AddIdentifier(string fileName) {
-        return String.Concat(fileNameIdentifier, fileName);
+    // Add the tag
+    public static string AddTag(string fileName) {
+        return String.Concat(tag, fileName);
     }
 
-    // Remove the identifier
-    public static string RemoveIdentifier(string fileName) {
-        return fileName.Substring(fileNameIdentifier.Length);
+    // Remove the tag
+    public static string RemoveTag(string fileName) {
+        string potentialTag = fileName.Substring(0, tag.Length);
+        if (potentialTag.Equals(tag)) {
+            return fileName.Substring(tag.Length);
+        } else {
+            return "";
+        }
     }
 
     public static string GetSaveDirectoryPath() {
         return saveDirectoryPath;
     }
 
-    public static bool IdentifierExists(string fileName) {
-        // If the length of the identifier is longer than or equal to the file name length
-        if (fileNameIdentifier.Length >= fileName.Length) {
+    public static bool ContainsTag(string fileName) {
+        // If the length of the tag is longer than or equal to the file name length
+        if (tag.Length >= fileName.Length) {
             return false;
         } else {
             // Check if the file name has the identifier in it's first part
-            string potentialIdentifier = fileName.Substring(0, fileNameIdentifier.Length);
-            return potentialIdentifier.Equals(fileNameIdentifier);
+            string potentialTag = fileName.Substring(0, tag.Length);
+            return potentialTag.Equals(tag);
         }
     }
 

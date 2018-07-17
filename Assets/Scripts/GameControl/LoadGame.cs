@@ -26,7 +26,7 @@ public class LoadGame : MonoBehaviour {
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             // Path of the file to be accessed and it's data deserialised
-            saveFilePath = GameFile.ConvertToPath(GameFile.AddIdentifier(fileName));
+            saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
             FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
             // Deserialised data is stored into levelData
             LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);

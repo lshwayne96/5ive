@@ -39,6 +39,7 @@ public class GameObjectPool : MonoBehaviour {
 
         // if the instance came from this pool, return it to the pool
         if (pooledObject != null && pooledObject.pool == this) {
+
             // make the instance a child of this and disable it
             toReturn.transform.SetParent(transform);
             toReturn.SetActive(false);

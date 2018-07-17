@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * This class represents a player and is used to restore
+ * a player to its saved position and velocity in the saved game.
+ */
+
+using System;
 using UnityEngine;
 
 [Serializable]
