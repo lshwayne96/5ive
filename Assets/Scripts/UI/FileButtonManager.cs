@@ -9,29 +9,71 @@ using UnityEngine.UI;
  * with buttons that link to saved games.
  * It is called whenever the player selects the Save or Load buttons
  * in the Pause Menu.
- * It requires a gameObject pool to be dragged to gameObjectPool.
  */
-public abstract class FileButtonManager : MonoBehaviour {
+public class FileButtonManager : MonoBehaviour {
 
     // A gameObject pool where buttons are recycled
-    protected GameObjectPool gameObjectPool;
-    protected HashSet<GameObject> buttons;
+    private GameObjectPool gameObjectPool;
+    private HashSet<GameObject> buttons;
     // fileNames contain file names that have the GameFile identifier
-    protected HashSet<string> uniqueFileNames;
+    private HashSet<string> uniqueTaggedFileNames;
 
-    protected string saveDirectoryPath;
-    protected DirectoryInfo saveDirectoryInfo;
+    private string saveTaggedFileNameToDelete;
+    private string saveDirectoryPath;
+    private DirectoryInfo saveDirectoryInfo;
+    private GameObject parentMenu;
 
-    protected GameObject fileButtonToDelete;
-    protected Button deleteButton;
-    protected Button deleteAllButton;
+    private GameObject fileButtonToDelete;
+    private Button deleteButton;
+    private Button deleteAllButton;
 
-    public abstract void Initialise();
-    public abstract void UpdateButtons();
-    public abstract void DeleteAll();
+    // Initialise the buttons associated with any save game files
+    public void Initialise() {
+        gameObjectPool = GameObject.FindWithTag("GameObjectPool").GetComponent<GameObjectPool>();
+        buttons = new HashSet<GameObject>();
+        uniqueTaggedFileNames = new HashSet<string>();
+
+        saveDirectoryPath = GameFile.GetSaveDirectoryPath();
+        saveDirectoryInfo = Directory.CreateDirectory(saveDirectoryPath);
+        parentMenu = GameMenu.SetParentMenu(parentMenu);
+
+        if (GameMenu.IsLoadMenu(parentMenu)) {
+            // Initialise the delete and delete all buttons only if the parent menu is the load menu
+            deleteButton = GameObject.FindWithTag("DeleteButton").GetComponent<Button>();
+            deleteAllButton = GameObject.FindWithTag("DeleteAllButton").GetComponent<Button>();
+
+            if (HaveFiles()) {
+                deleteAllButton.interactable = true;
+            } else {
+                deleteAllButton.interactable = false;
+            }
+        }
+
+        CreateFileButtons();
+    }
+
+    // Add new or remove old buttons immediately whenever they are added or removed
+    public void UpdateButtons() {
+        if (GameMenu.IsSaveMenu(parentMenu)) {
+            if (HaveFiles()) {
+                CreateFileButtons();
+            } else {
+                DeleteAll();
+                ClearCache();
+            }
+        } else if (GameMenu.IsLoadMenu(parentMenu)) {
+            if (HaveFiles()) {
+                deleteAllButton.interactable = true;
+                CreateFileButtons();
+            } else {
+                deleteAllButton.interactable = false;
+
+            }
+        }
+    }
 
     // Populate the Content gameObject with buttons associated with saved game files
-    protected void CreateFileButtons() {
+    private void CreateFileButtons() {
         // Get the files in the save directory
         List<FileInfo> fileInfos = new List<FileInfo>(saveDirectoryInfo.GetFiles());
         // Sort files from earliest to lastest created 
@@ -42,16 +84,60 @@ public abstract class FileButtonManager : MonoBehaviour {
         }
     }
 
+    // Creates a button associated with the fileInfo
     private void CreateFileButton(FileInfo fileInfo) {
         string filePath = fileInfo.FullName;
-        string fileName = fileInfo.Name;
-        if (!uniqueFileNames.Contains(fileName) && GameFile.IdentifierExists(fileName)) {
-            uniqueFileNames.Add(fileName);
+        string fileName = GameFile.ConvertToName(filePath);
+        if (!uniqueTaggedFileNames.Contains(fileName) && GameFile.ContainsTag(fileName)) {
+            uniqueTaggedFileNames.Add(fileName);
             LevelData levelData = GameFile.Deserialise(filePath);
             SetUpFileButtonInfo(levelData, fileInfo);
         }
     }
 
+    // Recycle all the buttons on the Content gameObject and delete their associated files
+    public void DeleteAll() {
+        foreach (GameObject button in buttons) {
+            FileButton fileButton = button.GetComponent<FileButton>();
+            // Delete the file associated with the button
+            DeleteFile(fileButton);
+            // Recycle the button to the SimpleObjectPool instance
+            gameObjectPool.ReturnObject(button);
+        }
+
+        if (GameMenu.IsLoadMenu(parentMenu)) {
+            deleteAllButton.interactable = false;
+            ClearCache();
+        }
+    }
+
+    // Recycle one of the buttons on the Content gameObject and delete its associated file
+    public void DeleteOne() {
+        if (GameMenu.IsLoadMenu(parentMenu)) {
+            File.Delete(GameFile.ConvertToPath(saveTaggedFileNameToDelete));
+            gameObjectPool.ReturnObject(fileButtonToDelete);
+
+            uniqueTaggedFileNames.Remove(saveTaggedFileNameToDelete);
+            buttons.Remove(fileButtonToDelete);
+            deleteButton.interactable = false;
+
+            if (!StillHaveFiles()) {
+                deleteAllButton.interactable = false;
+            }
+        }
+    }
+
+
+    // Removes all references or values stored
+    private void ClearCache() {
+        uniqueTaggedFileNames.Clear();
+        buttons.Clear();
+    }
+
+    /*
+     * Retrieves a button from the game object pool and initialises it
+     * with information from the levelData and fileInfo
+     * */
     private void SetUpFileButtonInfo(LevelData levelData, FileInfo fileInfo) {
         // Get information to be displayed on the SaveLoadMenuButton button
         int levelNo = levelData.GetSceneBuildIndex();
@@ -66,26 +152,47 @@ public abstract class FileButtonManager : MonoBehaviour {
         buttons.Add(button);
 
         FileButton fileButton = button.GetComponent<FileButton>();
-        string fileName = GameFile.RemoveIdentifier(GameFile.ConvertToName(fileInfo.FullName));
+        string fileName = GameFile.RemoveTag(GameFile.ConvertToName(fileInfo.FullName));
         fileButton.SetUp(fileName, levelNo, dateTime);
     }
+
+    /*
+    * Cache the name of the file and the gameObject
+    * attached to the FileButton instance to delete
+    */
+    public void SetFileButtonToDelete(FileButton fileButton) {
+        saveTaggedFileNameToDelete = GameFile.AddTag(fileButton.nameLabel.text);
+        fileButtonToDelete = fileButton.gameObject;
+        // Allow the player to click the delete button
+        deleteButton.interactable = true;
+    }
+
 
     // Delete the file associated with the button
     protected void DeleteFile(FileButton fileButton) {
         string saveFilePath =
-            GameFile.ConvertToPath(GameFile.AddIdentifier(fileButton.nameLabel.text));
+            GameFile.ConvertToPath(GameFile.AddTag(fileButton.nameLabel.text));
         File.Delete(saveFilePath);
     }
 
+    // Checks to see if there are still saved game files on the local machine
     protected bool HaveFiles() {
         FileInfo[] fileInfos = saveDirectoryInfo.GetFiles();
         foreach (FileInfo fileInfo in fileInfos) {
             string fileName = fileInfo.Name;
-            if (GameFile.IdentifierExists(fileName)) {
+            if (GameFile.ContainsTag(fileName)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /*
+     * Checks to see if there are still saved game files
+     * by checking the local cache uniqueTaggedFileNames
+     */
+    private bool StillHaveFiles() {
+        return uniqueTaggedFileNames.Count > 0;
     }
 }

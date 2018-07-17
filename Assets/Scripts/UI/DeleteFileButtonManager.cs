@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+﻿/*
+ * This script is attached to the delete buttons
+ * to give them delete or delete all functionality.
+ */
+
+using UnityEngine;
 
 public class DeleteFileButtonManager : MonoBehaviour {
 
-    private LoadMenuFileButtonManager fileButtonManager;
+    private FileButtonManager fileButtonManager;
 
     void Start() {
         fileButtonManager =
-            transform.parent.GetComponentInChildren<LoadMenuFileButtonManager>();
+            transform.parent.GetComponentInChildren<FileButtonManager>();
     }
 
     public void DeleteAllGameFileButtons() {

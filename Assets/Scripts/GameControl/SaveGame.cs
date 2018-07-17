@@ -16,7 +16,7 @@ public class SaveGame : MonoBehaviour {
     private String saveFilePath;
     private GameObject player;
     private GameObject ball;
-    private SaveMenuFileButtonManager buttonManager;
+    private FileButtonManager buttonManager;
 
     private void Start() {
         inputField = GetComponent<InputField>();
@@ -24,19 +24,17 @@ public class SaveGame : MonoBehaviour {
         ball = GameObject.FindWithTag("TeleportationBall");
         // Fragile code since it breaks when the hierarchy changes
         buttonManager =
-            transform.parent.parent.GetComponentInChildren<SaveMenuFileButtonManager>();
+            transform.parent.parent.GetComponentInChildren<FileButtonManager>();
     }
 
     // Serialise the game data and save it into a file as named by the user
     public void Save() {
-        //Debug.Log("In Save()");
-
         if (inputField.text != "") {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             // Directory to save file into
             Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
             // Path of the file to be used for saving
-            saveFilePath = GameFile.ConvertToPath(GameFile.AddIdentifier(inputField.text));
+            saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(inputField.text));
             FileStream fileStream = File.Create(saveFilePath);
             // Clear the input field
             inputField.text = "";
