@@ -173,3 +173,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 492f37998db7f473382d7add02279a0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damping: 0
+  lookAheadFactor: 0
+  lookAheadReturnSpeed: 0
+  lookAheadMoveThreshold: 0
