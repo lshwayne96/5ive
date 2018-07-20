@@ -145,7 +145,7 @@ public class FileButtonManager : MonoBehaviour {
 
         GameObject button = gameObjectPool.GetObject();
         // Add the button to the scroll view content
-        button.transform.SetParent(gameObject.transform);
+        button.transform.SetParent(transform);
         // Add the button to the top
         button.transform.SetAsFirstSibling();
         // Cache the buttons for easy deletion
