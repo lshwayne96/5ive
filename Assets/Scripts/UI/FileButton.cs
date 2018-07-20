@@ -29,6 +29,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         // f stands for full date/time pattern (short time)
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
         parentMenu = GameMenu.SetParentMenu(parentMenu);
+        transform.localScale = Vector3.one;
     }
 
     public void OnPointerClick(PointerEventData eventData) {
