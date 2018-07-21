@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+ * This is a utility class.
+ * It provides methods which check if a menu is of a specific type
+ * and also sets an uninitialised gameObject parentMenu as
+ * one of the menu types available.
+ */
+
+using UnityEngine;
 
 public class GameMenu {
     public static GameObject SetParentMenu(GameObject parentMenu) {

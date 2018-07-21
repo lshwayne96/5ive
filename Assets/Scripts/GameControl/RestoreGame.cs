@@ -12,11 +12,9 @@ public class RestoreGame : MonoBehaviour {
     // The Singleton RestoreGame instance
     public static RestoreGame restoreGame;
     private LevelData levelData;
-    private GameObject player;
-    private GameObject ball;
     private bool hasSavedGame;
 
-    // Ensures that there is only one RestoreGame instancd
+    // Ensures that there is only one RestoreGame instance
     private void Awake() {
         if (restoreGame == null) {
             DontDestroyOnLoad(gameObject);
@@ -30,41 +28,20 @@ public class RestoreGame : MonoBehaviour {
     }
 
     // Caches data from the LoadGame script
-    public void Take(LevelData levelData, GameObject player, GameObject ball) {
+    public void Cache(LevelData levelData) {
         this.levelData = levelData;
-        this.player = player;
-        this.ball = ball;
-        this.hasSavedGame = true;
+        hasSavedGame = true;
     }
 
     // Restores the previous game data
     public void Restore() {
-        /*
-         * The player and ball references are made here and not in
-         * Awake() or Start() since references are lost if
-         * a saved game is loaded from a scene different
-         * from the saved game's
-         */
-        player = GameObject.FindWithTag("Player");
-        ball = GameObject.FindWithTag("TeleportationBall");
-
-        // Restore player data
-        PlayerData playerData = levelData.GetPlayerData();
-        player.GetComponent<Rigidbody2D>().velocity = playerData.GetVelocity();
-        player.transform.position = playerData.GetPosition();
-
-        // Restore ball data
-        BallData ballData = levelData.GetBallData();
-        ball.GetComponent<Rigidbody2D>().velocity = ballData.GetVelocity();
-        ball.transform.localPosition = ballData.GetPosition();
-
-        // Restore player camera
-        player.GetComponent<DetectRoom>().GetCurrentRoom();
+        levelData.Restore();
     }
 
     private void OnLevelWasLoaded(int level) {
         if (hasSavedGame) {
-            RestoreGame.restoreGame.Restore();
+            Restore();
+            hasSavedGame = false;
         }
     }
 }

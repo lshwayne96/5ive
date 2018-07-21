@@ -45,7 +45,6 @@ public class PauseGame : MonoBehaviour {
                 ballRb.Sleep();
                 pauseMenu.SetActive(true);
 
-
             } else { // If the game is paused, unpause it
                 playerRb.velocity = prevVelocity;
                 playerRb.WakeUp();
@@ -56,5 +55,9 @@ public class PauseGame : MonoBehaviour {
             playerMovementScript.enabled = !playerMovementScript.enabled;
             isPaused = !isPaused;
         }
+    }
+
+    public bool IsGamePaused() {
+        return isPaused;
     }
 }

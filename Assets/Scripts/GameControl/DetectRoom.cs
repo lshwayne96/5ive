@@ -34,7 +34,6 @@ public class DetectRoom : MonoBehaviour {
 
 
     private void OnTriggerExit2D(Collider2D collision) {
-        // Update currentRoom
         UpdateCurrentRoom();
     }
 
@@ -44,8 +43,7 @@ public class DetectRoom : MonoBehaviour {
         // Update currentRoom
         currentRoom = currentRoomCollider.transform;
 
-        if (CompareTag("Player"))
-        {
+        if (CompareTag("Player")) {
             BoxCollider2D roomCollider = currentRoom.GetComponent<BoxCollider2D>();
             Bounds roomBounds = new Bounds(new Vector3(currentRoom.position.x, currentRoom.position.y, -10f),
             new Vector3(roomCollider.size.x - 18f,
@@ -60,5 +58,12 @@ public class DetectRoom : MonoBehaviour {
 
     public Transform GetCurrentRoom() {
         return currentRoom;
+    }
+
+    public void SetCurrentRoom() {
+        // Get collider of current room
+        currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
+        // Update currentRoom
+        currentRoom = currentRoomCollider.transform;
     }
 }

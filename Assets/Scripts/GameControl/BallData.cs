@@ -28,12 +28,22 @@ public class BallData {
     }
 
     // Reconstruct the velocity
-    public Vector2 GetVelocity() {
+    private Vector2 GetVelocity() {
         return new Vector2(vX, vY);
     }
 
     // Reconstruct the position
-    public Vector3 GetPosition() {
+    private Vector3 GetPosition() {
         return new Vector3(pX, pY, pZ);
+    }
+
+    public void Restore() {
+        // Find the ball in the new scene
+        GameObject ball = GameObject.FindWithTag("TeleportationBall");
+        ball.GetComponent<Rigidbody2D>().velocity = GetVelocity();
+        ball.transform.position = GetPosition();
+
+        // Restore ball camera
+        ball.GetComponent<DetectRoom>().SetCurrentRoom();
     }
 }

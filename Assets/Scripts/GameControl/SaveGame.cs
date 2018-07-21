@@ -29,7 +29,18 @@ public class SaveGame : MonoBehaviour {
 
     // Serialise the game data and save it into a file as named by the user
     public void Save() {
-        if (inputField.text != "") {
+        if (!inputField.text.Equals(System.String.Empty)) {
+            // Get the current scene
+            Scene scene = SceneManager.GetActiveScene();
+            // Cache the player data
+            PlayerData playerData = CachePlayerData();
+            // Cache the ball data
+            BallData ballData = CacheBallData();
+            // Cache the state of interactables
+            InteractablesData interactablesData = CacheInteractablesData();
+            // Package the game data into a LevelData instance
+            LevelData levelData = new LevelData(scene, playerData, ballData, interactablesData);
+
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             // Directory to save file into
             Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
@@ -37,12 +48,7 @@ public class SaveGame : MonoBehaviour {
             saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(inputField.text));
             FileStream fileStream = File.Create(saveFilePath);
             // Clear the input field
-            inputField.text = "";
-
-            // Get the current scene
-            Scene scene = SceneManager.GetActiveScene();
-            // Package the game data into a LevelData instance
-            LevelData levelData = new LevelData(scene, player, ball);
+            inputField.text = System.String.Empty;
 
             // Serialise levelData
             binaryFormatter.Serialize(fileStream, levelData);
@@ -50,5 +56,23 @@ public class SaveGame : MonoBehaviour {
 
             buttonManager.UpdateButtons();
         }
+    }
+
+    private PlayerData CachePlayerData() {
+        Vector2 velocity = player.GetComponent<Rigidbody2D>().velocity;
+        Vector3 position = player.transform.position;
+        return new PlayerData(velocity, position);
+    }
+
+    private BallData CacheBallData() {
+        Vector2 velocity = ball.GetComponent<Rigidbody2D>().velocity;
+        Vector3 position = ball.transform.position;
+        return new BallData(velocity, position);
+    }
+
+    private InteractablesData CacheInteractablesData() {
+        InteractablesData interactablesData = new InteractablesData();
+        interactablesData.ScreenShot();
+        return interactablesData;
     }
 }

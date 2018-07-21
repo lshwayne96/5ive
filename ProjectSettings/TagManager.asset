@@ -12,6 +12,8 @@ TagManager:
   - BackButton
   - GameObjectPool
   - DeleteAllButton
+  - Interactable
+  - Pause
   layers:
   - Default
   - TransparentFX

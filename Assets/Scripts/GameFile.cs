@@ -3,6 +3,7 @@
  * It provides methods which convert between a file path and a file name
  * and adds an identifier to save game files.
  */
+
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;

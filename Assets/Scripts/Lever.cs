@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-public class Lever : MonoBehaviour {
+public class Lever : MonoBehaviour, IInteractable {
 
     // Expose the interactable variable to the editor
     public GameObject interactable;
@@ -17,7 +17,12 @@ public class Lever : MonoBehaviour {
     private Vector3 targetAngle;
     private float angleOfRotation;
 
-    void Start() {
+    /*
+     * Awake() is used instead of Start() to allow the lever
+     * to be rotated by Restore() in InteractablesData
+     * to its previous state when a new game is loaded
+     * */
+    void Awake() {
         interactableState = interactable.activeSelf;
         angleOfRotation = 90f;
 
@@ -54,6 +59,7 @@ public class Lever : MonoBehaviour {
 
     private void RotateLever() {
         transform.eulerAngles = Vector3.Lerp(currentAngle, targetAngle, 1);
+        hasRotated = !hasRotated;
 
         // Swap the currentAngle and targetAngle
         Vector3 temp;
@@ -66,5 +72,14 @@ public class Lever : MonoBehaviour {
     private void ChangeInteractableState() {
         interactable.SetActive(!interactableState);
         interactableState = !interactableState;
+    }
+
+    public void Toggle() {
+        RotateLever();
+        ChangeInteractableState();
+    }
+
+    public bool HasToggled() {
+        return hasRotated;
     }
 }
