@@ -299,11 +299,6 @@ Prefab:
       propertyPath: m_Name
       value: Canvas (Main Menu)
       objectReference: {fileID: 0}
-    - target: {fileID: 114610863941206436, guid: 14ff89ba8311b4ca0a06072e91a8ce93,
-        type: 2}
-      propertyPath: m_Interactable
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14ff89ba8311b4ca0a06072e91a8ce93, type: 2}
   m_IsPrefabAsset: 0
