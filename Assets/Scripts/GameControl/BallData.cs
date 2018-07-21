@@ -41,6 +41,6 @@ public class BallData {
         // Find the ball in the new scene
         GameObject ball = GameObject.FindWithTag("TeleportationBall");
         ball.GetComponent<Rigidbody2D>().velocity = GetVelocity();
-        ball.transform.localPosition = GetPosition();
+        ball.transform.position = GetPosition();
     }
 }
