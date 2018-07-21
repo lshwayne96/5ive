@@ -42,5 +42,8 @@ public class BallData {
         GameObject ball = GameObject.FindWithTag("TeleportationBall");
         ball.GetComponent<Rigidbody2D>().velocity = GetVelocity();
         ball.transform.position = GetPosition();
+
+        // Restore ball camera
+        ball.GetComponent<DetectRoom>().SetCurrentRoom();
     }
 }

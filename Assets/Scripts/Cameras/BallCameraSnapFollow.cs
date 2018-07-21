@@ -10,11 +10,12 @@ public class BallCameraSnapFollow : MonoBehaviour {
 
     private Transform playerCamera;
 
-    void Update() {
-
+    private void Start() {
         playerCamera = GameObject.FindWithTag("MainCamera").transform;
-        Vector3 offset = SetCurrentRoom.currentPlayerRoom.position - playerCamera.position;
+    }
 
+    void Update() {
+        Vector3 offset = SetCurrentRoom.currentPlayerRoom.position - playerCamera.position;
         gameObject.transform.position =
             new Vector3(SetCurrentRoom.currentBallRoom.position.x - offset.x,
                         SetCurrentRoom.currentBallRoom.position.y - offset.y,
