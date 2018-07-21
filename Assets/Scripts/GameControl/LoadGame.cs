@@ -32,8 +32,8 @@ public class LoadGame : MonoBehaviour {
             LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
 
-            // Cache levelData and the player and ball references in restoreGame
-            RestoreGame.restoreGame.Take(levelData, player, ball);
+            // Cache the levelData reference in restoreGame
+            RestoreGame.restoreGame.Cache(levelData);
             // Load the scene of the saved game
             SceneManager.LoadScene(levelData.GetSceneBuildIndex());
 

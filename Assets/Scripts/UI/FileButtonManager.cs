@@ -54,6 +54,7 @@ public class FileButtonManager : MonoBehaviour {
 
     // Add new or remove old buttons immediately whenever they are added or removed
     public void UpdateButtons() {
+        //Debug.Log("From UpdateButtons");
         if (GameMenu.IsSaveMenu(parentMenu)) {
             if (HaveFiles()) {
                 CreateFileButtons();
@@ -107,6 +108,7 @@ public class FileButtonManager : MonoBehaviour {
 
         if (GameMenu.IsLoadMenu(parentMenu)) {
             deleteAllButton.interactable = false;
+            deleteButton.interactable = false;
             ClearCache();
         }
     }

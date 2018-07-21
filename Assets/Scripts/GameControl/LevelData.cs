@@ -4,7 +4,6 @@
  */
 
 using System;
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [Serializable]
@@ -13,30 +12,23 @@ public class LevelData {
     private int sceneBuildIndex;
     private PlayerData playerData;
     private BallData ballData;
+    private InteractablesData interactablesData;
 
-    public LevelData(Scene scene, GameObject player, GameObject ball) {
+    public LevelData(Scene scene, PlayerData playerData,
+                     BallData ballData, InteractablesData interactablesData) {
         this.sceneBuildIndex = scene.buildIndex;
+        this.playerData = playerData;
+        this.ballData = ballData;
+        this.interactablesData = interactablesData;
+    }
 
-        // Cache player data
-        Vector2 velocity = player.GetComponent<Rigidbody2D>().velocity;
-        Vector3 position = player.transform.position;
-        this.playerData = new PlayerData(velocity, position);
-
-        // Cache ball data
-        velocity = ball.GetComponent<Rigidbody2D>().velocity;
-        position = ball.transform.position;
-        this.ballData = new BallData(velocity, position);
+    public void Restore() {
+        playerData.Restore();
+        ballData.Restore();
+        interactablesData.Restore();
     }
 
     public int GetSceneBuildIndex() {
         return sceneBuildIndex;
-    }
-
-    public PlayerData GetPlayerData() {
-        return playerData;
-    }
-
-    public BallData GetBallData() {
-        return ballData;
     }
 }
