@@ -11,13 +11,6 @@ using UnityEngine;
 public class LoadGame : MonoBehaviour {
 
     private String saveFilePath;
-    private GameObject player;
-    private GameObject ball;
-
-    private void Start() {
-        player = GameObject.FindWithTag("Player");
-        ball = GameObject.FindWithTag("TeleportationBall");
-    }
 
     // Deserialise the game data and cache them in restoreGame
     public void Load(string fileName) {

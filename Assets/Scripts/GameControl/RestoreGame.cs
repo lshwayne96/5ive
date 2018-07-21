@@ -30,7 +30,7 @@ public class RestoreGame : MonoBehaviour {
     // Caches data from the LoadGame script
     public void Cache(LevelData levelData) {
         this.levelData = levelData;
-        this.hasSavedGame = true;
+        hasSavedGame = true;
     }
 
     // Restores the previous game data
@@ -41,6 +41,7 @@ public class RestoreGame : MonoBehaviour {
     private void OnLevelWasLoaded(int level) {
         if (hasSavedGame) {
             Restore();
+            hasSavedGame = false;
         }
     }
 }

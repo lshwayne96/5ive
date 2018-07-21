@@ -10,19 +10,23 @@ public class Teleportation : MonoBehaviour {
 
     private MeshRenderer preview;
     private GameObject mainCamera;
+    private PauseGame pauseGame;
 
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
+        pauseGame = GameObject.FindWithTag("Pause").GetComponent<PauseGame>();
     }
 
     void Update() {
-        if (Input.GetKeyDown(KeyCode.T)) {
-            preview.enabled = true;
-        }
-        if (Input.GetKeyUp(KeyCode.T)) {
-            preview.enabled = false;
-            Teleport();
+        if (!pauseGame.IsGamePaused()) {
+            if (Input.GetKeyDown(KeyCode.T)) {
+                preview.enabled = true;
+            }
+            if (Input.GetKeyUp(KeyCode.T)) {
+                preview.enabled = false;
+                Teleport();
+            }
         }
     }
 

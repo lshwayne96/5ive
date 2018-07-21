@@ -6,7 +6,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class End : MonoBehaviour {
+public class EndScene : MonoBehaviour {
 
     // Expose the scene variable to the editor
     public int scene;
