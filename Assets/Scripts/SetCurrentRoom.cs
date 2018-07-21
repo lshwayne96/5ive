@@ -39,10 +39,13 @@ public class SetCurrentRoom : MonoBehaviour {
 
     void Update() {
         currentPlayerRoom = playerRoomScript.GetCurrentRoom();
+        currentBallRoom = ballRoomScript.GetCurrentRoom();
     }
 
+    /*
     private void OnTriggerExit2D(Collider2D collision) {
         currentPlayerRoom = playerRoomScript.GetCurrentRoom();
         currentBallRoom = ballRoomScript.GetCurrentRoom();
     }
+    */
 }

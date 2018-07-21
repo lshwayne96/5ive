@@ -2,18 +2,19 @@
 
 public class FallThrough : MonoBehaviour {
 
-    private BoxCollider2D boxCollider2D;
+    private PlatformEffector2D platformEffector2D;
+    public LayerMask excludePlayer;
 
     void Start() {
-        boxCollider2D = GetComponent<BoxCollider2D>();
+        platformEffector2D = GetComponent<PlatformEffector2D>();
 
     }
 
     void Update() {
         if (Input.GetKey(KeyCode.DownArrow)) {
-            boxCollider2D.isTrigger = true;
+            platformEffector2D.colliderMask = excludePlayer;
         } else {
-            boxCollider2D.isTrigger = false;
+            platformEffector2D.colliderMask = -1;
         }
     }
 }

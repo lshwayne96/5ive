@@ -36,8 +36,7 @@ public class PlayerCameraSnapFollow : MonoBehaviour {
 
         float offsetX = Mathf.Abs(roomCollider.size.x - 18f) / 2;
         float offsetY = Mathf.Abs(roomCollider.size.y - 10f) / 2;
-
-
+        
         // only update lookahead pos if accelerating or changed direction
         float xMoveDelta = (target.position - m_LastTargetPosition).x;
 
