@@ -2,7 +2,9 @@
 
 public class Crate : MonoBehaviour, IPickable {
 
-    public float distFromPlayer;
+    public float distXFromPlayer;
+    public float distYFromPlayer;
+
     private bool canPickUpCrate;
     private bool crateIsPickedUp;
     private Transform playerTf;
@@ -38,20 +40,22 @@ public class Crate : MonoBehaviour, IPickable {
     }
 
     public void PickUp() {
-        if (playerTf.position.x < 0) {
-            distFromPlayer *= -1;
+        if (playerTf.localScale.x < 0) {
+            distXFromPlayer *= -1;
         }
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        transform.position = playerTf.position + new Vector3(0, distFromPlayer);
+        Destroy(GetComponent<Rigidbody2D>());
+        transform.position = playerTf.position + new Vector3(distXFromPlayer, distYFromPlayer);
         transform.SetParent(playerTf);
-        GetComponent<Rigidbody2D>().gravityScale = 0f;
         crateIsPickedUp = true;
     }
 
     public void Drop() {
         transform.SetParent(null);
+        gameObject.AddComponent<Rigidbody2D>();
         GetComponent<Rigidbody2D>().gravityScale = 1f;
-        distFromPlayer *= -1;
+        if (distXFromPlayer < 0) {
+            distXFromPlayer *= -1;
+        }
         crateIsPickedUp = false;
     }
 }

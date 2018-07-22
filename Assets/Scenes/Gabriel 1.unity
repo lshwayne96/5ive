@@ -3929,11 +3929,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
-  m_LinearDrag: 0
+  m_Mass: 1
+  m_LinearDrag: 5
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 8be6341e1ce3f4cec9902bc34f72d20a, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -4020,7 +4020,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb90f5cfb6ee8452aa664b417317f996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distFromPlayer: 0
+  distXFromPlayer: 0.4
+  distYFromPlayer: -0.3
 --- !u!1001 &1896293575
 Prefab:
   m_ObjectHideFlags: 0
@@ -4225,6 +4226,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114234845959870522, guid: a88338282960a453fb1d126431f05eb0,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4299881487994338, guid: a88338282960a453fb1d126431f05eb0, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4384,6 +4390,16 @@ Prefab:
         type: 2}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: NewSave
+      objectReference: {fileID: 0}
+    - target: {fileID: 114234845959870522, guid: a88338282960a453fb1d126431f05eb0,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114234845959870522, guid: a88338282960a453fb1d126431f05eb0,
+        type: 2}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a88338282960a453fb1d126431f05eb0, type: 2}
