@@ -32,13 +32,11 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         transform.localScale = Vector3.one;
     }
 
-    public void OnPointerClick(PointerEventData eventData) {
-        // If the parent menu is the load menu
+    public void OnPointerClick(PointerEventData pointerEventData) {
         if (GameMenu.IsLoadMenu(parentMenu)) {
 
             // If the button is clicked once by the left button on the mouse
-            if (eventData.button == PointerEventData.InputButton.Left &&
-                eventData.clickCount == 1) {
+            if (IsSingleClick(pointerEventData)) {
                 FileButtonManager buttonManager =
                     transform.parent.GetComponent<FileButtonManager>();
                 /*
@@ -50,13 +48,30 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
             }
 
             // If the button is double clicked by the left button on the mouse
-            if (eventData.button == PointerEventData.InputButton.Left &&
-                eventData.clickCount == 2) {
-                // Load the save file with fileName
-                LoadGame loadGameScript = GetComponent<LoadGame>();
+            if (IsDoubleClick(pointerEventData)) {
+                LoadGame loadGame = GetComponent<LoadGame>();
                 // Load the game file associated with that button
-                loadGameScript.Load(nameLabel.text);
+                loadGame.Load(nameLabel.text);
+            }
+
+        } else if (GameMenu.IsSaveMenu(parentMenu)) {
+
+            // If the button is doubled clicked by the left button on the mouse
+            if (IsDoubleClick(pointerEventData)) {
+                SaveGame saveGame = GetComponent<SaveGame>();
+                // Overwrite the old filew with new game data
+                saveGame.Overwrite(nameLabel.text);
             }
         }
+    }
+
+    private bool IsSingleClick(PointerEventData pointerEventData) {
+        return pointerEventData.button == PointerEventData.InputButton.Left &&
+                          pointerEventData.clickCount == 1;
+    }
+
+    private bool IsDoubleClick(PointerEventData pointerEventData) {
+        return pointerEventData.button == PointerEventData.InputButton.Left &&
+                               pointerEventData.clickCount == 2;
     }
 }

@@ -27,35 +27,49 @@ public class SaveGame : MonoBehaviour {
             transform.parent.parent.GetComponentInChildren<FileButtonManager>();
     }
 
-    // Serialise the game data and save it into a file as named by the user
-    public void Save() {
+    // Save into a new game file
+    public void NewSave() {
         if (!inputField.text.Equals(System.String.Empty)) {
-            // Get the current scene
-            Scene scene = SceneManager.GetActiveScene();
-            // Cache the player data
-            PlayerData playerData = CachePlayerData();
-            // Cache the ball data
-            BallData ballData = CacheBallData();
-            // Cache the state of interactables
-            InteractablesData interactablesData = CacheInteractablesData();
-            // Package the game data into a LevelData instance
-            LevelData levelData = new LevelData(scene, playerData, ballData, interactablesData);
-
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            // Directory to save file into
-            Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
-            // Path of the file to be used for saving
-            saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(inputField.text));
-            FileStream fileStream = File.Create(saveFilePath);
+            Save(inputField.text);
             // Clear the input field
             inputField.text = System.String.Empty;
-
-            // Serialise levelData
-            binaryFormatter.Serialize(fileStream, levelData);
-            fileStream.Close();
-
-            buttonManager.UpdateButtons();
         }
+    }
+
+    // Overwrite an old game file
+    public void Overwrite(String fileName) {
+        Save(fileName);
+    }
+
+    /*
+     * Caches all game data into a LevelData instance,
+     * creates a new or overwrite an old game file,
+     * and serialise the game data
+     */
+    private void Save(String fileName) {
+        // Get the current scene
+        Scene scene = SceneManager.GetActiveScene();
+        // Cache the player data
+        PlayerData playerData = CachePlayerData();
+        // Cache the ball data
+        BallData ballData = CacheBallData();
+        // Cache the state of interactables
+        InteractablesData interactablesData = CacheInteractablesData();
+        // Package the game data into a LevelData instance
+        LevelData levelData = new LevelData(scene, playerData, ballData, interactablesData);
+
+        BinaryFormatter binaryFormatter = new BinaryFormatter();
+        // Directory to save file into
+        Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
+        // Path of the file to be used for saving
+        saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
+        FileStream fileStream = File.Create(saveFilePath);
+
+        // Serialise levelData
+        binaryFormatter.Serialize(fileStream, levelData);
+        fileStream.Close();
+
+        buttonManager.UpdateButtons();
     }
 
     private PlayerData CachePlayerData() {
