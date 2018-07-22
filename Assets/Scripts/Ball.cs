@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public class Ball : MonoBehaviour {
+public class Ball : MonoBehaviour, IPickable {
 
     // Expose the speed variable to the editor
     public float speed = 10f;
@@ -31,13 +31,13 @@ public class Ball : MonoBehaviour {
         // If the player has entered the ball's trigger, the player can pick it up
         if (canPickUpBall) {
             if (Input.GetKeyDown(KeyCode.G) && !playerHasBall) {
-                PlayerPicksUpBall();
+                PickUp();
             }
         }
 
         // Enable the ball to be dropped anytime
         if (Input.GetKeyDown(KeyCode.H) && playerHasBall) {
-            PlayerDropsBall();
+            Drop();
         }
     }
 
@@ -53,15 +53,13 @@ public class Ball : MonoBehaviour {
         }
     }
 
-    // Allow the player to pick up the ball
-    private void PlayerPicksUpBall() {
+    public void PickUp() {
         transform.position = playerTf.position;
         GetComponent<Rigidbody2D>().gravityScale = 0f;
         playerHasBall = true;
     }
 
-    // Allow the player to drop the ball
-    private void PlayerDropsBall() {
+    public void Drop() {
         GetComponent<Rigidbody2D>().gravityScale = 1f;
         playerHasBall = false;
     }
