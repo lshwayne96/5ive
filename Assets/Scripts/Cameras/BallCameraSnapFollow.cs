@@ -14,7 +14,7 @@ public class BallCameraSnapFollow : MonoBehaviour {
     void Update() {
 
         playerCamera = GameObject.FindWithTag("MainCamera").transform;
-        
+
         Vector3 offset = playerCamera.position - SetCurrentRoom.currentPlayerRoom.position;
 
         BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom.GetComponent<BoxCollider2D>();
@@ -25,17 +25,15 @@ public class BallCameraSnapFollow : MonoBehaviour {
         float scaleFactor_y = ballRoomCollider.size.y / playerRoomCollider.size.y;
 
         GetComponent<Camera>().orthographicSize = 5 * Mathf.Min(scaleFactor_x, scaleFactor_y);
-        
-        if (scaleFactor_x > scaleFactor_y)
-        {
+
+        if (scaleFactor_x > scaleFactor_y) {
             player = GameObject.FindWithTag("Player").transform;
             float playerOffset = (player.position - playerCamera.position).x;
             float offSetLimit = (scaleFactor_x / scaleFactor_y / 4f + 0.5f) * 4.5f; //not sure if correct
-            if (Mathf.Abs(playerOffset) > offSetLimit)
-            {
+            if (Mathf.Abs(playerOffset) > offSetLimit) {
                 playerOffset = Mathf.Sign(playerOffset) * offSetLimit;
             }
-            offset += new Vector3(playerOffset,0,0);
+            offset += new Vector3(playerOffset, 0, 0);
         }
 
         gameObject.transform.position =

@@ -7,7 +7,7 @@
 using UnityEngine;
 
 public class PlayerCameraSnapFollow : MonoBehaviour {
-    
+
     private Transform target;
     public float damping = 0;
     public float lookAheadFactor = 0;
@@ -22,8 +22,7 @@ public class PlayerCameraSnapFollow : MonoBehaviour {
     private BoxCollider2D roomCollider;
 
     // Use this for initialization
-    private void Start()
-    {
+    private void Start() {
         target = GameObject.FindWithTag("Player").transform;
         m_LastTargetPosition = target.position;
         m_OffsetZ = (transform.position - target.position).z;
@@ -36,18 +35,15 @@ public class PlayerCameraSnapFollow : MonoBehaviour {
 
         float offsetX = Mathf.Abs(roomCollider.size.x - 18f) / 2;
         float offsetY = Mathf.Abs(roomCollider.size.y - 10f) / 2;
-        
+
         // only update lookahead pos if accelerating or changed direction
         float xMoveDelta = (target.position - m_LastTargetPosition).x;
 
         bool updateLookAheadTarget = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
 
-        if (updateLookAheadTarget)
-        {
+        if (updateLookAheadTarget) {
             m_LookAheadPos = lookAheadFactor * Vector3.right * Mathf.Sign(xMoveDelta);
-        }
-        else
-        {
+        } else {
             m_LookAheadPos = Vector3.MoveTowards(m_LookAheadPos, Vector3.zero, Time.deltaTime * lookAheadReturnSpeed);
         }
 
