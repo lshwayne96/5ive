@@ -75,7 +75,8 @@ public class SaveGame : MonoBehaviour {
     private PlayerData CachePlayerData() {
         Vector2 velocity = player.GetComponent<Rigidbody2D>().velocity;
         Vector3 position = player.transform.position;
-        return new PlayerData(velocity, position);
+        Vector3 localScale = player.transform.localScale;
+        return new PlayerData(velocity, position, localScale);
     }
 
     private BallData CacheBallData() {

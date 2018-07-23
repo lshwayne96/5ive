@@ -43,7 +43,8 @@ public class Crate : MonoBehaviour, IPickable {
         if (playerTf.localScale.x < 0) {
             distXFromPlayer *= -1;
         }
-        Destroy(GetComponent<Rigidbody2D>());
+        GetComponent<Rigidbody2D>().gravityScale = 0;
+        //Destroy(GetComponent<Rigidbody2D>());
         transform.position = playerTf.position + new Vector3(distXFromPlayer, distYFromPlayer);
         transform.SetParent(playerTf);
         crateIsPickedUp = true;
@@ -51,7 +52,7 @@ public class Crate : MonoBehaviour, IPickable {
 
     public void Drop() {
         transform.SetParent(null);
-        gameObject.AddComponent<Rigidbody2D>();
+        //gameObject.AddComponent<Rigidbody2D>();
         GetComponent<Rigidbody2D>().gravityScale = 1f;
         if (distXFromPlayer < 0) {
             distXFromPlayer *= -1;

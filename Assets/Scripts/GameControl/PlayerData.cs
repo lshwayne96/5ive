@@ -19,15 +19,20 @@ public class PlayerData {
     // Vector3 position
     private float pX;
     private float pY;
-    private float pZ;
 
-    public PlayerData(Vector2 velocity, Vector3 position) {
+    private float sX;
+    private float sY;
+    private float sZ;
+
+    public PlayerData(Vector2 velocity, Vector3 position, Vector3 localScale) {
         this.vX = velocity.x;
         this.vY = velocity.y;
 
         this.pX = position.x;
         this.pY = position.y;
-        this.pZ = position.z;
+
+        this.sX = localScale.x;
+        this.sY = localScale.y;
     }
 
     // Reconstruct the velocity
@@ -37,7 +42,11 @@ public class PlayerData {
 
     // Reconstruct the position
     private Vector3 GetPosition() {
-        return new Vector3(pX, pY, pZ);
+        return new Vector3(pX, pY);
+    }
+
+    private Vector3 GetLocalScale() {
+        return new Vector3(sX, sY);
     }
 
     public void Restore() {
@@ -45,6 +54,7 @@ public class PlayerData {
         GameObject player = GameObject.FindWithTag("Player");
         player.GetComponent<Rigidbody2D>().velocity = GetVelocity();
         player.transform.position = GetPosition();
+        player.transform.localScale = GetLocalScale();
 
         // Restore player camera
         player.GetComponent<DetectRoom>().SetCurrentRoom();
