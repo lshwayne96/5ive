@@ -20,7 +20,10 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
     private string dateTimePattern;
     private bool isDoubleClick;
+    private bool hasOverwritten;
     private GameObject parentMenu;
+
+
 
     // Initialise the button
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
@@ -61,6 +64,9 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
                 SaveGame saveGame = GetComponent<SaveGame>();
                 // Overwrite the old filew with new game data
                 saveGame.Overwrite(nameLabel.text);
+                hasOverwritten = true;
+                NotificationManager.hasOverwritten = true;
+                NotificationManager.OverwriteSuccessful();
             }
         }
     }

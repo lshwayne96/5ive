@@ -2,8 +2,8 @@
 
 public class StandButton : MonoBehaviour {
 
-    public float waitDuration = 3;
-    public float translationDistY = 0.15f;
+    private float waitDuration;
+    private float translationDistY;
 
     private Vector3 startPosition;
     private Vector3 endPosition;
@@ -17,88 +17,108 @@ public class StandButton : MonoBehaviour {
     private float firstTime;
     private Direction movementDirection;
 
+    private Vector3 originalStartPosition;
+    private Vector3 originalEndPosition;
+
     // Movement speed in units/sec.
     public float speed = 1.0F;
 
-    // Use this for initialization
     void Start() {
-        startPosition = gameObject.transform.position;
-        endPosition = startPosition - new Vector3(0, translationDistY, 0);
+        waitDuration = 3f;
+        translationDistY = 0.15f;
+
+
+        startPosition = originalStartPosition = gameObject.transform.position;
+        Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
+        endPosition = originalEndPosition = startPosition - vectorDifference;
         journeyLength = Vector3.Distance(startPosition, endPosition);
-        movementDirection = Direction.Down;
+
         isAtRest = true;
+        movementDirection = Direction.Down;
     }
 
-    // Follows the target position like with a spring
     void Update() {
         // Move
         if (move) {
             Move();
+            Debug.Log("Moving");
         }
 
         // While moving and reaching the end
         if (move && !isAtRest) {
-            if (HasReachedEnd(movementDirection)) {
-                Debug.Log("Reached end");
+            // The end position has been reached
+            if (HasReachedFinalPosition(movementDirection)) {
                 // Stop moving
                 move = false;
-                // Reached the final position
                 isAtRest = true;
 
-                if (movementDirection == Direction.Down) {
+                if (movementDirection == Direction.Down) { // Was moving down
                     // Start waiting
                     wait = true;
                     // Get the time at which the waiting begins
                     startTime = Time.time;
-                } else {
-                    Debug.Log(move);
-                    Debug.Log(wait);
-                    Debug.Log(isAtRest);
-                    Debug.Log(isBeingPressed);
                 }
+
+                // Swap the start and end position
+                Vector3 temp = startPosition;
+                startPosition = endPosition;
+                endPosition = temp;
+                ChangeMovementDirection();
             }
         }
 
         // Finished moving and now start waiting
         if (wait) {
+            Debug.Log("IsBeingPressed: " + isBeingPressed);
+            Debug.Log("Move: " + move);
+            // If the wait is over and the stand button is not being pressed
             if (IsWaitOver() && !isBeingPressed) {
-                Debug.Log("Done waiting");
+                Debug.Log("Wait is over");
                 move = true;
                 isAtRest = false;
                 wait = false;
 
-                Vector3 temp = startPosition;
-                startPosition = endPosition;
-                endPosition = temp;
-                ChangeMovementDirection();
-
+                startTime = Time.time;
                 Move();
             }
+        }
+
+        if (isAtRest && movementDirection == Direction.Up) {
+            endPosition = originalStartPosition;
+            startPosition = originalEndPosition;
+        } else if (isAtRest && movementDirection == Direction.Down) {
+
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        Debug.Log("First contact");
         if (!move && isAtRest && !wait) {
+            Debug.Log("Enter");
             startTime = Time.time;
             move = true;
             isAtRest = false;
             isBeingPressed = true;
         }
+
+        if (move && !isAtRest && !wait && movementDirection == Direction.Up) {
+            isBeingPressed = true;
+            Vector3 temp = startPosition;
+            startPosition = endPosition;
+            endPosition = temp;
+            ChangeMovementDirection();
+            startPosition = gameObject.transform.position;
+        }
     }
 
     private void OnCollisionStay2D(Collision2D collision) {
-        Debug.Log("Is being pressed");
         isBeingPressed = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision) {
-        if (isAtRest) {
-            isBeingPressed = false;
-        }
+        isBeingPressed = false;
     }
 
-    private bool HasReachedEnd(Direction direction) {
+    private bool HasReachedFinalPosition(Direction direction) {
         if (direction == Direction.Down) {
             return gameObject.transform.position.y <= endPosition.y;
         } else {
@@ -107,7 +127,8 @@ public class StandButton : MonoBehaviour {
     }
 
     private bool IsWaitOver() {
-        return Time.time - firstTime >= waitDuration;
+        float currentWaitDuration = Time.time - startTime;
+        return currentWaitDuration >= waitDuration;
     }
 
     private void Move() {
