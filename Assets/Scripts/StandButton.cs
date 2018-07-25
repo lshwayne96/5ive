@@ -1,6 +1,26 @@
-﻿using UnityEngine;
+﻿/*
+ * This script encapsulates the functionality of a stand button.
+ * When a gameObject is on a stand button, the stand button will
+ * depress (move towards the ground).
+ * 
+ * After a certain amount of time (as dictated by waitDuration),
+ * the stand button will resurface from the ground.
+ * While the stand button is resurfacing, it is still sensitive to
+ * collisions and will still still depress if it senses one.
+ * 
+ * A stand button can be paired with another gameObject with an
+ * attached script that implements the IMovable interface.
+ * When the stand button is depressed, the corresponding gameObject will
+ * execute its Move().
+ */
 
-public class StandButton : MonoBehaviour {
+using UnityEngine;
+
+public class StandButton : MonoBehaviour, IMovable {
+
+    public GameObject movable;
+    private IMovable movableScript;
+    private bool hasMoved;
 
     private float waitDuration;
     private float translationDistY;
@@ -24,9 +44,10 @@ public class StandButton : MonoBehaviour {
     public float speed = 1.0F;
 
     void Start() {
+        movableScript = movable.GetComponent<IMovable>();
+
         waitDuration = 3f;
         translationDistY = 0.15f;
-
 
         startPosition = originalStartPosition = gameObject.transform.position;
         Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
@@ -41,7 +62,6 @@ public class StandButton : MonoBehaviour {
         // Move
         if (move) {
             Move();
-            Debug.Log("Moving");
         }
 
         // While moving and reaching the end
@@ -69,11 +89,8 @@ public class StandButton : MonoBehaviour {
 
         // Finished moving and now start waiting
         if (wait) {
-            Debug.Log("IsBeingPressed: " + isBeingPressed);
-            Debug.Log("Move: " + move);
             // If the wait is over and the stand button is not being pressed
             if (IsWaitOver() && !isBeingPressed) {
-                Debug.Log("Wait is over");
                 move = true;
                 isAtRest = false;
                 wait = false;
@@ -89,11 +106,17 @@ public class StandButton : MonoBehaviour {
         } else if (isAtRest && movementDirection == Direction.Down) {
 
         }
+
+        if (!hasMoved && isAtRest && movementDirection == Direction.Up) {
+            movableScript.Move();
+            hasMoved = true;
+        } else if (hasMoved && isAtRest && movementDirection == Direction.Down) {
+            hasMoved = false;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
         if (!move && isAtRest && !wait) {
-            Debug.Log("Enter");
             startTime = Time.time;
             move = true;
             isAtRest = false;
@@ -131,7 +154,7 @@ public class StandButton : MonoBehaviour {
         return currentWaitDuration >= waitDuration;
     }
 
-    private void Move() {
+    public void Move() {
         // Distance moved = time * speed.
         float distCovered = (Time.time - startTime) * speed;
 
@@ -148,6 +171,10 @@ public class StandButton : MonoBehaviour {
         } else {
             movementDirection = Direction.Up;
         }
+    }
+
+    private bool IsAtOriginalPosition() {
+        return isAtRest && movementDirection == Direction.Down;
     }
 }
 

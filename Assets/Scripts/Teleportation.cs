@@ -12,6 +12,8 @@ public class Teleportation : MonoBehaviour {
     private GameObject mainCamera;
     private PauseGame pauseGame;
 
+    private bool inAllowedLocation;
+
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
@@ -19,7 +21,7 @@ public class Teleportation : MonoBehaviour {
     }
 
     void Update() {
-        if (!pauseGame.IsGamePaused()) {
+        if (CanTeleport()) {
             if (Input.GetKeyDown(KeyCode.T)) {
                 preview.enabled = true;
             }
@@ -27,6 +29,18 @@ public class Teleportation : MonoBehaviour {
                 preview.enabled = false;
                 Teleport();
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("SpecialRoom")) {
+            inAllowedLocation = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("SpecialRoom")) {
+            inAllowedLocation = false;
         }
     }
 
@@ -48,7 +62,11 @@ public class Teleportation : MonoBehaviour {
         float scaleFactor_x = playerRoomCollider.size.x / ballRoomCollider.size.x;
         float scaleFactor_y = playerRoomCollider.size.y / ballRoomCollider.size.y;
 
-        transform.position += positionDifference + Vector3.Scale(playerOffset, new Vector3(1/scaleFactor_x - 1, 1/scaleFactor_y - 1, 0));
+        transform.position += positionDifference + Vector3.Scale(playerOffset, new Vector3(1 / scaleFactor_x - 1, 1 / scaleFactor_y - 1, 0));
         SetCurrentRoom.ball.transform.position -= positionDifference - Vector3.Scale(ballOffset, new Vector3(scaleFactor_x - 1, scaleFactor_y - 1, 0));
+    }
+
+    private bool CanTeleport() {
+        return !pauseGame.IsGamePaused() && inAllowedLocation;
     }
 }

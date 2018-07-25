@@ -1,20 +1,17 @@
 ﻿using UnityEngine;
 
-public class Booster : MonoBehaviour {
-    private Rigidbody2D ballRb;
+public class Booster : MonoBehaviour, IMovable {
+
+    // The force at which the gameObject's rigid body is pushed
+    private Vector2 force;
+    private Rigidbody2D rb;
 
     void Start() {
-        ballRb = GameObject.FindWithTag("TeleportationBall").GetComponent<Rigidbody2D>();
+        force = new Vector2(0, 20);
+        rb = GetComponent<Rigidbody2D>();
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.F)) {
-            Boost();
-        }
-    }
-
-    public void Boost() {
-        Vector2 force = new Vector2(1, 10);
-        ballRb.AddForce(force, ForceMode2D.Impulse);
+    public void Move() {
+        rb.AddForce(force, ForceMode2D.Impulse);
     }
 }
