@@ -15,6 +15,7 @@ TagManager:
   - Interactable
   - Pause
   - SpecialRoom
+  - Notifications
   layers:
   - Default
   - TransparentFX

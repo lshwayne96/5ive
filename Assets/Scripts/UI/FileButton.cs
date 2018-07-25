@@ -23,7 +23,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     private bool hasOverwritten;
     private GameObject parentMenu;
 
-
+    private NotificationsManager notificationsManager;
 
     // Initialise the button
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
@@ -33,6 +33,9 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
         parentMenu = GameMenu.SetParentMenu(parentMenu);
         transform.localScale = Vector3.one;
+
+        notificationsManager = GameObject.FindWithTag("Notifications")
+                                         .GetComponent<NotificationsManager>();
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
@@ -65,8 +68,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
                 // Overwrite the old filew with new game data
                 saveGame.Overwrite(nameLabel.text);
                 hasOverwritten = true;
-                NotificationManager.hasOverwritten = true;
-                NotificationManager.OverwriteSuccessful();
+                notificationsManager.OverwriteSuccessful();
             }
         }
     }
