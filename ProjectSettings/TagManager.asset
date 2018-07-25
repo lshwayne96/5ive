@@ -14,6 +14,7 @@ TagManager:
   - DeleteAllButton
   - Interactable
   - Pause
+  - SpecialRoom
   layers:
   - Default
   - TransparentFX

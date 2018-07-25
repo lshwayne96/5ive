@@ -5,6 +5,7 @@
  */
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Teleportation : MonoBehaviour {
 
@@ -12,12 +13,17 @@ public class Teleportation : MonoBehaviour {
     private GameObject mainCamera;
     private PauseGame pauseGame;
 
-    private bool inAllowedLocation;
+    // Whether the scene allow teleportation freely
+    private bool isInAllowedScene;
+    // Whether the location allows teleportation freely given that the scene does not
+    private bool isInAllowedLocation;
 
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
         pauseGame = GameObject.FindWithTag("Pause").GetComponent<PauseGame>();
+
+        isInAllowedScene = IsInAllowedScene();
     }
 
     void Update() {
@@ -34,13 +40,13 @@ public class Teleportation : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("SpecialRoom")) {
-            inAllowedLocation = true;
+            isInAllowedLocation = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("SpecialRoom")) {
-            inAllowedLocation = false;
+            isInAllowedLocation = false;
         }
     }
 
@@ -49,16 +55,16 @@ public class Teleportation : MonoBehaviour {
         Vector3 positionDifference =
             SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentPlayerRoom.position;
 
-        //Offset of player from centre of room
+        // Offset of player from centre of room
         Vector3 playerOffset = transform.position - SetCurrentRoom.currentPlayerRoom.position;
 
-        //Offset of ball from centre of room
+        // Offset of ball from centre of room
         Vector3 ballOffset = SetCurrentRoom.ball.transform.position - SetCurrentRoom.currentBallRoom.position;
 
         BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom.GetComponent<BoxCollider2D>();
         BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoom.GetComponent<BoxCollider2D>();
 
-        //Difference in scale of 2 rooms
+        // Difference in scale of 2 rooms
         float scaleFactor_x = playerRoomCollider.size.x / ballRoomCollider.size.x;
         float scaleFactor_y = playerRoomCollider.size.y / ballRoomCollider.size.y;
 
@@ -66,7 +72,21 @@ public class Teleportation : MonoBehaviour {
         SetCurrentRoom.ball.transform.position -= positionDifference - Vector3.Scale(ballOffset, new Vector3(scaleFactor_x - 1, scaleFactor_y - 1, 0));
     }
 
-    private bool CanTeleport() {
-        return !pauseGame.IsGamePaused() && inAllowedLocation;
+    private bool IsInAllowedScene() {
+        int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        return !(sceneBuildIndex == (int)Scenes.Denial
+                 || sceneBuildIndex == (int)Scenes.Anger);
     }
+
+    private bool CanTeleport() {
+        if (!pauseGame.IsGamePaused()) {
+            return isInAllowedScene || isInAllowedLocation;
+        } else {
+            return false;
+        }
+    }
+}
+
+enum Scenes {
+    Denial = 1, Anger, Bargaining, Depression, Acceptance
 }

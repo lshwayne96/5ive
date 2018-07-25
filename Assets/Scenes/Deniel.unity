@@ -721,7 +721,7 @@ GameObject:
   - component: {fileID: 163067655}
   m_Layer: 9
   m_Name: Room
-  m_TagString: Untagged
+  m_TagString: SpecialRoom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3385,7 +3385,7 @@ GameObject:
   - component: {fileID: 1483078655}
   m_Layer: 0
   m_Name: 1x2 Small Room
-  m_TagString: Untagged
+  m_TagString: SpecialRoom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5327,7 +5327,7 @@ GameObject:
   - component: {fileID: 2115624971}
   m_Layer: 9
   m_Name: Room (1)
-  m_TagString: Untagged
+  m_TagString: SpecialRoom
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
