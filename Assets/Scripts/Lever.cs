@@ -6,7 +6,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Lever : MonoBehaviour, IInteractable {
+public class Lever : MonoBehaviour {
 
     // Expose the interactable variable to the editor
     public GameObject interactable;
@@ -14,6 +14,9 @@ public class Lever : MonoBehaviour, IInteractable {
     private bool hasRotated;
     private bool interactableState;
     private bool hasEnteredTrigger;
+    private bool toResume;
+    private bool hasSwitchedPosition;
+
     private Vector3 currentAngle;
     private Vector3 targetAngle;
     private float angleOfRotation;
@@ -24,6 +27,8 @@ public class Lever : MonoBehaviour, IInteractable {
 
     private Quaternion startRotation;
     private Quaternion endRotation;
+    private Quaternion prevRotation;
+    private Quaternion prevEndRotation;
 
     /*
      * Awake() is used instead of Start() to allow the lever
@@ -31,7 +36,16 @@ public class Lever : MonoBehaviour, IInteractable {
      * to its previous state when a new game is loaded
      * */
     void Awake() {
-        interactableState = interactable.activeSelf;
+        /*
+         * It is possible that a number of levers control
+         * a gameObject in unison. In that case, no gameObject
+         * will be attached as an interactable.
+         * The InteractionManager will manage their collective
+         * interaction.
+         */
+        if (interactable != null) {
+            interactableState = interactable.activeSelf;
+        }
         angleOfRotation = 90f;
 
         Vector3 angleDifference = Vector3.back * angleOfRotation;
@@ -56,7 +70,11 @@ public class Lever : MonoBehaviour, IInteractable {
     void Update() {
         if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
             startTime = Time.time;
-            StartCoroutine(Move());
+            StartCoroutine(Rotate());
+        }
+
+        if (toResume) {
+            StartCoroutine(Rotate(startTime, prevRotation, prevEndRotation));
         }
     }
 
@@ -74,7 +92,7 @@ public class Lever : MonoBehaviour, IInteractable {
         }
     }
 
-    private IEnumerator Move() {
+    private IEnumerator Rotate() {
         float distCovered;
         float fracJourney = 0;
 
@@ -91,10 +109,67 @@ public class Lever : MonoBehaviour, IInteractable {
             yield return null;
         }
 
-        ChangeInteractableState();
+        if (interactable != null) {
+            ChangeInteractableState();
+        }
+
         Quaternion temp = startRotation;
         startRotation = endRotation;
         endRotation = temp;
+
+        hasSwitchedPosition = !hasSwitchedPosition;
+        hasRotated = true;
+    }
+
+    private IEnumerator Rotate(float newStartTime, Quaternion prevRotation, Quaternion prevEndRotation) {
+        float distCovered;
+        float fracJourney = 0;
+
+        while (fracJourney < 1) {
+            // Distance moved = time * speed.
+            distCovered = (Time.time - newStartTime) * speed;
+
+            // Fraction of journey completed = current distance divided by total distance.
+            fracJourney = distCovered / journeyLength;
+
+            // Set our position as a fraction of the distance between the markers.
+            transform.rotation = Quaternion.Slerp(prevRotation, prevEndRotation, fracJourney);
+
+            yield return null;
+        }
+
+        if (interactable != null) {
+            ChangeInteractableState();
+        }
+
+        Quaternion temp = startRotation;
+        startRotation = endRotation;
+        endRotation = temp;
+        hasRotated = true;
+
+        hasSwitchedPosition = !hasSwitchedPosition;
+        toResume = false;
+    }
+
+    public void SetPrevRotation(Quaternion prevRotation) {
+        this.prevRotation = prevRotation;
+    }
+
+    public void SetPrevEndRotation(Quaternion prevEndRotation) {
+        this.prevEndRotation = prevEndRotation;
+    }
+
+    public void ResumeRotation() {
+        toResume = true;
+        startTime = Time.time;
+    }
+
+    public void SwitchRotation() {
+        transform.rotation = endRotation;
+    }
+
+    public bool HasRotated() {
+        return hasRotated;
     }
 
     // Controls the interactable assigned to the lever
@@ -104,11 +179,9 @@ public class Lever : MonoBehaviour, IInteractable {
     }
 
     public void Toggle() {
-        Move();
+        Rotate();
         ChangeInteractableState();
     }
 
-    public bool HasToggled() {
-        return hasRotated;
-    }
 }
+

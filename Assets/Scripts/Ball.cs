@@ -6,7 +6,7 @@
 
 using UnityEngine;
 
-public class Ball : MonoBehaviour, IPickable {
+public class Ball : MonoBehaviour {
 
     // Expose the speed variable to the editor
     public float speed = 10f;
@@ -53,13 +53,13 @@ public class Ball : MonoBehaviour, IPickable {
         }
     }
 
-    public void PickUp() {
+    private void PickUp() {
         transform.position = playerTf.position;
         GetComponent<Rigidbody2D>().gravityScale = 0f;
         playerHasBall = true;
     }
 
-    public void Drop() {
+    private void Drop() {
         GetComponent<Rigidbody2D>().gravityScale = 1f;
         playerHasBall = false;
     }

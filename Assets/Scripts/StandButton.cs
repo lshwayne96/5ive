@@ -16,10 +16,10 @@
 
 using UnityEngine;
 
-public class StandButton : MonoBehaviour, IMovable {
+public class StandButton : MonoBehaviour {
 
-    public GameObject movable;
-    private IMovable movableScript;
+    public GameObject interactable;
+    private IIndirectInteractable indirectInteraction;
     private bool hasMoved;
 
     private float waitDuration;
@@ -44,7 +44,7 @@ public class StandButton : MonoBehaviour, IMovable {
     public float speed = 1.0F;
 
     void Start() {
-        movableScript = movable.GetComponent<IMovable>();
+        indirectInteraction = interactable.GetComponent<IIndirectInteractable>();
 
         waitDuration = 3f;
         translationDistY = 0.15f;
@@ -108,7 +108,7 @@ public class StandButton : MonoBehaviour, IMovable {
         }
 
         if (!hasMoved && isAtRest && movementDirection == Direction.Up) {
-            movableScript.Move();
+            indirectInteraction.Interact();
             hasMoved = true;
         } else if (hasMoved && isAtRest && movementDirection == Direction.Down) {
             hasMoved = false;
@@ -178,4 +178,4 @@ public class StandButton : MonoBehaviour, IMovable {
     }
 }
 
-enum Direction { Up, Down };
+public enum Direction { Up, Down };
