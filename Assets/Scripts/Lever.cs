@@ -3,6 +3,7 @@
  * It requires the gameObject of interest to be dragged to interactable.
  */
 
+using System.Collections;
 using UnityEngine;
 
 public class Lever : MonoBehaviour, IInteractable {
@@ -17,6 +18,13 @@ public class Lever : MonoBehaviour, IInteractable {
     private Vector3 targetAngle;
     private float angleOfRotation;
 
+    private float startTime;
+    private float journeyLength;
+    private float speed;
+
+    private Quaternion startRotation;
+    private Quaternion endRotation;
+
     /*
      * Awake() is used instead of Start() to allow the lever
      * to be rotated by Restore() in InteractablesData
@@ -26,9 +34,18 @@ public class Lever : MonoBehaviour, IInteractable {
         interactableState = interactable.activeSelf;
         angleOfRotation = 90f;
 
-        // Cache both the currentAngle and targetAngle for convenience
+        Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
-        targetAngle = transform.eulerAngles + Vector3.back * angleOfRotation;
+        targetAngle = transform.eulerAngles + angleDifference;
+
+        startRotation = transform.rotation;
+        Vector3 eulerAngles = transform.eulerAngles;
+        endRotation = Quaternion.Euler(eulerAngles + angleDifference);
+    }
+
+    void Start() {
+        speed = 300f;
+        journeyLength = Vector3.Distance(targetAngle, currentAngle);
     }
 
     /* 
@@ -38,8 +55,8 @@ public class Lever : MonoBehaviour, IInteractable {
     */
     void Update() {
         if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
-            RotateLever();
-            ChangeInteractableState();
+            startTime = Time.time;
+            StartCoroutine(Move());
         }
     }
 
@@ -57,15 +74,27 @@ public class Lever : MonoBehaviour, IInteractable {
         }
     }
 
-    private void RotateLever() {
-        transform.eulerAngles = Vector3.Lerp(currentAngle, targetAngle, 1);
-        hasRotated = !hasRotated;
+    private IEnumerator Move() {
+        float distCovered;
+        float fracJourney = 0;
 
-        // Swap the currentAngle and targetAngle
-        Vector3 temp;
-        temp = currentAngle;
-        currentAngle = targetAngle;
-        targetAngle = temp;
+        while (fracJourney < 1) {
+            // Distance moved = time * speed.
+            distCovered = (Time.time - startTime) * speed;
+
+            // Fraction of journey completed = current distance divided by total distance.
+            fracJourney = distCovered / journeyLength;
+
+            // Set our position as a fraction of the distance between the markers.
+            transform.rotation = Quaternion.Slerp(startRotation, endRotation, fracJourney);
+
+            yield return null;
+        }
+
+        ChangeInteractableState();
+        Quaternion temp = startRotation;
+        startRotation = endRotation;
+        endRotation = temp;
     }
 
     // Controls the interactable assigned to the lever
@@ -75,7 +104,7 @@ public class Lever : MonoBehaviour, IInteractable {
     }
 
     public void Toggle() {
-        RotateLever();
+        Move();
         ChangeInteractableState();
     }
 
