@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114059241275795482}
   m_Layer: 0
   m_Name: StandButton
-  m_TagString: DirectInteractable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

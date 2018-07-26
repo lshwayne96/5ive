@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 50774547347310412}
   m_Layer: 0
   m_Name: Trap Door Large
-  m_TagString: IndirectInteractable
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

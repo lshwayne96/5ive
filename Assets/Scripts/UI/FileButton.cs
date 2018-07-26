@@ -10,6 +10,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class FileButton : MonoBehaviour, IPointerClickHandler {
 
@@ -28,10 +29,16 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     // Initialise the button
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
         nameLabel.text = fileName;
-        levelLabel.text = "Level " + sceneBuildIndex.ToString();
+
+        Scene scene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
+        int prefixLength = 2;
+        String sceneName = scene.name.Substring(prefixLength);
+        levelLabel.text = sceneName;
+
         // f stands for full date/time pattern (short time)
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
         parentMenu = GameMenu.SetParentMenu(parentMenu);
+
         transform.localScale = Vector3.one;
 
         notificationsManager = GameObject.FindWithTag("Notifications")

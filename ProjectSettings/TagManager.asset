@@ -16,8 +16,7 @@ TagManager:
   - Pause
   - SpecialRoom
   - Notifications
-  - DirectInteractable
-  - IndirectInteractable
+  - Lever
   layers:
   - Default
   - TransparentFX
