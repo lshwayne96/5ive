@@ -3,8 +3,8 @@
  * interacting with the attached gameObject.
  */
 
-using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoadSceneOnClick : MonoBehaviour {
 

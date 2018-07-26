@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Main Menu.unity
+    path: Assets/Scenes/0_Main Menu.unity
     guid: 85fbbdeaf0ae64ff3a27d984b5bee1e9
   - enabled: 1
-    path: Assets/Scenes/Deniel.unity
+    path: Assets/Scenes/1_Deniel.unity
     guid: 61f5a9e94ee7844c3ab81058c36da2f5
   - enabled: 1
-    path: Assets/Scenes/Anger.unity
+    path: Assets/Scenes/2_Anger.unity
     guid: 3e5a5702c6a004cb7b8ed23caa85aa24
   m_configObjects: {}
