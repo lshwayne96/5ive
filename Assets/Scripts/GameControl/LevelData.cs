@@ -15,13 +15,16 @@ public class LevelData {
     private BallData ballData;
 
     private LeverData[] leverDatas;
+    private StandButtonData[] standButtonDatas;
 
     public LevelData(Scene scene, PlayerData playerData,
-                     BallData ballData, LeverData[] leverDatas) {
+                     BallData ballData, LeverData[] leverDatas,
+                     StandButtonData[] standButtonDatas) {
         this.sceneBuildIndex = scene.buildIndex;
         this.playerData = playerData;
         this.ballData = ballData;
         this.leverDatas = leverDatas;
+        this.standButtonDatas = standButtonDatas;
     }
 
     public void Restore() {
@@ -35,6 +38,15 @@ public class LevelData {
         for (int i = 0; i < numLevers; i++) {
             levers[i] = leverGameObjects[i].GetComponent<Lever>();
             leverDatas[i].Restore(levers[i]);
+        }
+
+        GameObject[] standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");
+        int numStandButtons = standButtonGameObjects.Length;
+        StandButton[] standButtons = new StandButton[numStandButtons];
+
+        for (int i = 0; i < numStandButtons; i++) {
+            standButtons[i] = standButtonGameObjects[i].GetComponent<StandButton>();
+            standButtonDatas[i].Restore(standButtons[i]);
         }
     }
 

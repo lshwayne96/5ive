@@ -19,11 +19,9 @@ public class RestoreGame : MonoBehaviour {
         if (restoreGame == null) {
             DontDestroyOnLoad(gameObject);
             restoreGame = this;
-            //Debug.Log("Make this the restoreGame");
 
         } else if (restoreGame != this) {
             Destroy(gameObject);
-            //Debug.Log("This is not the restoreGame");
         }
     }
 

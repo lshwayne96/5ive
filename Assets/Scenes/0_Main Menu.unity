@@ -113,6 +113,48 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &840342964
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 375
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 136.29999
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4997968407420476, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bbb01756c753b4630a1d35de0d9630e6, type: 2}
+  m_IsPrefabAsset: 0
 --- !u!1 &1717409962
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +408,11 @@ Prefab:
         type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 114235194842864464, guid: 14ff89ba8311b4ca0a06072e91a8ce93,
+        type: 2}
+      propertyPath: m_Text
+      value: Bargaining
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14ff89ba8311b4ca0a06072e91a8ce93, type: 2}

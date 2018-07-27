@@ -11,11 +11,13 @@ public class Lever : MonoBehaviour {
     // Expose the interactable variable to the editor
     public GameObject interactable;
 
-    private bool hasRotated;
+    private PauseGame pauseGame;
+
     private bool interactableState;
     private bool hasEnteredTrigger;
     private bool toResume;
-    private bool hasSwitchedPosition;
+    private bool hasSwitchedRotation;
+    private bool isRotating;
 
     private Vector3 currentAngle;
     private Vector3 targetAngle;
@@ -48,6 +50,8 @@ public class Lever : MonoBehaviour {
         }
         angleOfRotation = 90f;
 
+        pauseGame = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseGame>();
+
         Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
         targetAngle = transform.eulerAngles + angleDifference;
@@ -70,10 +74,12 @@ public class Lever : MonoBehaviour {
     void Update() {
         if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
             startTime = Time.time;
+            isRotating = true;
             StartCoroutine(Rotate());
         }
 
         if (toResume) {
+            isRotating = true;
             StartCoroutine(Rotate(startTime, prevRotation, prevEndRotation));
         }
     }
@@ -97,15 +103,18 @@ public class Lever : MonoBehaviour {
         float fracJourney = 0;
 
         while (fracJourney < 1) {
-            // Distance moved = time * speed.
-            distCovered = (Time.time - startTime) * speed;
+            if (!pauseGame.IsGamePaused()) {
+                // Distance moved = time * speed.
+                distCovered = (Time.time - startTime) * speed;
 
-            // Fraction of journey completed = current distance divided by total distance.
-            fracJourney = distCovered / journeyLength;
+                // Fraction of journey completed = current distance divided by total distance.
+                fracJourney = distCovered / journeyLength;
 
-            // Set our position as a fraction of the distance between the markers.
-            transform.rotation = Quaternion.Slerp(startRotation, endRotation, fracJourney);
-
+                // Set our position as a fraction of the distance between the markers.
+                transform.rotation = Quaternion.Slerp(startRotation, endRotation, fracJourney);
+            } else {
+                startTime = Time.time;
+            }
             yield return null;
         }
 
@@ -117,15 +126,15 @@ public class Lever : MonoBehaviour {
         startRotation = endRotation;
         endRotation = temp;
 
-        hasSwitchedPosition = !hasSwitchedPosition;
-        hasRotated = true;
+        hasSwitchedRotation = !hasSwitchedRotation;
+        isRotating = false;
     }
 
     private IEnumerator Rotate(float newStartTime, Quaternion prevRotation, Quaternion prevEndRotation) {
         float distCovered;
         float fracJourney = 0;
 
-        while (fracJourney < 1) {
+        while (fracJourney < 1 && !pauseGame.IsGamePaused()) {
             // Distance moved = time * speed.
             distCovered = (Time.time - newStartTime) * speed;
 
@@ -145,9 +154,9 @@ public class Lever : MonoBehaviour {
         Quaternion temp = startRotation;
         startRotation = endRotation;
         endRotation = temp;
-        hasRotated = true;
 
-        hasSwitchedPosition = !hasSwitchedPosition;
+        hasSwitchedRotation = !hasSwitchedRotation;
+        isRotating = false;
         toResume = false;
     }
 
@@ -168,10 +177,6 @@ public class Lever : MonoBehaviour {
         transform.rotation = endRotation;
     }
 
-    public bool HasRotated() {
-        return hasRotated;
-    }
-
     // Controls the interactable assigned to the lever
     private void ChangeInteractableState() {
         interactable.SetActive(!interactableState);
@@ -181,6 +186,18 @@ public class Lever : MonoBehaviour {
     public void Toggle() {
         Rotate();
         ChangeInteractableState();
+    }
+
+    public bool HasSwitchedRotation() {
+        return hasSwitchedRotation;
+    }
+
+    public LeverData CacheData() {
+        Debug.Log(transform.rotation);
+        Debug.Log(endRotation);
+        Debug.Log(hasSwitchedRotation);
+        Debug.Log(isRotating);
+        return new LeverData(transform.rotation, endRotation, hasSwitchedRotation, isRotating);
     }
 
 }

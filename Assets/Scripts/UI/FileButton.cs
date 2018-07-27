@@ -21,7 +21,6 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
     private string dateTimePattern;
     private bool isDoubleClick;
-    private bool hasOverwritten;
     private GameObject parentMenu;
 
     private NotificationsManager notificationsManager;
@@ -30,9 +29,8 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
         nameLabel.text = fileName;
 
-        Scene scene = SceneManager.GetSceneByBuildIndex(sceneBuildIndex);
         int prefixLength = 2;
-        String sceneName = scene.name.Substring(prefixLength);
+        String sceneName = SceneNames.GetSceneName(sceneBuildIndex).Substring(prefixLength);
         levelLabel.text = sceneName;
 
         // f stands for full date/time pattern (short time)
@@ -41,8 +39,10 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
         transform.localScale = Vector3.one;
 
-        notificationsManager = GameObject.FindWithTag("Notifications")
-                                         .GetComponent<NotificationsManager>();
+        if (GameMenu.IsSaveMenu(parentMenu)) {
+            notificationsManager = GameObject.FindWithTag("Notifications")
+                                             .GetComponent<NotificationsManager>();
+        }
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
@@ -74,7 +74,6 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
                 SaveGame saveGame = GetComponent<SaveGame>();
                 // Overwrite the old filew with new game data
                 saveGame.Overwrite(nameLabel.text);
-                hasOverwritten = true;
                 notificationsManager.OverwriteSuccessful();
             }
         }

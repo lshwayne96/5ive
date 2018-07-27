@@ -14,41 +14,31 @@ public class LeverData {
     private float qEZ;
     private float qEW;
 
-    private float qCX;
-    private float qCY;
-    private float qCZ;
-    private float qCW;
-
-    private bool hasSwitchedPosition;
+    private bool hasSwitchedRotation;
     private bool isRotating;
 
     public LeverData(Quaternion prevRotation, Quaternion prevEndRotation,
-                     Quaternion currentRotation, bool hasSwitchedPosition, bool isRotating) {
+                     bool hasSwitchedRotation, bool isRotating) {
         qPX = prevRotation.x;
         qPY = prevRotation.y;
         qPZ = prevRotation.z;
         qPW = prevRotation.w;
 
-        qEW = prevEndRotation.x;
+        qEX = prevEndRotation.x;
         qEY = prevEndRotation.y;
         qEZ = prevEndRotation.z;
         qEW = prevEndRotation.w;
 
-        qCW = currentRotation.x;
-        qCY = currentRotation.y;
-        qCZ = currentRotation.z;
-        qCW = currentRotation.w;
-
-        this.hasSwitchedPosition = hasSwitchedPosition;
+        this.hasSwitchedRotation = hasSwitchedRotation;
         this.isRotating = isRotating;
     }
 
     private Quaternion GetPrevRotation() {
-        return new Quaternion(qCX, qCY, qCZ, qCW);
+        return new Quaternion(qPX, qPY, qPZ, qPW);
     }
 
     private Quaternion GetPrevEndRotation() {
-        return new Quaternion(qCX, qCY, qCZ, qCW);
+        return new Quaternion(qEX, qEY, qEZ, qEW);
     }
 
     public void Restore(Lever lever) {
@@ -58,7 +48,7 @@ public class LeverData {
             lever.ResumeRotation();
         }
 
-        if (hasSwitchedPosition) {
+        if (hasSwitchedRotation) {
             lever.SwitchRotation();
         }
     }

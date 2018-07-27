@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114059241275795482}
   m_Layer: 0
   m_Name: StandButton
-  m_TagString: Untagged
+  m_TagString: StandButton
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -79,7 +79,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactable: {fileID: 0}
-  speed: 1
 --- !u!212 &212865688108934512
 SpriteRenderer:
   m_ObjectHideFlags: 1
