@@ -34,6 +34,7 @@ public class Teleportation : MonoBehaviour {
     void Update() {
         if (CanTeleport()) {
             if (Input.GetKeyDown(KeyCode.T)) {
+                previewHasExpired = false;
                 preview.enabled = true;
                 startTime = Time.time;
             }
