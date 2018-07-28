@@ -37,13 +37,19 @@ public class LevelData {
         Lever[] levers = new Lever[numLevers];
         */
 
-        Temp temp = GameObject.FindGameObjectWithTag("Temp").GetComponent<Temp>();
+        GameObject tempObject = GameObject.FindGameObjectWithTag("Temp");
+        Temp temp;
+        if (tempObject)
+        {
+            temp = tempObject.GetComponent<Temp>();
+            Lever[] levers = temp.Return();
+            int numLevers = levers.Length;
 
-        Lever[] levers = temp.Return();
-        int numLevers = levers.Length;
 
-        for (int i = 0; i < numLevers; i++) {
-            leverDatas[i].Restore(levers[i]);
+            for (int i = 0; i < numLevers; i++)
+            {
+                leverDatas[i].Restore(levers[i]);
+            }
         }
 
         GameObject[] standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");

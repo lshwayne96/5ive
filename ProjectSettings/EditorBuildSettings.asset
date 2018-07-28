@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/2_Anger.unity
     guid: 3e5a5702c6a004cb7b8ed23caa85aa24
+  - enabled: 1
+    path: Assets/Scenes/New Scene.unity
+    guid: 243f12b9ab4d95441b45fc8bc5b65924
   m_configObjects: {}

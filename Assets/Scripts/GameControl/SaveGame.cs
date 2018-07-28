@@ -31,7 +31,11 @@ public class SaveGame : MonoBehaviour {
         inputField = GetComponent<InputField>();
         // Fragile code since it breaks when the hierarchy changes
         buttonManager = transform.parent.parent.GetComponentInChildren<FileButtonManager>();
-        temp = GameObject.FindGameObjectWithTag("Temp").GetComponent<Temp>();
+        GameObject tempObject = GameObject.FindGameObjectWithTag("Temp");
+        if (tempObject)
+        {
+            temp = tempObject.GetComponent<Temp>();
+        }
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
@@ -44,12 +48,15 @@ public class SaveGame : MonoBehaviour {
             levers[i] = leverGameObjects[i].GetComponent<Lever>();
         }
         */
-        levers = temp.Return();
-        numLevers = levers.Length;
+        if (temp)
+        {
+            levers = temp.Return();
+            numLevers = levers.Length;
+        }
 
         standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");
         numStandButtons = standButtonGameObjects.Length;
-        standButtons = new StandButton[numLevers];
+        standButtons = new StandButton[numStandButtons];
         for (int i = 0; i < numStandButtons; i++) {
             standButtons[i] = standButtonGameObjects[i].GetComponent<StandButton>();
         }
