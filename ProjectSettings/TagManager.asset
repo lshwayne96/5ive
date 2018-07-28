@@ -18,6 +18,7 @@ TagManager:
   - Notifications
   - Lever
   - StandButton
+  - Temp
   layers:
   - Default
   - TransparentFX

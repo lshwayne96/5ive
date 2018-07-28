@@ -1091,9 +1091,10 @@ GameObject:
   m_Component:
   - component: {fileID: 959938808}
   - component: {fileID: 959938809}
+  - component: {fileID: 959938810}
   m_Layer: 9
   m_Name: Room1
-  m_TagString: Untagged
+  m_TagString: Temp
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1147,6 +1148,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 18, y: 10}
   m_EdgeRadius: 0
+--- !u!114 &959938810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 959938807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5145e1ad975664b18ad20f7a312ad899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963618274
 GameObject:
   m_ObjectHideFlags: 0

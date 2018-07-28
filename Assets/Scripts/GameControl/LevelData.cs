@@ -31,12 +31,18 @@ public class LevelData {
         playerData.Restore();
         ballData.Restore();
 
+        /*
         GameObject[] leverGameObjects = GameObject.FindGameObjectsWithTag("Lever");
         int numLevers = leverGameObjects.Length;
         Lever[] levers = new Lever[numLevers];
+        */
+
+        Temp temp = GameObject.FindGameObjectWithTag("Temp").GetComponent<Temp>();
+
+        Lever[] levers = temp.Return();
+        int numLevers = levers.Length;
 
         for (int i = 0; i < numLevers; i++) {
-            levers[i] = leverGameObjects[i].GetComponent<Lever>();
             leverDatas[i].Restore(levers[i]);
         }
 

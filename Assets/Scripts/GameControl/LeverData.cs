@@ -50,6 +50,8 @@ public class LeverData {
 
         if (hasSwitchedRotation) {
             lever.SwitchRotation();
+            lever.ChangeInteractableState();
+            lever.SetHasSwitchedRotation(hasSwitchedRotation);
         }
     }
 }

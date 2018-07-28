@@ -14,11 +14,12 @@ public class SaveGame : MonoBehaviour {
 
     private InputField inputField;
     private FileButtonManager buttonManager;
+    private Temp temp;
 
     private GameObject player;
     private GameObject ball;
 
-    private GameObject[] leverGameObjects;
+    //private GameObject[] leverGameObjects;
     private int numLevers;
     private Lever[] levers;
 
@@ -29,18 +30,22 @@ public class SaveGame : MonoBehaviour {
     private void Start() {
         inputField = GetComponent<InputField>();
         // Fragile code since it breaks when the hierarchy changes
-        buttonManager =
-            transform.parent.parent.GetComponentInChildren<FileButtonManager>();
+        buttonManager = transform.parent.parent.GetComponentInChildren<FileButtonManager>();
+        temp = GameObject.FindGameObjectWithTag("Temp").GetComponent<Temp>();
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
 
+        /*
         leverGameObjects = GameObject.FindGameObjectsWithTag("Lever");
         numLevers = leverGameObjects.Length;
         levers = new Lever[numLevers];
         for (int i = 0; i < numLevers; i++) {
             levers[i] = leverGameObjects[i].GetComponent<Lever>();
         }
+        */
+        levers = temp.Return();
+        numLevers = levers.Length;
 
         standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");
         numStandButtons = standButtonGameObjects.Length;
@@ -111,7 +116,6 @@ public class SaveGame : MonoBehaviour {
     }
 
     private LeverData[] CacheLeverData() {
-        Debug.Log("Number of levers: " + numLevers);
         LeverData[] leverDatas = new LeverData[numLevers];
         for (int i = 0; i < numLevers; i++) {
             leverDatas[i] = levers[i].CacheData();
@@ -120,7 +124,6 @@ public class SaveGame : MonoBehaviour {
     }
 
     private StandButtonData[] CacheStandButtonData() {
-        Debug.Log("Number of buttons: " + numStandButtons);
         StandButtonData[] standButtonDatas = new StandButtonData[numStandButtons];
         for (int i = 0; i < numStandButtons; i++) {
             standButtonDatas[i] = standButtons[i].CacheData();

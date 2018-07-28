@@ -18,6 +18,8 @@ public class Lever : MonoBehaviour {
     private bool toResume;
     private bool hasSwitchedRotation;
     private bool isRotating;
+    private bool hasFinishedRotating;
+    private bool coroutineHasFinished;
 
     private Vector3 currentAngle;
     private Vector3 targetAngle;
@@ -80,7 +82,7 @@ public class Lever : MonoBehaviour {
 
         if (toResume) {
             isRotating = true;
-            StartCoroutine(Rotate(startTime, prevRotation, prevEndRotation));
+            StartCoroutine(Rotate(startTime));
         }
     }
 
@@ -116,21 +118,28 @@ public class Lever : MonoBehaviour {
                 startTime = Time.time;
             }
             yield return null;
+
+            if (fracJourney >= 1 && !coroutineHasFinished) {
+                if (interactable != null) {
+                    Debug.Log("Change");
+                    ChangeInteractableState();
+                }
+
+                coroutineHasFinished = true;
+
+                Quaternion temp = startRotation;
+                startRotation = endRotation;
+                endRotation = temp;
+
+                hasSwitchedRotation = !hasSwitchedRotation;
+                isRotating = false;
+            }
         }
 
-        if (interactable != null) {
-            ChangeInteractableState();
-        }
-
-        Quaternion temp = startRotation;
-        startRotation = endRotation;
-        endRotation = temp;
-
-        hasSwitchedRotation = !hasSwitchedRotation;
-        isRotating = false;
+        coroutineHasFinished = false;
     }
 
-    private IEnumerator Rotate(float newStartTime, Quaternion prevRotation, Quaternion prevEndRotation) {
+    private IEnumerator Rotate(float newStartTime) {
         float distCovered;
         float fracJourney = 0;
 
@@ -147,17 +156,23 @@ public class Lever : MonoBehaviour {
             yield return null;
         }
 
-        if (interactable != null) {
-            ChangeInteractableState();
+        if (fracJourney >= 1 && !coroutineHasFinished) {
+            if (interactable != null) {
+                Debug.Log(fracJourney);
+                Debug.Log("Change");
+                ChangeInteractableState();
+            }
+            coroutineHasFinished = true;
+
+            Quaternion temp = startRotation;
+            startRotation = endRotation;
+            endRotation = temp;
+
+            hasSwitchedRotation = !hasSwitchedRotation;
+            isRotating = false;
+            toResume = false;
         }
-
-        Quaternion temp = startRotation;
-        startRotation = endRotation;
-        endRotation = temp;
-
-        hasSwitchedRotation = !hasSwitchedRotation;
-        isRotating = false;
-        toResume = false;
+        coroutineHasFinished = false;
     }
 
     public void SetPrevRotation(Quaternion prevRotation) {
@@ -178,7 +193,7 @@ public class Lever : MonoBehaviour {
     }
 
     // Controls the interactable assigned to the lever
-    private void ChangeInteractableState() {
+    public void ChangeInteractableState() {
         interactable.SetActive(!interactableState);
         interactableState = !interactableState;
     }
@@ -192,11 +207,13 @@ public class Lever : MonoBehaviour {
         return hasSwitchedRotation;
     }
 
+    public void SetHasSwitchedRotation(bool hasSwitchedRotation) {
+        this.hasSwitchedRotation = hasSwitchedRotation;
+    }
+
     public LeverData CacheData() {
-        Debug.Log(transform.rotation);
-        Debug.Log(endRotation);
-        Debug.Log(hasSwitchedRotation);
-        Debug.Log(isRotating);
+        Debug.Log("Caching. HasSwitched: " + hasSwitchedRotation);
+        Debug.Log(gameObject);
         return new LeverData(transform.rotation, endRotation, hasSwitchedRotation, isRotating);
     }
 
