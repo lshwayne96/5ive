@@ -35,6 +35,8 @@ public class PauseGame : MonoBehaviour {
 
         // Get the player movement script
         playerMovementScript = player.GetComponent<Platformer2DUserControl>();
+
+        Time.timeScale = 1;
     }
 
     void Update() {
