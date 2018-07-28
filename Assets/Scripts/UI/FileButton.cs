@@ -10,6 +10,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class FileButton : MonoBehaviour, IPointerClickHandler {
 
@@ -20,7 +21,6 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
     private string dateTimePattern;
     private bool isDoubleClick;
-    private bool hasOverwritten;
     private GameObject parentMenu;
 
     private NotificationsManager notificationsManager;
@@ -28,14 +28,21 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     // Initialise the button
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
         nameLabel.text = fileName;
-        levelLabel.text = "Level " + sceneBuildIndex.ToString();
+
+        int prefixLength = 2;
+        String sceneName = SceneNames.GetSceneName(sceneBuildIndex).Substring(prefixLength);
+        levelLabel.text = sceneName;
+
         // f stands for full date/time pattern (short time)
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
         parentMenu = GameMenu.SetParentMenu(parentMenu);
+
         transform.localScale = Vector3.one;
 
-        notificationsManager = GameObject.FindWithTag("Notifications")
-                                         .GetComponent<NotificationsManager>();
+        if (GameMenu.IsSaveMenu(parentMenu)) {
+            notificationsManager = GameObject.FindWithTag("Notifications")
+                                             .GetComponent<NotificationsManager>();
+        }
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
@@ -67,7 +74,6 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
                 SaveGame saveGame = GetComponent<SaveGame>();
                 // Overwrite the old filew with new game data
                 saveGame.Overwrite(nameLabel.text);
-                hasOverwritten = true;
                 notificationsManager.OverwriteSuccessful();
             }
         }

@@ -13,6 +13,10 @@ public class Teleportation : MonoBehaviour {
     private GameObject mainCamera;
     private PauseGame pauseGame;
 
+    private float startTime;
+    private float previewDuration;
+    private bool previewHasExpired;
+
     // Whether the scene allow teleportation freely
     private bool isInAllowedScene;
     // Whether the location allows teleportation freely given that the scene does not
@@ -23,6 +27,7 @@ public class Teleportation : MonoBehaviour {
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
         pauseGame = GameObject.FindWithTag("Pause").GetComponent<PauseGame>();
 
+        previewDuration = 3f;
         isInAllowedScene = IsInAllowedScene();
     }
 
@@ -30,8 +35,15 @@ public class Teleportation : MonoBehaviour {
         if (CanTeleport()) {
             if (Input.GetKeyDown(KeyCode.T)) {
                 preview.enabled = true;
+                startTime = Time.time;
             }
-            if (Input.GetKeyUp(KeyCode.T)) {
+
+            if (Time.time - startTime >= previewDuration) {
+                previewHasExpired = true;
+                preview.enabled = false;
+            }
+
+            if (Input.GetKeyUp(KeyCode.T) && !previewHasExpired) {
                 preview.enabled = false;
                 Teleport();
             }

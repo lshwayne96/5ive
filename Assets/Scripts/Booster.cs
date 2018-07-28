@@ -1,17 +1,16 @@
 ﻿using UnityEngine;
 
-public class Booster : MonoBehaviour, IMovable {
+public class Booster : MonoBehaviour {
 
-    // The force at which the gameObject's rigid body is pushed
-    private Vector2 force;
+    private Vector2 pushForce;
     private Rigidbody2D rb;
 
     void Start() {
-        force = new Vector2(0, 20);
+        pushForce = new Vector2(0, 20);
         rb = GetComponent<Rigidbody2D>();
     }
 
     public void Move() {
-        rb.AddForce(force, ForceMode2D.Impulse);
+        rb.AddForce(pushForce, ForceMode2D.Impulse);
     }
 }

@@ -13,18 +13,46 @@ using UnityEngine;
 public class SaveGame : MonoBehaviour {
 
     private InputField inputField;
-    private String saveFilePath;
+    private FileButtonManager buttonManager;
+    private Temp temp;
+
     private GameObject player;
     private GameObject ball;
-    private FileButtonManager buttonManager;
+
+    //private GameObject[] leverGameObjects;
+    private int numLevers;
+    private Lever[] levers;
+
+    private GameObject[] standButtonGameObjects;
+    private int numStandButtons;
+    private StandButton[] standButtons;
 
     private void Start() {
         inputField = GetComponent<InputField>();
+        // Fragile code since it breaks when the hierarchy changes
+        buttonManager = transform.parent.parent.GetComponentInChildren<FileButtonManager>();
+        temp = GameObject.FindGameObjectWithTag("Temp").GetComponent<Temp>();
+
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
-        // Fragile code since it breaks when the hierarchy changes
-        buttonManager =
-            transform.parent.parent.GetComponentInChildren<FileButtonManager>();
+
+        /*
+        leverGameObjects = GameObject.FindGameObjectsWithTag("Lever");
+        numLevers = leverGameObjects.Length;
+        levers = new Lever[numLevers];
+        for (int i = 0; i < numLevers; i++) {
+            levers[i] = leverGameObjects[i].GetComponent<Lever>();
+        }
+        */
+        levers = temp.Return();
+        numLevers = levers.Length;
+
+        standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");
+        numStandButtons = standButtonGameObjects.Length;
+        standButtons = new StandButton[numLevers];
+        for (int i = 0; i < numStandButtons; i++) {
+            standButtons[i] = standButtonGameObjects[i].GetComponent<StandButton>();
+        }
     }
 
     // Save into a new game file
@@ -47,22 +75,25 @@ public class SaveGame : MonoBehaviour {
      * and serialise the game data
      */
     private void Save(String fileName) {
-        // Get the current scene
         Scene scene = SceneManager.GetActiveScene();
-        // Cache the player data
+
         PlayerData playerData = CachePlayerData();
-        // Cache the ball data
         BallData ballData = CacheBallData();
-        // Cache the state of interactables
-        InteractablesData interactablesData = CacheInteractablesData();
+
+        LeverData[] leverDatas = CacheLeverData();
+
+        StandButtonData[] standButtonDatas = CacheStandButtonData();
+
         // Package the game data into a LevelData instance
-        LevelData levelData = new LevelData(scene, playerData, ballData, interactablesData);
+        LevelData levelData = new LevelData(scene, playerData,
+                                            ballData, leverDatas,
+                                            standButtonDatas);
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         // Directory to save file into
         Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
         // Path of the file to be used for saving
-        saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
+        string saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
         FileStream fileStream = File.Create(saveFilePath);
 
         // Serialise levelData
@@ -75,8 +106,7 @@ public class SaveGame : MonoBehaviour {
     private PlayerData CachePlayerData() {
         Vector2 velocity = player.GetComponent<Rigidbody2D>().velocity;
         Vector3 position = player.transform.position;
-        Vector3 localScale = player.transform.localScale;
-        return new PlayerData(velocity, position, localScale);
+        return new PlayerData(velocity, position);
     }
 
     private BallData CacheBallData() {
@@ -85,9 +115,19 @@ public class SaveGame : MonoBehaviour {
         return new BallData(velocity, position);
     }
 
-    private InteractablesData CacheInteractablesData() {
-        InteractablesData interactablesData = new InteractablesData();
-        interactablesData.ScreenShot();
-        return interactablesData;
+    private LeverData[] CacheLeverData() {
+        LeverData[] leverDatas = new LeverData[numLevers];
+        for (int i = 0; i < numLevers; i++) {
+            leverDatas[i] = levers[i].CacheData();
+        }
+        return leverDatas;
+    }
+
+    private StandButtonData[] CacheStandButtonData() {
+        StandButtonData[] standButtonDatas = new StandButtonData[numStandButtons];
+        for (int i = 0; i < numStandButtons; i++) {
+            standButtonDatas[i] = standButtons[i].CacheData();
+        }
+        return standButtonDatas;
     }
 }

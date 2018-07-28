@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Crate : MonoBehaviour, IPickable {
+public class Crate : MonoBehaviour {
 
     public float distXFromPlayer;
     public float distYFromPlayer;
@@ -39,7 +39,7 @@ public class Crate : MonoBehaviour, IPickable {
         }
     }
 
-    public void PickUp() {
+    private void PickUp() {
         if (playerTf.localScale.x < 0) {
             distXFromPlayer *= -1;
         }
@@ -50,7 +50,7 @@ public class Crate : MonoBehaviour, IPickable {
         crateIsPickedUp = true;
     }
 
-    public void Drop() {
+    private void Drop() {
         transform.SetParent(null);
         //gameObject.AddComponent<Rigidbody2D>();
         GetComponent<Rigidbody2D>().gravityScale = 1f;

@@ -16,17 +16,16 @@
 
 using UnityEngine;
 
-public class StandButton : MonoBehaviour, IMovable {
+public class StandButton : MonoBehaviour {
 
-    public GameObject movable;
-    private IMovable movableScript;
-    private bool hasMoved;
+    public GameObject interactable;
+
+    private Booster booster;
+    private PauseGame pauseGame;
 
     private float waitDuration;
     private float translationDistY;
-
-    private Vector3 startPosition;
-    private Vector3 endPosition;
+    private float speed;
     private float startTime;
     private float journeyLength;
 
@@ -34,24 +33,34 @@ public class StandButton : MonoBehaviour, IMovable {
     private bool wait;
     private bool isAtRest;
     private bool isBeingPressed;
-    private float firstTime;
+    private bool interactableHasMoved;
+    private bool toResume;
+    private bool wasInterruptedWhileMoving;
+
     private Direction movementDirection;
 
+    private Vector3 startPosition;
+    private Vector3 endPosition;
+    private Vector3 prevPosition;
+    private Vector3 prevEndPosition;
     private Vector3 originalStartPosition;
     private Vector3 originalEndPosition;
 
-    // Movement speed in units/sec.
-    public float speed = 1.0F;
-
     void Start() {
-        movableScript = movable.GetComponent<IMovable>();
+        booster = interactable.GetComponent<Booster>();
+        pauseGame = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseGame>();
 
-        waitDuration = 3f;
+        waitDuration = 2f;
         translationDistY = 0.15f;
+        speed = 1f;
 
-        startPosition = originalStartPosition = gameObject.transform.position;
+        startPosition = gameObject.transform.position;
         Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
-        endPosition = originalEndPosition = startPosition - vectorDifference;
+        endPosition = startPosition - vectorDifference;
+
+        originalStartPosition = startPosition;
+        originalEndPosition = endPosition;
+
         journeyLength = Vector3.Distance(startPosition, endPosition);
 
         isAtRest = true;
@@ -59,9 +68,22 @@ public class StandButton : MonoBehaviour, IMovable {
     }
 
     void Update() {
+
+        if (toResume) {
+            move = true;
+            isAtRest = false;
+            isBeingPressed = true;
+            Move();
+            toResume = false;
+        }
+
         // Move
         if (move) {
-            Move();
+            if (!pauseGame.IsGamePaused()) {
+                Move();
+            } else {
+                startTime = Time.time;
+            }
         }
 
         // While moving and reaching the end
@@ -73,6 +95,11 @@ public class StandButton : MonoBehaviour, IMovable {
                 isAtRest = true;
 
                 if (movementDirection == Direction.Down) { // Was moving down
+                    if (wasInterruptedWhileMoving) {
+                        startPosition = originalStartPosition;
+                        endPosition = originalEndPosition;
+                    }
+
                     // Start waiting
                     wait = true;
                     // Get the time at which the waiting begins
@@ -95,52 +122,73 @@ public class StandButton : MonoBehaviour, IMovable {
                 isAtRest = false;
                 wait = false;
 
+                // This startTime is to ensure smooth upward movement of the stand button
                 startTime = Time.time;
-                Move();
+                // Move upwards
+                if (!pauseGame.IsGamePaused()) {
+                    Move();
+                } else {
+                    startTime = Time.time;
+                }
             }
         }
 
-        if (isAtRest && movementDirection == Direction.Up) {
-            endPosition = originalStartPosition;
-            startPosition = originalEndPosition;
-        } else if (isAtRest && movementDirection == Direction.Down) {
-
-        }
-
-        if (!hasMoved && isAtRest && movementDirection == Direction.Up) {
-            movableScript.Move();
-            hasMoved = true;
-        } else if (hasMoved && isAtRest && movementDirection == Direction.Down) {
-            hasMoved = false;
+        if (HasReachedBottom()) {
+            booster.Move();
+            if (pauseGame.IsGamePaused()) {
+                startTime = Time.time;
+            }
+            interactableHasMoved = true;
+        } else if (HasReturnedToTop()) {
+            interactableHasMoved = false;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        if (!move && isAtRest && !wait) {
+        // When contact is made while the stand button is at its original position
+        if (IsAtOriginalPosition()) {
             startTime = Time.time;
             move = true;
             isAtRest = false;
             isBeingPressed = true;
         }
 
-        if (move && !isAtRest && !wait && movementDirection == Direction.Up) {
+        // When contact is made while the stand button is moving towards its original position
+        if (IsMovingUp()) {
             isBeingPressed = true;
+            wasInterruptedWhileMoving = true;
+
             Vector3 temp = startPosition;
             startPosition = endPosition;
             endPosition = temp;
+
             ChangeMovementDirection();
+
+            // Set the startPosition as wherever the stand button is to began the movement up
             startPosition = gameObject.transform.position;
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision) {
-        isBeingPressed = true;
+    private void OnCollisionStay2D(Collision2D collision) { isBeingPressed = true; }
+    private void OnCollisionExit2D(Collision2D collision) { isBeingPressed = false; }
+
+    private bool IsAtOriginalPosition() {
+        return !move && isAtRest && !wait;
     }
 
-    private void OnCollisionExit2D(Collision2D collision) {
-        isBeingPressed = false;
+    private bool IsMovingUp() {
+        return move && !isAtRest && !wait && movementDirection == Direction.Up;
     }
 
+    private bool HasReachedBottom() {
+        return !interactableHasMoved && isAtRest && movementDirection == Direction.Up;
+    }
+
+    private bool HasReturnedToTop() {
+        return interactableHasMoved && isAtRest && movementDirection == Direction.Down;
+    }
+
+    // Determines if the stand button is at rest
     private bool HasReachedFinalPosition(Direction direction) {
         if (direction == Direction.Down) {
             return gameObject.transform.position.y <= endPosition.y;
@@ -154,15 +202,35 @@ public class StandButton : MonoBehaviour, IMovable {
         return currentWaitDuration >= waitDuration;
     }
 
+    public void Resume() {
+        toResume = true;
+        startTime = Time.time;
+    }
+
     public void Move() {
-        // Distance moved = time * speed.
         float distCovered = (Time.time - startTime) * speed;
-
-        // Fraction of journey completed = current distance divided by total distance.
         float fracJourney = distCovered / journeyLength;
-
         // Set our position as a fraction of the distance between the markers.
         transform.position = Vector3.Lerp(startPosition, endPosition, fracJourney);
+    }
+
+    public void Move(Vector3 prevPosition, Vector3 prevEndPosition) {
+        float distCovered = (Time.time - startTime) * speed;
+        float fracJourney = distCovered / journeyLength;
+        // Set our position as a fraction of the distance between the markers.
+        transform.position = Vector3.Lerp(prevPosition, prevEndPosition, fracJourney);
+    }
+
+    public StandButtonData CacheData() {
+        return new StandButtonData(transform.position, endPosition, move);
+    }
+
+    public void SetPrevPosition(Vector3 prevPosition) {
+        this.prevPosition = prevPosition;
+    }
+
+    public void SetPrevEndPosition(Vector3 prevEndPosition) {
+        this.prevEndPosition = prevEndPosition;
     }
 
     private void ChangeMovementDirection() {
@@ -171,10 +239,6 @@ public class StandButton : MonoBehaviour, IMovable {
         } else {
             movementDirection = Direction.Up;
         }
-    }
-
-    private bool IsAtOriginalPosition() {
-        return isAtRest && movementDirection == Direction.Down;
     }
 }
 

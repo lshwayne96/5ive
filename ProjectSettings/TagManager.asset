@@ -16,6 +16,9 @@ TagManager:
   - Pause
   - SpecialRoom
   - Notifications
+  - Lever
+  - StandButton
+  - Temp
   layers:
   - Default
   - TransparentFX
