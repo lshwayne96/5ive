@@ -87,6 +87,7 @@ public class Teleportation : MonoBehaviour {
 
     private bool IsInAllowedScene() {
         int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        Debug.Log("Build index: " + sceneBuildIndex);
         return !(sceneBuildIndex == (int)Scenes.Denial
                  || sceneBuildIndex == (int)Scenes.Anger);
     }
