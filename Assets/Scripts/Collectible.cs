@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class Collectible : MonoBehaviour {
 
-    private bool canCollect;
+    //private bool canCollect;
     private SpriteRenderer[] spriteRenderers;
 
     private void Start() {
@@ -18,22 +18,27 @@ public class Collectible : MonoBehaviour {
     }
 
     private void Update() {
+        /*
         if (canCollect && Input.GetKeyDown(KeyCode.C)) {
             StartCoroutine(Collected());
         }
+        */
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            canCollect = true;
+            //canCollect = true;
+            StartCoroutine(Collected());
         }
     }
 
+    /*
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             canCollect = false;
         }
     }
+    */
 
     // Collect this collectible and destroy it
     private IEnumerator Collected() {
