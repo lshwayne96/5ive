@@ -15,7 +15,7 @@ public class FileButtonManager : MonoBehaviour {
     // A gameObject pool where buttons are recycled
     private GameObjectPool gameObjectPool;
     private HashSet<GameObject> buttons;
-    // fileNames contain file names that have the GameFile identifier
+    // fileNames contain file names that have the GameFile tag
     private HashSet<string> uniqueTaggedFileNames;
 
     private string saveTaggedFileNameToDelete;
@@ -38,7 +38,6 @@ public class FileButtonManager : MonoBehaviour {
         parentMenu = GameMenu.SetParentMenu(parentMenu);
 
         if (GameMenu.IsLoadMenu(parentMenu)) {
-            // Initialise the delete and delete all buttons only if the parent menu is the load menu
             deleteButton = GameObject.FindWithTag("DeleteButton").GetComponent<Button>();
             deleteAllButton = GameObject.FindWithTag("DeleteAllButton").GetComponent<Button>();
 
@@ -54,7 +53,6 @@ public class FileButtonManager : MonoBehaviour {
 
     // Add new or remove old buttons immediately whenever they are added or removed
     public void UpdateButtons() {
-        //Debug.Log("From UpdateButtons");
         if (GameMenu.IsSaveMenu(parentMenu)) {
             if (HaveFiles()) {
                 CreateFileButtons();
@@ -89,10 +87,11 @@ public class FileButtonManager : MonoBehaviour {
     private void CreateFileButton(FileInfo fileInfo) {
         string filePath = fileInfo.FullName;
         string fileName = GameFile.ConvertToName(filePath);
+
         if (!uniqueTaggedFileNames.Contains(fileName) && GameFile.ContainsTag(fileName)) {
             uniqueTaggedFileNames.Add(fileName);
-            LevelData levelData = GameFile.Deserialise(filePath);
-            SetUpFileButtonInfo(levelData, fileInfo);
+            SceneData sceneData = GameFile.Deserialise(filePath);
+            SetUpFileButtonInfo(sceneData, fileInfo);
         }
     }
 
@@ -100,7 +99,6 @@ public class FileButtonManager : MonoBehaviour {
     public void DeleteAll() {
         foreach (GameObject button in buttons) {
             FileButton fileButton = button.GetComponent<FileButton>();
-            // Delete the file associated with the button
             DeleteFile(fileButton);
             // Recycle the button to the SimpleObjectPool instance
             gameObjectPool.ReturnObject(button);
@@ -140,9 +138,9 @@ public class FileButtonManager : MonoBehaviour {
      * Retrieves a button from the game object pool and initialises it
      * with information from the levelData and fileInfo
      * */
-    private void SetUpFileButtonInfo(LevelData levelData, FileInfo fileInfo) {
+    private void SetUpFileButtonInfo(SceneData sceneData, FileInfo fileInfo) {
         // Get information to be displayed on the SaveLoadMenuButton button
-        int levelNo = levelData.GetSceneBuildIndex();
+        int sceneBuildIndex = sceneData.GetSceneBuildIndex();
         DateTime dateTime = fileInfo.LastWriteTimeUtc;
 
         GameObject button = gameObjectPool.GetObject();
@@ -155,7 +153,7 @@ public class FileButtonManager : MonoBehaviour {
 
         FileButton fileButton = button.GetComponent<FileButton>();
         string fileName = GameFile.RemoveTag(GameFile.ConvertToName(fileInfo.FullName));
-        fileButton.SetUp(fileName, levelNo, dateTime);
+        fileButton.SetUp(fileName, sceneBuildIndex, dateTime);
     }
 
     /*
@@ -171,14 +169,14 @@ public class FileButtonManager : MonoBehaviour {
 
 
     // Delete the file associated with the button
-    protected void DeleteFile(FileButton fileButton) {
+    private void DeleteFile(FileButton fileButton) {
         string saveFilePath =
             GameFile.ConvertToPath(GameFile.AddTag(fileButton.nameLabel.text));
         File.Delete(saveFilePath);
     }
 
     // Checks to see if there are still saved game files on the local machine
-    protected bool HaveFiles() {
+    private bool HaveFiles() {
         FileInfo[] fileInfos = saveDirectoryInfo.GetFiles();
         foreach (FileInfo fileInfo in fileInfos) {
             string fileName = fileInfo.Name;
@@ -196,5 +194,9 @@ public class FileButtonManager : MonoBehaviour {
      */
     private bool StillHaveFiles() {
         return uniqueTaggedFileNames.Count > 0;
+    }
+
+    public bool DoesFileExist(string fileName) {
+        return uniqueTaggedFileNames.Add(GameFile.AddTag(fileName));
     }
 }

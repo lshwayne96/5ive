@@ -10,104 +10,83 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class SaveGame : MonoBehaviour {
+public class SaveScene : MonoBehaviour {
 
     private InputField inputField;
-    private FileButtonManager buttonManager;
-    private Temp temp;
+    private FileButtonManager fileButtonManager;
 
     private GameObject player;
     private GameObject ball;
 
-    //private GameObject[] leverGameObjects;
-    private int numLevers;
     private Lever[] levers;
+    private int numLevers;
 
-    private GameObject[] standButtonGameObjects;
-    private int numStandButtons;
     private StandButton[] standButtons;
+    private int numStandButtons;
 
     private void Start() {
         inputField = GetComponent<InputField>();
-        // Fragile code since it breaks when the hierarchy changes
-        buttonManager = transform.parent.parent.GetComponentInChildren<FileButtonManager>();
-        GameObject tempObject = GameObject.FindGameObjectWithTag("Temp");
-        if (tempObject)
-        {
-            temp = tempObject.GetComponent<Temp>();
-        }
+        fileButtonManager =
+            GameObject.FindGameObjectWithTag("PauseControl").GetComponentInChildren<FileButtonManager>();
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
 
-        /*
-        leverGameObjects = GameObject.FindGameObjectsWithTag("Lever");
-        numLevers = leverGameObjects.Length;
-        levers = new Lever[numLevers];
-        for (int i = 0; i < numLevers; i++) {
-            levers[i] = leverGameObjects[i].GetComponent<Lever>();
-        }
-        */
-        if (temp)
-        {
-            levers = temp.Return();
-            numLevers = levers.Length;
-        }
+        GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
+        if (componentManagerGO) {
+            ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
 
-        standButtonGameObjects = GameObject.FindGameObjectsWithTag("StandButton");
-        numStandButtons = standButtonGameObjects.Length;
-        standButtons = new StandButton[numStandButtons];
-        for (int i = 0; i < numStandButtons; i++) {
-            standButtons[i] = standButtonGameObjects[i].GetComponent<StandButton>();
+            levers = componentManager.GetScripts<Lever>();
+            numLevers = levers.Length;
+
+            standButtons = componentManager.GetScripts<StandButton>();
+            numStandButtons = standButtons.Length;
         }
     }
 
-    // Save into a new game file
     public void NewSave() {
         if (!inputField.text.Equals(System.String.Empty)) {
-            Save(inputField.text);
+            if (fileButtonManager.DoesFileExist(inputField.text)) {
+                Save(inputField.text);
+            } else {
+                NotificationManager.Notifiy(new FileAlreadyExists());
+            }
+
             // Clear the input field
             inputField.text = System.String.Empty;
         }
     }
 
-    // Overwrite an old game file
     public void Overwrite(String fileName) {
         Save(fileName);
     }
 
     /*
-     * Caches all game data into a LevelData instance,
+     * Caches all scene data into a SceneData instance,
      * creates a new or overwrite an old game file,
-     * and serialise the game data
+     * and serialise the scene data
      */
     private void Save(String fileName) {
         Scene scene = SceneManager.GetActiveScene();
 
         PlayerData playerData = CachePlayerData();
         BallData ballData = CacheBallData();
-
         LeverData[] leverDatas = CacheLeverData();
-
         StandButtonData[] standButtonDatas = CacheStandButtonData();
 
-        // Package the game data into a LevelData instance
-        LevelData levelData = new LevelData(scene, playerData,
-                                            ballData, leverDatas,
-                                            standButtonDatas);
+        SceneData levelData =
+            new SceneData(scene, playerData, ballData, leverDatas, standButtonDatas);
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
-        // Directory to save file into
         Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
-        // Path of the file to be used for saving
+
         string saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
         FileStream fileStream = File.Create(saveFilePath);
 
-        // Serialise levelData
         binaryFormatter.Serialize(fileStream, levelData);
         fileStream.Close();
 
-        buttonManager.UpdateButtons();
+        fileButtonManager.UpdateButtons();
     }
 
     private PlayerData CachePlayerData() {

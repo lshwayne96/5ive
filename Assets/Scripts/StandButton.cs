@@ -21,7 +21,7 @@ public class StandButton : MonoBehaviour {
     public GameObject interactable;
 
     private Booster booster;
-    private PauseGame pauseGame;
+    private PauseScene pauseScene;
 
     private float waitDuration;
     private float translationDistY;
@@ -48,7 +48,7 @@ public class StandButton : MonoBehaviour {
 
     void Start() {
         booster = interactable.GetComponent<Booster>();
-        pauseGame = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseGame>();
+        pauseScene = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseScene>();
 
         waitDuration = 2f;
         translationDistY = 0.15f;
@@ -60,7 +60,6 @@ public class StandButton : MonoBehaviour {
 
         originalStartPosition = startPosition;
         originalEndPosition = endPosition;
-
         journeyLength = Vector3.Distance(startPosition, endPosition);
 
         isAtRest = true;
@@ -68,7 +67,6 @@ public class StandButton : MonoBehaviour {
     }
 
     void Update() {
-
         if (toResume) {
             move = true;
             isAtRest = false;
@@ -79,7 +77,7 @@ public class StandButton : MonoBehaviour {
 
         // Move
         if (move) {
-            if (!pauseGame.IsGamePaused()) {
+            if (!pauseScene.IsScenePaused()) {
                 Move();
             } else {
                 startTime = Time.time;
@@ -125,7 +123,7 @@ public class StandButton : MonoBehaviour {
                 // This startTime is to ensure smooth upward movement of the stand button
                 startTime = Time.time;
                 // Move upwards
-                if (!pauseGame.IsGamePaused()) {
+                if (!pauseScene.IsScenePaused()) {
                     Move();
                 } else {
                     startTime = Time.time;
@@ -133,13 +131,15 @@ public class StandButton : MonoBehaviour {
             }
         }
 
-        if (HasReachedBottom()) {
+        // Run the booster script when the stand button has just reached bottom
+        if (HasJustReachedBottom()) {
             booster.Move();
-            if (pauseGame.IsGamePaused()) {
+            if (pauseScene.IsScenePaused()) {
                 startTime = Time.time;
             }
             interactableHasMoved = true;
-        } else if (HasReturnedToTop()) {
+
+        } else if (IsAtOriginalPosition()) {
             interactableHasMoved = false;
         }
     }
@@ -176,16 +176,8 @@ public class StandButton : MonoBehaviour {
         return !move && isAtRest && !wait;
     }
 
-    private bool IsMovingUp() {
-        return move && !isAtRest && !wait && movementDirection == Direction.Up;
-    }
-
-    private bool HasReachedBottom() {
+    private bool HasJustReachedBottom() {
         return !interactableHasMoved && isAtRest && movementDirection == Direction.Up;
-    }
-
-    private bool HasReturnedToTop() {
-        return interactableHasMoved && isAtRest && movementDirection == Direction.Down;
     }
 
     // Determines if the stand button is at rest
@@ -202,35 +194,33 @@ public class StandButton : MonoBehaviour {
         return currentWaitDuration >= waitDuration;
     }
 
-    public void Resume() {
+    private bool IsMovingUp() {
+        return move && !isAtRest && !wait && movementDirection == Direction.Up;
+    }
+
+    public void Resume(Vector3 prevPosition, Vector3 prevEndPosition) {
         toResume = true;
         startTime = Time.time;
+        this.prevPosition = prevPosition;
+        this.prevEndPosition = prevEndPosition;
     }
 
     public void Move() {
+        Vector3 start;
+        Vector3 end;
+
+        if (toResume) {
+            start = prevPosition;
+            end = prevEndPosition;
+        } else {
+            start = startPosition;
+            end = endPosition;
+        }
+
         float distCovered = (Time.time - startTime) * speed;
         float fracJourney = distCovered / journeyLength;
         // Set our position as a fraction of the distance between the markers.
-        transform.position = Vector3.Lerp(startPosition, endPosition, fracJourney);
-    }
-
-    public void Move(Vector3 prevPosition, Vector3 prevEndPosition) {
-        float distCovered = (Time.time - startTime) * speed;
-        float fracJourney = distCovered / journeyLength;
-        // Set our position as a fraction of the distance between the markers.
-        transform.position = Vector3.Lerp(prevPosition, prevEndPosition, fracJourney);
-    }
-
-    public StandButtonData CacheData() {
-        return new StandButtonData(transform.position, endPosition, move);
-    }
-
-    public void SetPrevPosition(Vector3 prevPosition) {
-        this.prevPosition = prevPosition;
-    }
-
-    public void SetPrevEndPosition(Vector3 prevEndPosition) {
-        this.prevEndPosition = prevEndPosition;
+        transform.position = Vector3.Lerp(start, end, fracJourney);
     }
 
     private void ChangeMovementDirection() {
@@ -239,6 +229,10 @@ public class StandButton : MonoBehaviour {
         } else {
             movementDirection = Direction.Up;
         }
+    }
+
+    public StandButtonData CacheData() {
+        return new StandButtonData(transform.position, endPosition, move);
     }
 }
 

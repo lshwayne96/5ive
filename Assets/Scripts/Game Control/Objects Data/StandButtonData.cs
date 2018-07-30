@@ -36,9 +36,7 @@ public class StandButtonData {
 
     public void Restore(StandButton standButton) {
         if (isMoving) {
-            standButton.SetPrevPosition(GetPrevPosition());
-            standButton.SetPrevEndPosition(GetPrevEndPosition());
-            standButton.Resume();
+            standButton.Resume(GetPrevPosition(), GetPrevEndPosition());
         }
     }
 }

@@ -8,10 +8,18 @@ using UnityEngine;
 
 public class Lever : MonoBehaviour {
 
-    // Expose the interactable variable to the editor
     public GameObject interactable;
 
-    private PauseGame pauseGame;
+    private PauseScene pauseScene;
+
+    private Quaternion startRotation;
+    private Quaternion endRotation;
+    private Quaternion prevRotation;
+    private Quaternion prevEndRotation;
+
+    private Vector3 currentAngle;
+    private Vector3 targetAngle;
+    private float angleOfRotation;
 
     private bool interactableState;
     private bool hasEnteredTrigger;
@@ -19,20 +27,10 @@ public class Lever : MonoBehaviour {
     private bool hasSwitchedRotation;
     private bool isRotating;
     private bool hasFinishedRotating;
-    private bool coroutineHasFinished;
-
-    private Vector3 currentAngle;
-    private Vector3 targetAngle;
-    private float angleOfRotation;
 
     private float startTime;
     private float journeyLength;
     private float speed;
-
-    private Quaternion startRotation;
-    private Quaternion endRotation;
-    private Quaternion prevRotation;
-    private Quaternion prevEndRotation;
 
     /*
      * Awake() is used instead of Start() to allow the lever
@@ -52,7 +50,7 @@ public class Lever : MonoBehaviour {
         }
         angleOfRotation = 90f;
 
-        pauseGame = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseGame>();
+        pauseScene = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseScene>();
 
         Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
@@ -82,7 +80,7 @@ public class Lever : MonoBehaviour {
 
         if (toResume) {
             isRotating = true;
-            StartCoroutine(Rotate(startTime));
+            StartCoroutine(Rotate());
         }
     }
 
@@ -103,9 +101,19 @@ public class Lever : MonoBehaviour {
     private IEnumerator Rotate() {
         float distCovered;
         float fracJourney = 0;
+        Quaternion start;
+        Quaternion end;
+
+        if (toResume) {
+            start = prevRotation;
+            end = prevEndRotation;
+        } else {
+            start = startRotation;
+            end = endRotation;
+        }
 
         while (fracJourney < 1) {
-            if (!pauseGame.IsGamePaused()) {
+            if (!pauseScene.IsScenePaused()) {
                 // Distance moved = time * speed.
                 distCovered = (Time.time - startTime) * speed;
 
@@ -113,107 +121,54 @@ public class Lever : MonoBehaviour {
                 fracJourney = distCovered / journeyLength;
 
                 // Set our position as a fraction of the distance between the markers.
-                transform.rotation = Quaternion.Slerp(startRotation, endRotation, fracJourney);
+                transform.rotation = Quaternion.Slerp(start, end, fracJourney);
             } else {
                 startTime = Time.time;
             }
             yield return null;
-
-            if (fracJourney >= 1 && !coroutineHasFinished) {
-                if (interactable != null) {
-                    Debug.Log("Change");
-                    ChangeInteractableState();
-                }
-
-                coroutineHasFinished = true;
-
-                Quaternion temp = startRotation;
-                startRotation = endRotation;
-                endRotation = temp;
-
-                hasSwitchedRotation = !hasSwitchedRotation;
-                isRotating = false;
-            }
         }
 
-        coroutineHasFinished = false;
-    }
-
-    private IEnumerator Rotate(float newStartTime) {
-        float distCovered;
-        float fracJourney = 0;
-
-        while (fracJourney < 1 && !pauseGame.IsGamePaused()) {
-            // Distance moved = time * speed.
-            distCovered = (Time.time - newStartTime) * speed;
-
-            // Fraction of journey completed = current distance divided by total distance.
-            fracJourney = distCovered / journeyLength;
-
-            // Set our position as a fraction of the distance between the markers.
-            transform.rotation = Quaternion.Slerp(prevRotation, prevEndRotation, fracJourney);
-
-            yield return null;
+        if (interactable) {
+            ChangeInteractableState();
         }
 
-        if (fracJourney >= 1 && !coroutineHasFinished) {
-            if (interactable != null) {
-                Debug.Log(fracJourney);
-                Debug.Log("Change");
-                ChangeInteractableState();
-            }
-            coroutineHasFinished = true;
-
-            Quaternion temp = startRotation;
-            startRotation = endRotation;
-            endRotation = temp;
-
-            hasSwitchedRotation = !hasSwitchedRotation;
-            isRotating = false;
+        if (toResume) {
             toResume = false;
         }
-        coroutineHasFinished = false;
+
+        Quaternion temp = startRotation;
+        startRotation = endRotation;
+        endRotation = temp;
+
+        hasSwitchedRotation = !hasSwitchedRotation;
+        isRotating = false;
     }
 
-    public void SetPrevRotation(Quaternion prevRotation) {
-        this.prevRotation = prevRotation;
-    }
-
-    public void SetPrevEndRotation(Quaternion prevEndRotation) {
-        this.prevEndRotation = prevEndRotation;
-    }
-
-    public void ResumeRotation() {
+    // Allow the rotation to resume
+    public void ResumeRotation(Quaternion prevRotation, Quaternion prevEndRotation) {
         toResume = true;
         startTime = Time.time;
+        this.prevRotation = prevRotation;
+        this.prevEndRotation = prevEndRotation;
     }
 
     public void SwitchRotation() {
         transform.rotation = endRotation;
+        ChangeInteractableState();
+        hasSwitchedRotation = true;
     }
 
     // Controls the interactable assigned to the lever
-    public void ChangeInteractableState() {
+    private void ChangeInteractableState() {
         interactable.SetActive(!interactableState);
         interactableState = !interactableState;
-    }
-
-    public void Toggle() {
-        Rotate();
-        ChangeInteractableState();
     }
 
     public bool HasSwitchedRotation() {
         return hasSwitchedRotation;
     }
 
-    public void SetHasSwitchedRotation(bool hasSwitchedRotation) {
-        this.hasSwitchedRotation = hasSwitchedRotation;
-    }
-
     public LeverData CacheData() {
-        Debug.Log("Caching. HasSwitched: " + hasSwitchedRotation);
-        Debug.Log(gameObject);
         return new LeverData(transform.rotation, endRotation, hasSwitchedRotation, isRotating);
     }
 

@@ -18,7 +18,6 @@ public class LeverManager : MonoBehaviour {
         }
     }
 
-    // Update is called once per frame
     void Update() {
         if (CanActivate()) {
             interactable.SetActive(false);

@@ -12,10 +12,12 @@ public class UpdateFileButtons : MonoBehaviour {
     private GameObject parentMenu;
 
     private void OnEnable() {
+        // Set the parentMenu only once
         if (parentMenu == null) {
             parentMenu = GameMenu.SetParentMenu(parentMenu);
         }
 
+        // Set the fileButtonManager only once
         if (fileButtonManager == null) {
             fileButtonManager = GetComponentInChildren<FileButtonManager>();
         }

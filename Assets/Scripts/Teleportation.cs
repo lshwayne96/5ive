@@ -11,7 +11,7 @@ public class Teleportation : MonoBehaviour {
 
     private MeshRenderer preview;
     private GameObject mainCamera;
-    private PauseGame pauseGame;
+    private PauseScene pauseScene;
 
     private float startTime;
     private float previewDuration;
@@ -25,7 +25,7 @@ public class Teleportation : MonoBehaviour {
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
-        pauseGame = GameObject.FindWithTag("Pause").GetComponent<PauseGame>();
+        pauseScene = GameObject.FindWithTag("Pause").GetComponent<PauseScene>();
 
         previewDuration = 3f;
         isInAllowedScene = IsInAllowedScene();
@@ -54,15 +54,8 @@ public class Teleportation : MonoBehaviour {
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("SpecialRoom")) {
             isInAllowedLocation = true;
-        } else
-        {
+        } else {
             isInAllowedLocation = false;
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("SpecialRoom")) {
-            //isInAllowedLocation = false;
         }
     }
 
@@ -90,13 +83,12 @@ public class Teleportation : MonoBehaviour {
 
     private bool IsInAllowedScene() {
         int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("Build index: " + sceneBuildIndex);
         return !(sceneBuildIndex == (int)Scenes.Denial
                  || sceneBuildIndex == (int)Scenes.Anger);
     }
 
     private bool CanTeleport() {
-        if (!pauseGame.IsGamePaused()) {
+        if (!pauseScene.IsScenePaused()) {
             return isInAllowedScene || isInAllowedLocation;
         } else {
             return false;

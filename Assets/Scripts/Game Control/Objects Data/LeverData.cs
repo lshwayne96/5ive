@@ -43,15 +43,11 @@ public class LeverData {
 
     public void Restore(Lever lever) {
         if (isRotating) {
-            lever.SetPrevRotation(GetPrevRotation());
-            lever.SetPrevEndRotation(GetPrevEndRotation());
-            lever.ResumeRotation();
+            lever.ResumeRotation(GetPrevRotation(), GetPrevEndRotation());
         }
 
         if (hasSwitchedRotation) {
             lever.SwitchRotation();
-            lever.ChangeInteractableState();
-            lever.SetHasSwitchedRotation(hasSwitchedRotation);
         }
     }
 }

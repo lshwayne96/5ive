@@ -8,7 +8,6 @@ using UnityEngine;
 
 public class EndScene : MonoBehaviour {
 
-    // Expose the scene variable to the editor
     public int scene;
 
     private void OnTriggerEnter2D(Collider2D collision) {

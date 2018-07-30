@@ -8,7 +8,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class LoadGame : MonoBehaviour {
+public class LoadScene : MonoBehaviour {
 
     private String saveFilePath;
 
@@ -20,14 +20,14 @@ public class LoadGame : MonoBehaviour {
             saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
             FileStream fileStream = File.Open(saveFilePath, FileMode.Open);
             // Deserialised data is stored into levelData
-            LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);
+            SceneData sceneData = (SceneData)binaryFormatter.Deserialize(fileStream);
             fileStream.Close();
 
             // Load the scene of the saved game
-            SceneManager.LoadScene(levelData.GetSceneBuildIndex());
+            SceneManager.LoadScene(sceneData.GetSceneBuildIndex());
 
             // Cache the levelData reference in restoreGame
-            RestoreGame.restoreGame.Cache(levelData);
+            RestoreScene.restoreScene.Cache(sceneData);
 
         } catch (FileNotFoundException) {
             Debug.Log("Game file has been deleted or moved.");

@@ -9,7 +9,6 @@ using UnityEngine;
 
 public class Spring : MonoBehaviour {
 
-    // Exposes both springForce and velocityCap to the editor
     // Multiplier for how high spring will bounce
     public float springForce;
     // Maximum velocity spring should allow

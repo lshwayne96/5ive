@@ -15,10 +15,9 @@ TagManager:
   - Interactable
   - Pause
   - SpecialRoom
-  - Notifications
   - Lever
   - StandButton
-  - Temp
+  - ComponentManager
   layers:
   - Default
   - TransparentFX

@@ -5,7 +5,7 @@
 
 using UnityEngine;
 
-public class QuitOnClick : MonoBehaviour {
+public class OnClickQuit : MonoBehaviour {
 
     public void Quit() {
 

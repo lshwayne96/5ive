@@ -14,18 +14,15 @@ using UnityEngine.SceneManagement;
 
 public class FileButton : MonoBehaviour, IPointerClickHandler {
 
-    // Properties of a FileButton instance
     public Text nameLabel;
     public Text levelLabel;
     public Text dateTimeLabel;
 
     private string dateTimePattern;
     private bool isDoubleClick;
+
     private GameObject parentMenu;
 
-    private NotificationsManager notificationsManager;
-
-    // Initialise the button
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
         nameLabel.text = fileName;
 
@@ -38,11 +35,6 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         parentMenu = GameMenu.SetParentMenu(parentMenu);
 
         transform.localScale = Vector3.one;
-
-        if (GameMenu.IsSaveMenu(parentMenu)) {
-            notificationsManager = GameObject.FindWithTag("Notifications")
-                                             .GetComponent<NotificationsManager>();
-        }
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
@@ -62,19 +54,17 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
             // If the button is double clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                LoadGame loadGame = GetComponent<LoadGame>();
-                // Load the game file associated with that button
-                loadGame.Load(nameLabel.text);
+                LoadScene loadScene = GetComponent<LoadScene>();
+                loadScene.Load(nameLabel.text);
             }
 
         } else if (GameMenu.IsSaveMenu(parentMenu)) {
 
             // If the button is doubled clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                SaveGame saveGame = GetComponent<SaveGame>();
-                // Overwrite the old filew with new game data
-                saveGame.Overwrite(nameLabel.text);
-                notificationsManager.OverwriteSuccessful();
+                SaveScene saveScene = GetComponent<SaveScene>();
+                saveScene.Overwrite(nameLabel.text);
+                NotificationManager.Notifiy(new OverwriteSuccessful());
             }
         }
     }

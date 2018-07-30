@@ -10,8 +10,7 @@ public class DeleteFileButtonManager : MonoBehaviour {
     private FileButtonManager fileButtonManager;
 
     void Start() {
-        fileButtonManager =
-            transform.parent.GetComponentInChildren<FileButtonManager>();
+        fileButtonManager = transform.parent.GetComponentInChildren<FileButtonManager>();
     }
 
     public void DeleteAllGameFileButtons() {

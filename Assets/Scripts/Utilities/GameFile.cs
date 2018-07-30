@@ -1,7 +1,7 @@
 ﻿/*
  * This is a utility class.
  * It provides methods which convert between a file path and a file name
- * and adds an identifier to save game files.
+ * and adds an identifier to save scene files.
  */
 
 using System;
@@ -20,6 +20,7 @@ public class GameFile {
 
     // Hide the constructor
     private GameFile() {
+
     }
 
     // Get the full path of the file
@@ -48,7 +49,7 @@ public class GameFile {
         if (potentialTag.Equals(tag)) {
             return fileName.Substring(tag.Length);
         } else {
-            return "";
+            return System.String.Empty;
         }
     }
 
@@ -67,11 +68,11 @@ public class GameFile {
         }
     }
 
-    public static LevelData Deserialise(string filePath) {
+    public static SceneData Deserialise(string filePath) {
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         FileStream fileStream = File.Open(filePath, FileMode.Open);
-        LevelData levelData = (LevelData)binaryFormatter.Deserialize(fileStream);
+        SceneData sceneData = (SceneData)binaryFormatter.Deserialize(fileStream);
         fileStream.Close();
-        return levelData;
+        return sceneData;
     }
 }

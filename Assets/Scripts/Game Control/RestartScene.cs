@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RestartGame : MonoBehaviour {
+public class RestartScene : MonoBehaviour {
 
     public void Restart() {
         Scene scene = SceneManager.GetActiveScene();
