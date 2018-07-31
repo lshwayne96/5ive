@@ -11,12 +11,18 @@ public class TopOfLadder : MonoBehaviour {
 
     // Whether the player is nearing or at the top
     private bool isNearTop;
-    private Ladder ladderScript;
+    private Ladder ladder;
+
     private BoxCollider2D ladderBoxCollider;
+    private bool isLadderATrigger;
+    private bool hasRestored;
 
     void Start() {
-        ladderScript = GetComponentInParent<Ladder>();
-        ladderBoxCollider = ladderScript.GetComponent<BoxCollider2D>();
+        ladder = GetComponentInParent<Ladder>();
+        ladderBoxCollider = ladder.GetComponent<BoxCollider2D>();
+        if (hasRestored) {
+            ladderBoxCollider.isTrigger = isLadderATrigger;
+        }
     }
 
     void Update() {
@@ -32,7 +38,7 @@ public class TopOfLadder : MonoBehaviour {
     }
 
     private bool AtTopOfLadder() {
-        return ladderScript.IsOutsideLadder() && isNearTop;
+        return ladder.IsOutsideLadder() && isNearTop;
     }
 
     // When the player is standing or moving nearby the top
@@ -47,5 +53,14 @@ public class TopOfLadder : MonoBehaviour {
         if (collision.gameObject.CompareTag("Player")) {
             isNearTop = false;
         }
+    }
+
+    public void Restore(bool isNearTop, bool isLadderATrigger) {
+        this.isNearTop = isNearTop;
+        this.isLadderATrigger = isLadderATrigger;
+    }
+
+    public TopOfLadderData CacheData() {
+        return new TopOfLadderData(isNearTop, ladderBoxCollider.isTrigger);
     }
 }

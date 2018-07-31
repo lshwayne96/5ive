@@ -24,6 +24,9 @@ public class SaveScene : MonoBehaviour {
     private StandButton[] standButtons;
     private int numStandButtons;
 
+    private Ladder[] ladders;
+    private int numLadders;
+
     private void Start() {
         inputField = GetComponent<InputField>();
         fileButtonManager =
@@ -41,12 +44,15 @@ public class SaveScene : MonoBehaviour {
 
             standButtons = componentManager.GetScripts<StandButton>();
             numStandButtons = standButtons.Length;
+
+            ladders = componentManager.GetScripts<Ladder>();
+            numLadders = ladders.Length;
         }
     }
 
     public void NewSave() {
         if (!inputField.text.Equals(System.String.Empty)) {
-            if (fileButtonManager.DoesFileExist(inputField.text)) {
+            if (!fileButtonManager.DoesFileExist(inputField.text)) {
                 Save(inputField.text);
             } else {
                 NotificationManager.Notifiy(new FileAlreadyExists());
@@ -71,11 +77,14 @@ public class SaveScene : MonoBehaviour {
 
         PlayerData playerData = CachePlayerData();
         BallData ballData = CacheBallData();
-        LeverData[] leverDatas = CacheLeverData();
-        StandButtonData[] standButtonDatas = CacheStandButtonData();
 
-        SceneData levelData =
-            new SceneData(scene, playerData, ballData, leverDatas, standButtonDatas);
+        LeverData[] leverDatas = CacheLeverData();
+
+        StandButtonData[] standButtonDatas = CacheStandButtonData();
+        LadderData[] ladderDatas = CacheLadderData();
+
+        SceneData levelData = new SceneData(scene, playerData, ballData,
+                                            leverDatas, standButtonDatas, ladderDatas);
 
         BinaryFormatter binaryFormatter = new BinaryFormatter();
         Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
@@ -115,5 +124,13 @@ public class SaveScene : MonoBehaviour {
             standButtonDatas[i] = standButtons[i].CacheData();
         }
         return standButtonDatas;
+    }
+
+    private LadderData[] CacheLadderData() {
+        LadderData[] ladderDatas = new LadderData[numLadders];
+        for (int i = 0; i < numLadders; i++) {
+            ladderDatas[i] = ladders[i].CacheData();
+        }
+        return ladderDatas;
     }
 }

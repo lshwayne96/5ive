@@ -18,19 +18,29 @@ public class Ladder : MonoBehaviour {
     private bool outsideLadder;
     private bool canClimb;
 
-    private float originalGravityScale;
+    private TopOfLadder topOfLadder;
+    private GameObject player;
 
     private Rigidbody2D playerRigidBody;
-    private GameObject player;
+    private float originalGravityScale;
+    private float prevGravityScale;
+    private bool hasRestored;
 
     void Start() {
         // Start the climbing speed to a default 6
         climbingSpeed = 6;
-        player = GameObject.FindWithTag("Player");
-        playerRigidBody = player.GetComponent<Rigidbody2D>();
-        originalGravityScale = playerRigidBody.gravityScale;
+
         isPassingThrough = true;
         outsideLadder = true;
+
+        topOfLadder = GetComponentInChildren<TopOfLadder>();
+        player = GameObject.FindWithTag("Player");
+        playerRigidBody = player.GetComponent<Rigidbody2D>();
+
+        originalGravityScale = playerRigidBody.gravityScale;
+        if (hasRestored) {
+            playerRigidBody.gravityScale = prevGravityScale;
+        }
     }
 
     // While on the ladder
@@ -97,5 +107,21 @@ public class Ladder : MonoBehaviour {
 
     public bool IsOutsideLadder() {
         return outsideLadder;
+    }
+
+    public LadderData CacheData() {
+        return new LadderData(isPassingThrough, wasClimbing, outsideLadder,
+                              canClimb, playerRigidBody.gravityScale, topOfLadder);
+    }
+
+    public void Restore(bool isPassingThrough, bool wasClimbing, bool outsideLadder,
+                        bool canClimb, float currentGravityScale) {
+        this.isPassingThrough = isPassingThrough;
+        this.wasClimbing = wasClimbing;
+        this.outsideLadder = outsideLadder;
+        this.canClimb = canClimb;
+
+        hasRestored = true;
+        prevGravityScale = currentGravityScale;
     }
 }

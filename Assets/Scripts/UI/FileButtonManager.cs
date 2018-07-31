@@ -197,6 +197,6 @@ public class FileButtonManager : MonoBehaviour {
     }
 
     public bool DoesFileExist(string fileName) {
-        return uniqueTaggedFileNames.Add(GameFile.AddTag(fileName));
+        return uniqueTaggedFileNames.Contains(GameFile.AddTag(fileName));
     }
 }
