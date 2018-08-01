@@ -461,6 +461,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1931542456321444, guid: eab54d44ef5e84926844c26356317da9, type: 2}
+      propertyPath: m_Name
+      value: Half Room Ladder (Test)
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eab54d44ef5e84926844c26356317da9, type: 2}
   m_IsPrefabAsset: 0
@@ -11337,7 +11341,7 @@ GameObject:
   - component: {fileID: 1836320381}
   m_Layer: 0
   m_Name: Rooms
-  m_TagString: Untagged
+  m_TagString: ComponentManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -99,9 +99,8 @@ public class SaveScene : MonoBehaviour {
     }
 
     private PlayerData CachePlayerData() {
-        Vector2 velocity = player.GetComponent<Rigidbody2D>().velocity;
-        Vector3 position = player.transform.position;
-        return new PlayerData(velocity, position);
+        Rigidbody2D playerRigidBody = player.GetComponent<Rigidbody2D>();
+        return new PlayerData(playerRigidBody);
     }
 
     private BallData CacheBallData() {

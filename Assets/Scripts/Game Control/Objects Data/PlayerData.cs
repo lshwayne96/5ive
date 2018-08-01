@@ -20,12 +20,19 @@ public class PlayerData {
     private float pX;
     private float pY;
 
-    public PlayerData(Vector2 velocity, Vector3 position) {
+    private float prevGravityScale;
+
+    public PlayerData(Rigidbody2D playerRigidBody) {
+        Vector2 velocity = playerRigidBody.velocity;
+        Vector3 position = playerRigidBody.position;
+
         this.vX = velocity.x;
         this.vY = velocity.y;
 
         this.pX = position.x;
         this.pY = position.y;
+
+        this.prevGravityScale = playerRigidBody.gravityScale;
     }
 
     // Reconstruct the velocity
@@ -39,10 +46,14 @@ public class PlayerData {
     }
 
     public void Restore() {
-        // Find the player in the new scene
         GameObject player = GameObject.FindWithTag("Player");
         player.GetComponent<Rigidbody2D>().velocity = GetVelocity();
         player.transform.position = GetPosition();
+
+        Debug.Log(prevGravityScale);
+        player.GetComponent<Rigidbody2D>().gravityScale = prevGravityScale;
+
+        Debug.Log(player.GetComponent<Rigidbody2D>().gravityScale);
 
         // Restore player camera
         player.GetComponent<DetectRoom>().SetCurrentRoom();

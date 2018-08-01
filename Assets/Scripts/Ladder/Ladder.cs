@@ -23,7 +23,6 @@ public class Ladder : MonoBehaviour {
 
     private Rigidbody2D playerRigidBody;
     private float originalGravityScale;
-    private float prevGravityScale;
     private bool hasRestored;
 
     void Start() {
@@ -37,9 +36,8 @@ public class Ladder : MonoBehaviour {
         player = GameObject.FindWithTag("Player");
         playerRigidBody = player.GetComponent<Rigidbody2D>();
 
-        originalGravityScale = playerRigidBody.gravityScale;
-        if (hasRestored) {
-            playerRigidBody.gravityScale = prevGravityScale;
+        if (!hasRestored) {
+            originalGravityScale = playerRigidBody.gravityScale;
         }
     }
 
@@ -48,8 +46,10 @@ public class Ladder : MonoBehaviour {
         if (canClimb) {
             // Get the x of the velocity since only the y should change
             float currentX = playerRigidBody.velocity.x;
-            playerRigidBody.gravityScale = originalGravityScale;
-            wasClimbing = true;
+            if (!hasRestored) {
+                playerRigidBody.gravityScale = originalGravityScale;
+                wasClimbing = true;
+            }
 
             if (Input.GetKey(KeyCode.UpArrow)) { // Moving up
                 playerRigidBody.velocity = new Vector2(currentX, climbingSpeed);
@@ -111,17 +111,16 @@ public class Ladder : MonoBehaviour {
 
     public LadderData CacheData() {
         return new LadderData(isPassingThrough, wasClimbing, outsideLadder,
-                              canClimb, playerRigidBody.gravityScale, topOfLadder);
+                              canClimb, originalGravityScale, topOfLadder);
     }
 
     public void Restore(bool isPassingThrough, bool wasClimbing, bool outsideLadder,
-                        bool canClimb, float currentGravityScale) {
+                        bool canClimb, float originalGravityScale) {
         this.isPassingThrough = isPassingThrough;
         this.wasClimbing = wasClimbing;
         this.outsideLadder = outsideLadder;
         this.canClimb = canClimb;
-
+        this.originalGravityScale = originalGravityScale;
         hasRestored = true;
-        prevGravityScale = currentGravityScale;
     }
 }
