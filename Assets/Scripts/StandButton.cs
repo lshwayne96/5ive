@@ -236,4 +236,4 @@ public class StandButton : MonoBehaviour {
     }
 }
 
-enum Direction { Up, Down };
+enum Direction { Up, Down, Left, Right };

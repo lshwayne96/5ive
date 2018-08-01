@@ -49,11 +49,7 @@ public class PlayerData {
         GameObject player = GameObject.FindWithTag("Player");
         player.GetComponent<Rigidbody2D>().velocity = GetVelocity();
         player.transform.position = GetPosition();
-
-        Debug.Log(prevGravityScale);
         player.GetComponent<Rigidbody2D>().gravityScale = prevGravityScale;
-
-        Debug.Log(player.GetComponent<Rigidbody2D>().gravityScale);
 
         // Restore player camera
         player.GetComponent<DetectRoom>().SetCurrentRoom();

@@ -21,7 +21,9 @@ public class TopOfLadder : MonoBehaviour {
         ladder = GetComponentInParent<Ladder>();
         ladderBoxCollider = ladder.GetComponent<BoxCollider2D>();
         if (hasRestored) {
+            Debug.Log("Called");
             ladderBoxCollider.isTrigger = isLadderATrigger;
+            hasRestored = false;
         }
     }
 
@@ -58,6 +60,7 @@ public class TopOfLadder : MonoBehaviour {
     public void Restore(bool isNearTop, bool isLadderATrigger) {
         this.isNearTop = isNearTop;
         this.isLadderATrigger = isLadderATrigger;
+        //hasRestored = true;
     }
 
     public TopOfLadderData CacheData() {

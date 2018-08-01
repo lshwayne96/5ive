@@ -16,10 +16,15 @@ public class Lever : MonoBehaviour {
     private Quaternion endRotation;
     private Quaternion prevRotation;
     private Quaternion prevEndRotation;
+    private Quaternion originalStartRotation;
+    private Quaternion originalEndRotation;
 
     private Vector3 currentAngle;
     private Vector3 targetAngle;
     private float angleOfRotation;
+
+    private Coroutine currentCoroutine;
+    private Direction movementDirection;
 
     private bool interactableState;
     private bool hasEnteredTrigger;
@@ -27,10 +32,13 @@ public class Lever : MonoBehaviour {
     private bool hasSwitchedRotation;
     private bool isRotating;
     private bool hasFinishedRotating;
+    private bool wasInterruptedWhileMoving;
 
     private float startTime;
     private float journeyLength;
     private float speed;
+
+
 
     /*
      * Awake() is used instead of Start() to allow the lever
@@ -59,6 +67,11 @@ public class Lever : MonoBehaviour {
         startRotation = transform.rotation;
         Vector3 eulerAngles = transform.eulerAngles;
         endRotation = Quaternion.Euler(eulerAngles + angleDifference);
+
+        originalStartRotation = startRotation;
+        originalEndRotation = endRotation;
+
+        movementDirection = Direction.Right;
     }
 
     void Start() {
@@ -74,13 +87,33 @@ public class Lever : MonoBehaviour {
     void Update() {
         if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
             startTime = Time.time;
-            isRotating = true;
-            StartCoroutine(Rotate());
+            if (!isRotating) {
+                isRotating = true;
+                currentCoroutine = StartCoroutine(Rotate());
+            } else {
+                ChangeMovementDirection();
+                StopCoroutine(currentCoroutine);
+                wasInterruptedWhileMoving = true;
+
+                Quaternion temp = startRotation;
+                startRotation = endRotation;
+                endRotation = temp;
+
+                startRotation = transform.rotation;
+
+                if (movementDirection == Direction.Left) {
+                    endRotation = originalEndRotation;
+                } else {
+                    endRotation = originalStartRotation;
+                }
+
+                currentCoroutine = StartCoroutine(Rotate());
+            }
         }
 
         if (toResume) {
             isRotating = true;
-            StartCoroutine(Rotate());
+            currentCoroutine = StartCoroutine(Rotate());
         }
     }
 
@@ -140,8 +173,16 @@ public class Lever : MonoBehaviour {
         startRotation = endRotation;
         endRotation = temp;
 
+        ChangeMovementDirection();
+
         hasSwitchedRotation = !hasSwitchedRotation;
         isRotating = false;
+
+        if (wasInterruptedWhileMoving && !hasSwitchedRotation) {
+            startRotation = originalStartRotation;
+            endRotation = originalEndRotation;
+            wasInterruptedWhileMoving = false;
+        }
     }
 
     // Allow the rotation to resume
@@ -166,6 +207,14 @@ public class Lever : MonoBehaviour {
 
     public bool HasSwitchedRotation() {
         return hasSwitchedRotation;
+    }
+
+    private void ChangeMovementDirection() {
+        if (movementDirection == Direction.Right) {
+            movementDirection = Direction.Left;
+        } else {
+            movementDirection = Direction.Right;
+        }
     }
 
     public LeverData CacheData() {
