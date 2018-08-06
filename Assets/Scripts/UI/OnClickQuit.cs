@@ -7,13 +7,6 @@ using UnityEngine;
 
 public class OnClickQuit : MonoBehaviour {
 
-    private GameDataManager gameDataManager;
-
-    private void Start() {
-        gameDataManager =
-            GameObject.FindGameObjectWithTag("GameDataManager").GetComponent<GameDataManager>();
-    }
-
     public void Quit() {
         SaveBeforeQuit();
 
@@ -27,6 +20,6 @@ public class OnClickQuit : MonoBehaviour {
 
     private void SaveBeforeQuit() {
         string saveFilePath = GameFile.GetSaveFilePath();
-        GameFile.Serialise(saveFilePath, gameDataManager.GetGameData());
+        GameFile.Serialise(saveFilePath, GameDataManager.GetGameData());
     }
 }

@@ -6,9 +6,7 @@ public class ActivateLevels : MonoBehaviour {
     private GameData gameData;
 
     private void Start() {
-        gameData = GameObject.FindGameObjectWithTag("StartGame")
-                             .GetComponent<GameDataManager>()
-                             .GetGameData();
+        gameData = GameDataManager.GetGameData();
     }
 
     /*

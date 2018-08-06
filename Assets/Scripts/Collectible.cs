@@ -7,6 +7,7 @@
 
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Collectible : MonoBehaviour {
 
@@ -32,6 +33,10 @@ public class Collectible : MonoBehaviour {
             }
             yield return null;
         }
+
+        int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        GameDataManager.UpdateCollectibleLocations(currentSceneBuildIndex);
+
         Destroy(gameObject);
     }
 }

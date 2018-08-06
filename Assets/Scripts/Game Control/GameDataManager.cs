@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 public class GameDataManager : MonoBehaviour {
     // The Singleton StartGame instance
     public static GameDataManager gameDataManager;
-    private string saveFilePath;
-    private GameData gameData;
+    private static GameData gameData;
+    private static Collectible collectible;
 
     // Ensures that there is only one StartGame instance
     private void Awake() {
@@ -21,10 +21,12 @@ public class GameDataManager : MonoBehaviour {
         } else if (gameDataManager != this) {
             Destroy(gameObject);
         }
+
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    void Start() {
-        saveFilePath = GameFile.GetSaveFilePath();
+    private void Start() {
+        string saveFilePath = GameFile.GetSaveFilePath();
         if (!File.Exists(saveFilePath)) { // First time starting the game
             File.Create(saveFilePath);
             gameData = new GameData(SceneManager.sceneCountInBuildSettings);
@@ -34,7 +36,24 @@ public class GameDataManager : MonoBehaviour {
         }
     }
 
-    public GameData GetGameData() {
+    public static GameData GetGameData() {
         return gameData;
+    }
+
+    public static void UpdateCollectibleLocations(int sceneBuildIndex) {
+        gameData.UpdateCollectibleLocations(sceneBuildIndex);
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
+        if (scene.buildIndex != 0 && !gameData.DoesSceneContainCollectible(scene.buildIndex)) {
+            collectible = GameObject.FindGameObjectWithTag("ComponentManager")
+                        .GetComponent<ComponentManager>()
+                        .GetScript<Collectible>();
+            Destroy(collectible.gameObject);
+        }
+    }
+
+    private void OnDisable() {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 }

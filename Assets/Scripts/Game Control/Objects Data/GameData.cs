@@ -18,7 +18,7 @@ public class GameData {
         return collectibleLocations[sceneBuildIndex];
     }
 
-    public void UpdateCollectibleLocation(int sceneBuildIndex) {
+    public void UpdateCollectibleLocations(int sceneBuildIndex) {
         collectibleLocations[sceneBuildIndex] = false;
     }
 
