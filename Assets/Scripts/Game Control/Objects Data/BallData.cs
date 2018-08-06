@@ -1,5 +1,9 @@
 ﻿/*
- * This class represents a ball and is used to restore
+ * This class represents a ball and the ball camera.
+ * It is used to restore a ball and its saved position
+ * and velocity in the saved level.
+ * It is also used to reposition the ball camera
+ * to the correct room.
  * a ball to its saved position and velocity in the saved game.
  */
 

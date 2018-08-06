@@ -235,5 +235,3 @@ public class StandButton : MonoBehaviour {
         return new StandButtonData(transform.position, endPosition, move);
     }
 }
-
-enum Direction { Up, Down, Left, Right };

@@ -61,30 +61,36 @@ public class Teleportation : MonoBehaviour {
 
     private void Teleport() {
         // Swap the Player's and ball's rooms
-        Vector3 positionDifference =
-            SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentPlayerRoom.position;
+        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position
+                                                   - SetCurrentRoom.currentPlayerRoom.position;
 
         // Offset of player from centre of room
-        Vector3 playerOffset = transform.position - SetCurrentRoom.currentPlayerRoom.position;
+        Vector3 playerOffset = transform.position
+                                        - SetCurrentRoom.currentPlayerRoom.position;
 
         // Offset of ball from centre of room
-        Vector3 ballOffset = SetCurrentRoom.ball.transform.position - SetCurrentRoom.currentBallRoom.position;
+        Vector3 ballOffset = SetCurrentRoom.ball.transform.position
+                                           - SetCurrentRoom.currentBallRoom.position;
 
-        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom.GetComponent<BoxCollider2D>();
-        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoom.GetComponent<BoxCollider2D>();
+        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom
+                                                         .GetComponent<BoxCollider2D>();
+        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoom
+                                                       .GetComponent<BoxCollider2D>();
 
         // Difference in scale of 2 rooms
         float scaleFactor_x = playerRoomCollider.size.x / ballRoomCollider.size.x;
         float scaleFactor_y = playerRoomCollider.size.y / ballRoomCollider.size.y;
 
-        transform.position += positionDifference + Vector3.Scale(playerOffset, new Vector3(1 / scaleFactor_x - 1, 1 / scaleFactor_y - 1, 0));
-        SetCurrentRoom.ball.transform.position -= positionDifference - Vector3.Scale(ballOffset, new Vector3(scaleFactor_x - 1, scaleFactor_y - 1, 0));
+        transform.position += positionDifference
+            + Vector3.Scale(playerOffset, new Vector3(1 / scaleFactor_x - 1, 1 / scaleFactor_y - 1, 0));
+        SetCurrentRoom.ball.transform.position -= positionDifference
+            - Vector3.Scale(ballOffset, new Vector3(scaleFactor_x - 1, scaleFactor_y - 1, 0));
     }
 
     private bool IsInAllowedScene() {
         int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        return !(sceneBuildIndex == (int)Scenes.Denial
-                 || sceneBuildIndex == (int)Scenes.Anger);
+        return !(sceneBuildIndex == (int)Level.Denial
+                 || sceneBuildIndex == (int)Level.Anger);
     }
 
     private bool CanTeleport() {
@@ -94,8 +100,4 @@ public class Teleportation : MonoBehaviour {
             return false;
         }
     }
-}
-
-enum Scenes {
-    Denial = 1, Anger, Bargaining, Depression, Acceptance
 }

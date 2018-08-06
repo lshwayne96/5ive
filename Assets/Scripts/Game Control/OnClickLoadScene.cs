@@ -9,11 +9,9 @@ using UnityEngine.SceneManagement;
 public class OnClickLoadScene : MonoBehaviour {
 
     public void LoadByIndex(int sceneBuildIndex) {
-        GameData gameData = GameDataManager.GetGameData();
-
         int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        if (gameData.HasSavedBefore() && currentSceneBuildIndex == 0) {
-            string saveFilePath = LevelFile.ConvertToPath(LevelFile.AddTag(gameData.GetLastSavedFileName()));
+        if (GameDataManager.HasSavedBefore() && currentSceneBuildIndex == 0) {
+            string saveFilePath = LevelFile.ConvertToPath(GameDataManager.GetLastSavedFileName(), true);
             LevelData levelData = LevelFile.Deserialise<LevelData>(saveFilePath);
 
             // Load the scene of the saved game

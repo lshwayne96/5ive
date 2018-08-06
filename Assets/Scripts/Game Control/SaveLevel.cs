@@ -12,7 +12,6 @@ public class SaveLevel : MonoBehaviour {
 
     private InputField inputField;
     private FileButtonManager fileButtonManager;
-    private GameDataManager gameDataManager;
 
     private GameObject player;
     private GameObject ball;
@@ -30,8 +29,6 @@ public class SaveLevel : MonoBehaviour {
         inputField = GetComponent<InputField>();
         fileButtonManager = GameObject.FindGameObjectWithTag("PauseControl")
                                       .GetComponentInChildren<FileButtonManager>();
-        gameDataManager = GameObject.FindGameObjectWithTag("GameDataManager")
-                                    .GetComponent<GameDataManager>();
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
@@ -78,22 +75,23 @@ public class SaveLevel : MonoBehaviour {
 
         PlayerData playerData = CachePlayerData();
         BallData ballData = CacheBallData();
-
         LeverData[] leverDatas = CacheLeverData();
-
         StandButtonData[] standButtonDatas = CacheStandButtonData();
         LadderData[] ladderDatas = CacheLadderData();
 
-        LevelData levelData =
-            new LevelData(scene, playerData, ballData,
-                          leverDatas, standButtonDatas, ladderDatas);
+        LevelData levelData = new LevelData(scene, playerData, ballData,
+                                            leverDatas, standButtonDatas, ladderDatas);
 
-        string saveFilePath = LevelFile.ConvertToPath(LevelFile.AddTag(fileName));
+        string saveFilePath = LevelFile.ConvertToPath(fileName, true);
         LevelFile.Serialise(saveFilePath, levelData);
 
+        // Add new file buttons or update the information/ order of existing file buttons
         fileButtonManager.UpdateButtons();
-        gameDataManager.SetHasSavedBefore();
-        gameDataManager.SetLastSavedFileName(fileName);
+
+        // Used to know when to change the "New" text in the New Button to "Resume"
+        GameDataManager.SetHasSavedBefore();
+        // Used to allow clicking on the Resume button to load the latest saved level
+        GameDataManager.SetLastSavedFileName(fileName);
     }
 
     private PlayerData CachePlayerData() {

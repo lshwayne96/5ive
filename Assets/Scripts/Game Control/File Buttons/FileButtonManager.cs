@@ -114,7 +114,7 @@ public class FileButtonManager : MonoBehaviour {
     // Recycle one of the buttons on the Content gameObject and delete its associated file
     public void DeleteOne() {
         if (LevelMenu.IsLoadMenu(parentMenu)) {
-            File.Delete(LevelFile.ConvertToPath(saveTaggedFileNameToDelete));
+            File.Delete(LevelFile.ConvertToPath(saveTaggedFileNameToDelete, false));
             gameObjectPool.ReturnObject(fileButtonToDelete);
 
             uniqueTaggedFileNames.Remove(saveTaggedFileNameToDelete);
@@ -171,7 +171,7 @@ public class FileButtonManager : MonoBehaviour {
     // Delete the file associated with the button
     private void DeleteFile(FileButton fileButton) {
         string saveFilePath =
-            LevelFile.ConvertToPath(LevelFile.AddTag(fileButton.nameLabel.text));
+            LevelFile.ConvertToPath(fileButton.nameLabel.text, true);
         File.Delete(saveFilePath);
     }
 

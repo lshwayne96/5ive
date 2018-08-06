@@ -10,11 +10,17 @@ public class EndLevel : MonoBehaviour {
 
     public int scene;
 
+    /*
+     * Becomes true when one of the player collider enters the trigger
+     * When true, it prevents the other collider of the player from triggering
+     * the OnTriggerEnter2D method
+     */
     private bool hasEnded;
 
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player") && !hasEnded) {
             hasEnded = true;
+
             GameDataManager.UpdateNumLevelsCompleted();
             SceneManager.LoadScene(scene);
         }

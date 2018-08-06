@@ -1,6 +1,6 @@
 ﻿/*
  * This is a utility class.
- * It provides methods which convert between a file path and a file name
+ * It provides methods to convert between a file path and a file name
  * and adds an identifier to save level files.
  */
 
@@ -23,10 +23,19 @@ public class LevelFile {
 
     }
 
+    /*
     // Get the full path of the file
     public static string ConvertToPath(string fileName) {
         return saveDirectoryPath + fileName + fileNameExtension;
+    }
+    */
 
+    public static string ConvertToPath(string fileName, bool addTag) {
+        if (addTag) {
+            return saveDirectoryPath + AddTag(fileName) + fileNameExtension;
+        } else {
+            return saveDirectoryPath + fileName + fileNameExtension;
+        }
     }
 
     // Get the name of the file from its path

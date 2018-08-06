@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * This class represents the data of a lever.
+ * It is is used to restore a lver to
+ * its previous rotation.
+ */
+
+using System;
 using UnityEngine;
 
 [Serializable]

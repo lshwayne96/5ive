@@ -1,4 +1,6 @@
-﻿using UnityEngine.UI;
+﻿/*
+ * A subclass of Notification that gives the "Overwrite Successful!" message.
+ */
 
 public class OverwriteSuccessful : Notification {
     public override string GetMessage() {

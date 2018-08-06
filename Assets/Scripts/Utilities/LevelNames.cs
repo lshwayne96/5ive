@@ -1,4 +1,15 @@
-﻿public class LevelNames {
+﻿/*
+ * This is a utility class.
+ * It provides a method to get the name associated with
+ * a particular level.
+ */
+
+public class LevelName {
+
+    // Hide the constructor
+    private LevelName() {
+
+    }
 
     public static string GetLevelName(int sceneBuildIndex) {
         switch (sceneBuildIndex) {

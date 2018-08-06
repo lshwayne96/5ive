@@ -1,7 +1,7 @@
 ﻿/*
  * This class represents a player and the player camera.
  * It is used to restore a player to its saved position
- * and velocity in the saved game.
+ * and velocity in the saved level.
  * It is also used to reposition the player camera
  * to the correct room.
  */

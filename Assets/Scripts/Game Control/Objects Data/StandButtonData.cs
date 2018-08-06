@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * This class represents the data of a stand button.
+ * It is is used to restore a stand button to
+ * its previous position.
+ */
+
+using System;
 using UnityEngine;
 
 [Serializable]

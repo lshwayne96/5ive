@@ -1,5 +1,5 @@
 ﻿/*
- * This script represents a scene and is used to restore
+ * This class represents the data of a level and is used to restore
  * a level to its saved state.
  */
 

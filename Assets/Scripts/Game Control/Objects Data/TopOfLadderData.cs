@@ -1,4 +1,10 @@
-﻿using System;
+﻿/*
+ * This class represents the data of a ladder top.
+ * It is used to restore a ladder top to its previous
+ * set of boolean values.
+ */
+
+using System;
 
 [Serializable]
 public class TopOfLadderData {

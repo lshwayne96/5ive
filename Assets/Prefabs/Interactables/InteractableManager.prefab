@@ -51,6 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0199a20888a6149a2a45a2f23214778b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjects: []
-  interactableGameObject: {fileID: 0}
+  leverGameObjects: []
+  interactable: {fileID: 0}
   bools: 

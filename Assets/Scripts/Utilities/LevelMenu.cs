@@ -8,6 +8,12 @@
 using UnityEngine;
 
 public class LevelMenu {
+
+    // Hide the constructor
+    private LevelMenu() {
+
+    }
+
     public static GameObject SetParentMenu(GameObject parentMenu) {
         // Determine if the parent of this button is the SaveMenu or the LoadMenu
         parentMenu = GameObject.FindWithTag("SaveMenu");

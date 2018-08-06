@@ -26,7 +26,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         nameLabel.text = fileName;
 
         int prefixLength = 2;
-        String levelName = LevelNames.GetLevelName(sceneBuildIndex).Substring(prefixLength);
+        String levelName = LevelName.GetLevelName(sceneBuildIndex).Substring(prefixLength);
         levelLabel.text = levelName;
 
         // f stands for full date/time pattern (short time)

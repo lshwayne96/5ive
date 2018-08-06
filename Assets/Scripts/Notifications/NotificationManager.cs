@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿/*
+ * This script manages the sending of notifications.
+ */
+
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NotificationManager : MonoBehaviour {
-    private static Image image;
-    private static Text text;
+    private static Image notificationBox;
+    private static Text message;
     private Coroutine currentCoroutine;
 
     private static float startTime;
@@ -15,9 +19,10 @@ public class NotificationManager : MonoBehaviour {
     private bool doesFileAlreadyExist;
 
     private void Start() {
-        image = GetComponentInChildren<Image>();
-        image.enabled = false;
-        text = GetComponentInChildren<Text>();
+        notificationBox = GetComponentInChildren<Image>();
+        // Make the notification box invisible
+        notificationBox.enabled = false;
+        message = GetComponentInChildren<Text>();
 
         visibleDuration = 3f;
     }
@@ -33,10 +38,11 @@ public class NotificationManager : MonoBehaviour {
 
     public static void Notifiy(Notification notification) {
         SetUp();
-        text.text = notification.GetMessage();
+        message.text = notification.GetMessage();
         hasNewMessage = true;
     }
 
+    // Makes the notification disappear after a certain duration
     private IEnumerator Disappear(float start) {
         hasVisibleMessage = true;
 
@@ -49,13 +55,16 @@ public class NotificationManager : MonoBehaviour {
     }
 
     private static void SetUp() {
-        image.enabled = true;
+        // Make the notification box visible
+        notificationBox.enabled = true;
         startTime = Time.time;
     }
 
     private void CleanUp() {
-        image.enabled = false;
-        text.text = System.String.Empty;
+        // Make the notification box invisible
+        notificationBox.enabled = false;
+        // Clear the notification box of any messages
+        message.text = System.String.Empty;
         hasVisibleMessage = false;
         currentCoroutine = null;
     }

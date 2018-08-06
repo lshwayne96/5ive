@@ -1,4 +1,9 @@
-﻿using System;
+﻿/*
+ * This class represents the data of the game and is used to restore
+ * the game to its saved state.
+ */
+
+using System;
 
 [Serializable]
 public class GameData {

@@ -1,5 +1,13 @@
 ﻿/*
  * This script is attached to an empty prefab called StartGame.
+ * 
+ * It can be said to encapsulates a GameData instance,
+ * where some methods pertaining to the GameData class is
+ * encapsulated into static methods in this script.
+ * The aim is to reduce code complexity.
+ *
+ * It also handles the creation, deseralisation or destruction of
+ * a GameData instance.
  */
 
 using System.IO;
@@ -13,9 +21,8 @@ public class GameDataManager : MonoBehaviour {
     private static GameData gameData;
     private static Collectible collectible;
     private static Text newButtonText;
-    private string saveFilePath;
+    private static string saveFilePath;
     private bool hasInitialised;
-    private bool hasSavedBefore;
 
     // Ensures that there is only one StartGame instance
     private void Awake() {
@@ -48,25 +55,18 @@ public class GameDataManager : MonoBehaviour {
         }
     }
 
-    private void FirstGameSetUp() {
-        Debug.Log("First");
+    private static void FirstGameSetUp() {
         // Create the file, and then close the resulting file stream
         File.Create(saveFilePath).Close();
         gameData = new GameData(SceneManager.sceneCountInBuildSettings);
         newButtonText.text = "New";
     }
 
-    private void SubsequentGamesSetUp() {
-        Debug.Log("Subsequent");
-
+    private static void SubsequentGamesSetUp() {
         gameData = GameFile.Deserialise<GameData>(saveFilePath);
         if (gameData.HasSavedBefore()) {
             newButtonText.text = "Resume";
         }
-    }
-
-    public static GameData GetGameData() {
-        return gameData;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
@@ -75,11 +75,12 @@ public class GameDataManager : MonoBehaviour {
                                     .GetComponent<ComponentManager>()
                                     .GetScript<Collectible>();
             Destroy(collectible.gameObject);
+
         } else {
             int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-            if (hasSavedBefore && currentSceneBuildIndex == 0) {
+            if (gameData.HasSavedBefore() && currentSceneBuildIndex == (int)Level.MainMenu) {
                 newButtonText = GameObject.FindGameObjectWithTag("NewButton")
-                          .GetComponentInChildren<Text>();
+                                          .GetComponentInChildren<Text>();
                 newButtonText.text = "Resume";
             }
         }
@@ -96,31 +97,35 @@ public class GameDataManager : MonoBehaviour {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
-    public static void UpdateCollectibleLocations(int sceneBuildIndex) {
-        gameData.UpdateCollectibleLocations(sceneBuildIndex);
-    }
-
-    public static void UpdateNumLevelsCompleted() {
-        gameData.UpdateNumLevelsCompleted();
-    }
-
-    public void ResetGameData() {
+    public static void ResetGameData() {
         File.Delete(saveFilePath);
         string[] levelFileNames = Directory.GetFiles(LevelFile.GetSaveDirectoryPath());
         foreach (string levelFileName in levelFileNames) {
             File.Delete(levelFileName);
         }
-        hasSavedBefore = false;
         gameData.SetHasSavedBefore(false);
         FirstGameSetUp();
     }
 
-    public void SetHasSavedBefore() {
-        hasSavedBefore = true;
-        gameData.SetHasSavedBefore(true);
+    public static void ResetNewButtonText() {
+        newButtonText.text = "New";
     }
 
-    public void SetLastSavedFileName(string fileName) {
-        gameData.SetLastSavedFileName(fileName);
+    public static GameData GetGameData() {
+        return gameData;
     }
+
+    public static int GetNumLevelsCompleted() {
+        return gameData.GetNumLevelsCompleted();
+    }
+
+    public static void SetHasSavedBefore() {         gameData.SetHasSavedBefore(true);     }
+
+    public static bool HasSavedBefore() {
+        return gameData.HasSavedBefore();
+    }      public static void SetLastSavedFileName(string fileName) {         gameData.SetLastSavedFileName(fileName);     }
+
+    public static string GetLastSavedFileName() {
+        return gameData.GetLastSavedFileName();
+    }      public static void UpdateCollectibleLocations(int sceneBuildIndex) {         gameData.UpdateCollectibleLocations(sceneBuildIndex);     }      public static void UpdateNumLevelsCompleted() {         gameData.UpdateNumLevelsCompleted();     } 
 }
