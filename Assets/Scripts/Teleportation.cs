@@ -11,7 +11,7 @@ public class Teleportation : MonoBehaviour {
 
     private MeshRenderer preview;
     private GameObject mainCamera;
-    private PauseScene pauseScene;
+    private PauseLevel pauseLevel;
 
     private float startTime;
     private float previewDuration;
@@ -25,7 +25,7 @@ public class Teleportation : MonoBehaviour {
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
-        pauseScene = GameObject.FindWithTag("Pause").GetComponent<PauseScene>();
+        pauseLevel = GameObject.FindWithTag("Pause").GetComponent<PauseLevel>();
 
         previewDuration = 3f;
         isInAllowedScene = IsInAllowedScene();
@@ -88,7 +88,7 @@ public class Teleportation : MonoBehaviour {
     }
 
     private bool CanTeleport() {
-        if (!pauseScene.IsScenePaused()) {
+        if (!pauseLevel.IsScenePaused()) {
             return isInAllowedScene || isInAllowedLocation;
         } else {
             return false;

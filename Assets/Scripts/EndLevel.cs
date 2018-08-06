@@ -6,7 +6,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class EndScene : MonoBehaviour {
+public class EndLevel : MonoBehaviour {
 
     public int scene;
 

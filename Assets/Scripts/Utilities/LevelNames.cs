@@ -1,6 +1,6 @@
-﻿public class SceneNames {
+﻿public class LevelNames {
 
-    public static string GetSceneName(int sceneBuildIndex) {
+    public static string GetLevelName(int sceneBuildIndex) {
         switch (sceneBuildIndex) {
             case 1:
             return "1_Denial";
@@ -21,5 +21,5 @@
             return System.String.Empty;
         }
     }
-
 }
+

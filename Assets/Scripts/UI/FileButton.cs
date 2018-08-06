@@ -10,7 +10,6 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 
 public class FileButton : MonoBehaviour, IPointerClickHandler {
 
@@ -27,18 +26,18 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
         nameLabel.text = fileName;
 
         int prefixLength = 2;
-        String sceneName = SceneNames.GetSceneName(sceneBuildIndex).Substring(prefixLength);
-        levelLabel.text = sceneName;
+        String levelName = LevelNames.GetLevelName(sceneBuildIndex).Substring(prefixLength);
+        levelLabel.text = levelName;
 
         // f stands for full date/time pattern (short time)
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
-        parentMenu = GameMenu.SetParentMenu(parentMenu);
+        parentMenu = LevelMenu.SetParentMenu(parentMenu);
 
         transform.localScale = Vector3.one;
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
-        if (GameMenu.IsLoadMenu(parentMenu)) {
+        if (LevelMenu.IsLoadMenu(parentMenu)) {
 
             // If the button is clicked once by the left button on the mouse
             if (IsSingleClick(pointerEventData)) {
@@ -54,16 +53,16 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
             // If the button is double clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                LoadScene loadScene = GetComponent<LoadScene>();
-                loadScene.Load(nameLabel.text);
+                LoadLevel loadLevel = GetComponent<LoadLevel>();
+                loadLevel.Load(nameLabel.text);
             }
 
-        } else if (GameMenu.IsSaveMenu(parentMenu)) {
+        } else if (LevelMenu.IsSaveMenu(parentMenu)) {
 
             // If the button is doubled clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                SaveScene saveScene = GetComponent<SaveScene>();
-                saveScene.Overwrite(nameLabel.text);
+                SaveLevel saveLevel = GetComponent<SaveLevel>();
+                saveLevel.Overwrite(nameLabel.text);
                 NotificationManager.Notifiy(new OverwriteSuccessful());
             }
         }

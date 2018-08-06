@@ -21,7 +21,7 @@ public class StandButton : MonoBehaviour {
     public GameObject interactable;
 
     private Booster booster;
-    private PauseScene pauseScene;
+    private PauseLevel pauseLevel;
 
     private float waitDuration;
     private float translationDistY;
@@ -48,7 +48,7 @@ public class StandButton : MonoBehaviour {
 
     void Start() {
         booster = interactable.GetComponent<Booster>();
-        pauseScene = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseScene>();
+        pauseLevel = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseLevel>();
 
         waitDuration = 2f;
         translationDistY = 0.15f;
@@ -77,7 +77,7 @@ public class StandButton : MonoBehaviour {
 
         // Move
         if (move) {
-            if (!pauseScene.IsScenePaused()) {
+            if (!pauseLevel.IsScenePaused()) {
                 Move();
             } else {
                 startTime = Time.time;
@@ -123,7 +123,7 @@ public class StandButton : MonoBehaviour {
                 // This startTime is to ensure smooth upward movement of the stand button
                 startTime = Time.time;
                 // Move upwards
-                if (!pauseScene.IsScenePaused()) {
+                if (!pauseLevel.IsScenePaused()) {
                     Move();
                 } else {
                     startTime = Time.time;
@@ -134,7 +134,7 @@ public class StandButton : MonoBehaviour {
         // Run the booster script when the stand button has just reached bottom
         if (HasJustReachedBottom()) {
             booster.Move();
-            if (pauseScene.IsScenePaused()) {
+            if (pauseLevel.IsScenePaused()) {
                 startTime = Time.time;
             }
             interactableHasMoved = true;

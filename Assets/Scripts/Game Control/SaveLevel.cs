@@ -4,13 +4,11 @@
  */
 
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
 
-public class SaveScene : MonoBehaviour {
+public class SaveLevel : MonoBehaviour {
 
     private InputField inputField;
     private FileButtonManager fileButtonManager;
@@ -83,17 +81,12 @@ public class SaveScene : MonoBehaviour {
         StandButtonData[] standButtonDatas = CacheStandButtonData();
         LadderData[] ladderDatas = CacheLadderData();
 
-        SceneData levelData = new SceneData(scene, playerData, ballData,
-                                            leverDatas, standButtonDatas, ladderDatas);
+        LevelData levelData =
+            new LevelData(scene, playerData, ballData,
+                          leverDatas, standButtonDatas, ladderDatas);
 
-        BinaryFormatter binaryFormatter = new BinaryFormatter();
-        Directory.CreateDirectory(GameFile.GetSaveDirectoryPath());
-
-        string saveFilePath = GameFile.ConvertToPath(GameFile.AddTag(fileName));
-        FileStream fileStream = File.Create(saveFilePath);
-
-        binaryFormatter.Serialize(fileStream, levelData);
-        fileStream.Close();
+        string saveFilePath = LevelFile.ConvertToPath(LevelFile.AddTag(fileName));
+        LevelFile.Serialise(saveFilePath, levelData);
 
         fileButtonManager.UpdateButtons();
     }

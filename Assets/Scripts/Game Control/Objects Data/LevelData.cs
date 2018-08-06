@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [Serializable]
-public class SceneData {
+public class LevelData {
 
     private int sceneBuildIndex;
     private PlayerData playerData;
@@ -18,7 +18,7 @@ public class SceneData {
     private StandButtonData[] standButtonDatas;
     private LadderData[] ladderDatas;
 
-    public SceneData(Scene scene, PlayerData playerData, BallData ballData,
+    public LevelData(Scene scene, PlayerData playerData, BallData ballData,
                      LeverData[] leverDatas, StandButtonData[] standButtonDatas,
                      LadderData[] ladderDatas) {
         this.sceneBuildIndex = scene.buildIndex;

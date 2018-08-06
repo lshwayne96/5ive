@@ -7,7 +7,7 @@ using UnityEngine;
  * To prevent further input from moving the player,
  * the player movement script, Platformer2DUserControl, is disabled
  */
-public class PauseScene : MonoBehaviour {
+public class PauseLevel : MonoBehaviour {
 
     private GameObject pauseMenu;
     private GameObject player;

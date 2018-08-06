@@ -18,6 +18,8 @@ TagManager:
   - Lever
   - StandButton
   - ComponentManager
+  - Notifications
+  - GameDataManager
   layers:
   - Default
   - TransparentFX

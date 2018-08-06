@@ -14,7 +14,7 @@ public class UpdateFileButtons : MonoBehaviour {
     private void OnEnable() {
         // Set the parentMenu only once
         if (parentMenu == null) {
-            parentMenu = GameMenu.SetParentMenu(parentMenu);
+            parentMenu = LevelMenu.SetParentMenu(parentMenu);
         }
 
         // Set the fileButtonManager only once

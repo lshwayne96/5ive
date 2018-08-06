@@ -8,20 +8,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class RestoreScene : MonoBehaviour {
+public class RestoreLevel : MonoBehaviour {
 
     // The Singleton RestoreScene instance
-    public static RestoreScene restoreScene;
-    private SceneData sceneData;
+    public static RestoreLevel restoreLevel;
+    private LevelData levelData;
     private bool hasSavedScene;
 
     // Ensures that there is only one RestoreGame instance
     private void Awake() {
-        if (restoreScene == null) {
+        if (restoreLevel == null) {
             DontDestroyOnLoad(gameObject);
-            restoreScene = this;
+            restoreLevel = this;
 
-        } else if (restoreScene != this) {
+        } else if (restoreLevel != this) {
             Destroy(gameObject);
         }
 
@@ -29,14 +29,14 @@ public class RestoreScene : MonoBehaviour {
     }
 
     // Caches data from the LoadGame script
-    public void Cache(SceneData sceneData) {
-        this.sceneData = sceneData;
+    public void Cache(LevelData levelData) {
+        this.levelData = levelData;
         hasSavedScene = true;
     }
 
     // Restores the previous game data
     public void Restore() {
-        sceneData.Restore();
+        levelData.Restore();
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {

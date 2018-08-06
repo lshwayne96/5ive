@@ -1,18 +1,25 @@
-﻿using System;
+﻿/*
+ * This is a utility class.
+ * It provides methods which convert between a file path and a file name
+ * and adds an identifier to save level files.
+ */
+
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public class GameFile {
+public class LevelFile {
+
     // The standard directory path where level files will be saved
     private static string saveDirectoryPath =
-        Application.persistentDataPath + "/Saved Games/";
+        Application.persistentDataPath + "/Saved Levels/";
     private static string fileNameExtension = ".dat";
     // A tag added to saved level files to allow for distinguish them from others
-    private static string tag = "UnityGame";
+    private static string tag = "UnityLevel";
 
     // Hide the constructor
-    private GameFile() {
+    private LevelFile() {
 
     }
 
@@ -44,10 +51,6 @@ public class GameFile {
         } else {
             return System.String.Empty;
         }
-    }
-
-    public static string GetSaveFilePath() {
-        return saveDirectoryPath + "CurrentGame" + fileNameExtension;
     }
 
     public static string GetSaveDirectoryPath() {

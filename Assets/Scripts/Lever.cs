@@ -10,7 +10,7 @@ public class Lever : MonoBehaviour {
 
     public GameObject interactable;
 
-    private PauseScene pauseScene;
+    private PauseLevel pauseLevel;
 
     private Quaternion startRotation;
     private Quaternion endRotation;
@@ -58,7 +58,7 @@ public class Lever : MonoBehaviour {
         }
         angleOfRotation = 90f;
 
-        pauseScene = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseScene>();
+        pauseLevel = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseLevel>();
 
         Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
@@ -146,7 +146,7 @@ public class Lever : MonoBehaviour {
         }
 
         while (fracJourney < 1) {
-            if (!pauseScene.IsScenePaused()) {
+            if (!pauseLevel.IsScenePaused()) {
                 // Distance moved = time * speed.
                 distCovered = (Time.time - startTime) * speed;
 
