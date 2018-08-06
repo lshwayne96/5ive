@@ -10,8 +10,12 @@ public class EndLevel : MonoBehaviour {
 
     public int scene;
 
+    private bool hasEnded;
+
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Player")) {
+        if (collision.gameObject.CompareTag("Player") && !hasEnded) {
+            hasEnded = true;
+            GameDataManager.UpdateNumLevelsCompleted();
             SceneManager.LoadScene(scene);
         }
     }

@@ -1,12 +1,21 @@
-﻿using UnityEngine;
+﻿/*
+ * This script is attached to the empty Levels GameObject
+ * in the OverviewMenu GameObject in Scene 0_Main Menu.
+ */
+
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ActivateLevels : MonoBehaviour {
 
     private GameData gameData;
+    private Button[] levelButtons;
+    private bool hasInitialised;
 
-    private void Start() {
+    private void Initialise() {
         gameData = GameDataManager.GetGameData();
+        levelButtons = GetComponentsInChildren<Button>();
+        GameObject.FindGameObjectWithTag("OverviewMenu").SetActive(false);
     }
 
     /*
@@ -14,8 +23,12 @@ public class ActivateLevels : MonoBehaviour {
      * with the exception of the always-unlocked first level
      */
     private void OnEnable() {
-        Button[] levelButtons = GetComponentsInChildren<Button>();
-        for (int i = 1; i <= gameData.GetNumLevelsCompleted(); i++) {
+        if (!hasInitialised) {
+            Initialise();
+            hasInitialised = true;
+        }
+
+        for (int i = 0; i < gameData.GetNumLevelsCompleted(); i++) {
             levelButtons[i].interactable = true;
         }
     }

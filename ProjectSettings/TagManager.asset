@@ -20,6 +20,10 @@ TagManager:
   - ComponentManager
   - Notifications
   - GameDataManager
+  - StartGame
+  - NewButton
+  - OptionsMenu
+  - OverviewMenu
   layers:
   - Default
   - TransparentFX

@@ -2,12 +2,16 @@
 
 [Serializable]
 public class GameData {
-    public int numLevels;
-    public int numLevelsCompleted;
-    public bool[] collectibleLocations;
+    private int numLevels;
+    private int numLevelsCompleted;
+    private bool hasSavedBefore;
+    private bool[] collectibleLocations;
+    private string lastSavedFileName;
 
     public GameData(int numLevels) {
         this.numLevels = numLevels;
+        this.numLevelsCompleted = 1;
+        this.hasSavedBefore = false;
         this.collectibleLocations = new bool[numLevels + 1];
         for (int i = 1; i < collectibleLocations.Length; i++) {
             collectibleLocations[i] = true;
@@ -28,6 +32,22 @@ public class GameData {
 
     public int GetNumLevelsCompleted() {
         return numLevelsCompleted;
+    }
+
+    public bool HasSavedBefore() {
+        return hasSavedBefore;
+    }
+
+    public void SetHasSavedBefore(bool boolean) {
+        hasSavedBefore = boolean;
+    }
+
+    public void SetLastSavedFileName(string fileName) {
+        lastSavedFileName = fileName;
+    }
+
+    public string GetLastSavedFileName() {
+        return lastSavedFileName;
     }
 
 }

@@ -12,6 +12,7 @@ public class SaveLevel : MonoBehaviour {
 
     private InputField inputField;
     private FileButtonManager fileButtonManager;
+    private GameDataManager gameDataManager;
 
     private GameObject player;
     private GameObject ball;
@@ -27,8 +28,10 @@ public class SaveLevel : MonoBehaviour {
 
     private void Start() {
         inputField = GetComponent<InputField>();
-        fileButtonManager =
-            GameObject.FindGameObjectWithTag("PauseControl").GetComponentInChildren<FileButtonManager>();
+        fileButtonManager = GameObject.FindGameObjectWithTag("PauseControl")
+                                      .GetComponentInChildren<FileButtonManager>();
+        gameDataManager = GameObject.FindGameObjectWithTag("GameDataManager")
+                                    .GetComponent<GameDataManager>();
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
@@ -89,6 +92,8 @@ public class SaveLevel : MonoBehaviour {
         LevelFile.Serialise(saveFilePath, levelData);
 
         fileButtonManager.UpdateButtons();
+        gameDataManager.SetHasSavedBefore();
+        gameDataManager.SetLastSavedFileName(fileName);
     }
 
     private PlayerData CachePlayerData() {
