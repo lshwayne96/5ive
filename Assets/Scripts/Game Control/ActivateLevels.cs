@@ -20,12 +20,16 @@ public class ActivateLevels : MonoBehaviour {
      * Unlock all the levels that the player has completed
      * with the exception of the always-unlocked first level
      */
-    private void OnEnable() {
+    private void Start() {
         if (!hasInitialised) {
             Initialise();
             hasInitialised = true;
         }
 
+        UnlockLevelButtons();
+    }
+
+    private void UnlockLevelButtons() {
         for (int i = 0; i < GameDataManager.GetNumLevelsCompleted(); i++) {
             levelButtons[i].interactable = true;
         }

@@ -27,8 +27,14 @@ public class SaveLevel : MonoBehaviour {
 
     private void Start() {
         inputField = GetComponent<InputField>();
-        fileButtonManager = GameObject.FindGameObjectWithTag("PauseControl")
-                                      .GetComponentInChildren<FileButtonManager>();
+
+        int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        if (currentSceneBuildIndex == (int)Level.MainMenu) {
+            fileButtonManager = transform.parent.GetComponent<FileButtonManager>();
+        } else {
+            fileButtonManager = GameObject.FindGameObjectWithTag("PauseControl")
+                                  .GetComponentInChildren<FileButtonManager>();
+        }
 
         player = GameObject.FindWithTag("Player");
         ball = GameObject.FindWithTag("TeleportationBall");
@@ -89,9 +95,11 @@ public class SaveLevel : MonoBehaviour {
         fileButtonManager.UpdateButtons();
 
         // Used to know when to change the "New" text in the New Button to "Resume"
-        GameDataManager.SetHasSavedBefore();
+        GameDataManager.SetHasAdvancedInGame();
         // Used to allow clicking on the Resume button to load the latest saved level
         GameDataManager.SetLastSavedFileName(fileName);
+        // Used to decide between loading the last saved level or the newest unlocked level
+        GameDataManager.SetLastSavedLevel(scene.buildIndex);
     }
 
     private PlayerData CachePlayerData() {

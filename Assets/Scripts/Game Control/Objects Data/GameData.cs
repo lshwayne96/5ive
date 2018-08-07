@@ -9,18 +9,23 @@ using System;
 public class GameData {
     private int numLevels;
     private int numLevelsCompleted;
-    private bool hasSavedBefore;
     private bool[] collectibleLocations;
+
+    private bool hasAdvancedInGame;
     private string lastSavedFileName;
+    private int lastSavedLevel;
+    private int lastUnlockedLevel;
 
     public GameData(int numLevels) {
         this.numLevels = numLevels;
         this.numLevelsCompleted = 1;
-        this.hasSavedBefore = false;
+        this.hasAdvancedInGame = false;
         this.collectibleLocations = new bool[numLevels + 1];
         for (int i = 1; i < collectibleLocations.Length; i++) {
             collectibleLocations[i] = true;
         }
+        // Default starting level
+        this.lastUnlockedLevel = (int)Level.MainMenu;
     }
 
     public bool DoesSceneContainCollectible(int sceneBuildIndex) {
@@ -39,12 +44,12 @@ public class GameData {
         return numLevelsCompleted;
     }
 
-    public bool HasSavedBefore() {
-        return hasSavedBefore;
+    public bool HasAdvancedInGame() {
+        return hasAdvancedInGame;
     }
 
-    public void SetHasSavedBefore(bool boolean) {
-        hasSavedBefore = boolean;
+    public void SetHasAdvancedInGame(bool boolean) {
+        hasAdvancedInGame = boolean;
     }
 
     public void SetLastSavedFileName(string fileName) {
@@ -55,4 +60,19 @@ public class GameData {
         return lastSavedFileName;
     }
 
+    public bool HasUnlockedNewLevelWithoutSaving() {
+        return lastUnlockedLevel > lastSavedLevel;
+    }
+
+    public int GetLastUnlockedLevel() {
+        return lastUnlockedLevel;
+    }
+
+    public void SetLastSavedLevel(int lastSavedLevel) {
+        this.lastSavedLevel = lastSavedLevel;
+    }
+
+    public void SetLastUnlockedLevel(int lastUnlockedLevel) {
+        this.lastUnlockedLevel = lastUnlockedLevel;
+    }
 }

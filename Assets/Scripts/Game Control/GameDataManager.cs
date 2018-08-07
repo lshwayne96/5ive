@@ -64,7 +64,7 @@ public class GameDataManager : MonoBehaviour {
 
     private static void SubsequentGamesSetUp() {
         gameData = GameFile.Deserialise<GameData>(saveFilePath);
-        if (gameData.HasSavedBefore()) {
+        if (gameData.HasAdvancedInGame()) {
             newButtonText.text = "Resume";
         }
     }
@@ -78,7 +78,7 @@ public class GameDataManager : MonoBehaviour {
 
         } else {
             int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-            if (gameData.HasSavedBefore() && currentSceneBuildIndex == (int)Level.MainMenu) {
+            if (gameData.HasAdvancedInGame() && currentSceneBuildIndex == (int)Level.MainMenu) {
                 newButtonText = GameObject.FindGameObjectWithTag("NewButton")
                                           .GetComponentInChildren<Text>();
                 newButtonText.text = "Resume";
@@ -103,7 +103,7 @@ public class GameDataManager : MonoBehaviour {
         foreach (string levelFileName in levelFileNames) {
             File.Delete(levelFileName);
         }
-        gameData.SetHasSavedBefore(false);
+        gameData.SetHasAdvancedInGame(false);
         FirstGameSetUp();
     }
 
@@ -119,13 +119,29 @@ public class GameDataManager : MonoBehaviour {
         return gameData.GetNumLevelsCompleted();
     }
 
-    public static void SetHasSavedBefore() {         gameData.SetHasSavedBefore(true);     }
+    public static void SetHasAdvancedInGame() {         gameData.SetHasAdvancedInGame(true);     }
 
-    public static bool HasSavedBefore() {
-        return gameData.HasSavedBefore();
+    public static bool HasAdvancedInGame() {
+        return gameData.HasAdvancedInGame();
     }      public static void SetLastSavedFileName(string fileName) {         gameData.SetLastSavedFileName(fileName);     }
 
     public static string GetLastSavedFileName() {
         return gameData.GetLastSavedFileName();
-    }      public static void UpdateCollectibleLocations(int sceneBuildIndex) {         gameData.UpdateCollectibleLocations(sceneBuildIndex);     }      public static void UpdateNumLevelsCompleted() {         gameData.UpdateNumLevelsCompleted();     } 
+    }      public static void UpdateCollectibleLocations(int sceneBuildIndex) {         gameData.UpdateCollectibleLocations(sceneBuildIndex);     }      public static void UpdateNumLevelsCompleted() {         gameData.UpdateNumLevelsCompleted();     }
+
+    public static bool HasUnlockedNewLevelWithoutSaving() {
+        return gameData.HasUnlockedNewLevelWithoutSaving();
+    }
+
+    public static int GetLastUnlockedLevel() {
+        return gameData.GetLastUnlockedLevel();
+    }
+
+    public static void SetLastSavedLevel(int lastSavedLevel) {
+        gameData.SetLastSavedLevel(lastSavedLevel);
+    }
+
+    public static void SetLastUnlockedLevel(int lastUnlockedLevel) {
+        gameData.SetLastUnlockedLevel(lastUnlockedLevel);
+    } 
 }

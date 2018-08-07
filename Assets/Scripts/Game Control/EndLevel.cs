@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class EndLevel : MonoBehaviour {
 
-    public int scene;
+    public int sceneBuildIndex;
 
     /*
      * Becomes true when one of the player collider enters the trigger
@@ -22,7 +22,8 @@ public class EndLevel : MonoBehaviour {
             hasEnded = true;
 
             GameDataManager.UpdateNumLevelsCompleted();
-            SceneManager.LoadScene(scene);
+            GameDataManager.SetLastUnlockedLevel(sceneBuildIndex);
+            SceneManager.LoadScene(sceneBuildIndex);
         }
     }
 }
