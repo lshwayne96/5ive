@@ -63,6 +63,7 @@ public class PauseLevel : MonoBehaviour {
             }
 
             playerMovementScript.enabled = !playerMovementScript.enabled;
+            Debug.Log("Script is " + playerMovementScript.enabled);
             isPaused = !isPaused;
         }
     }

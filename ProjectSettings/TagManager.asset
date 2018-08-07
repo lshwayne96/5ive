@@ -23,6 +23,7 @@ TagManager:
   - NewButton
   - OptionsMenu
   - OverviewMenu
+  - LevelButtons
   layers:
   - Default
   - TransparentFX

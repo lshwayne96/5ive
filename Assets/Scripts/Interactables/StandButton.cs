@@ -127,6 +127,15 @@ public class StandButton : MonoBehaviour {
                     startTime = Time.time;
                 }
             }
+
+            // If the stand button is still being pressed
+            if (isBeingPressed) {
+                /* 
+                 * Refresh the start time to make the stand button wait for
+                 * the waitDuration even after it's not being pressed
+                 */
+                startTime = Time.time;
+            }
         }
 
         // Run the booster script when the stand button has just reached bottom
