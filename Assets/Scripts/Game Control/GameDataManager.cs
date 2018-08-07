@@ -1,5 +1,6 @@
 ﻿/*
- * This script is attached to an empty prefab called StartGame.
+ * This script is attached to an empty prefab called StartGame
+ * and will not destroyed when a new scene is loaded.
  * 
  * It can be said to encapsulates a GameData instance,
  * where some methods pertaining to the GameData class is

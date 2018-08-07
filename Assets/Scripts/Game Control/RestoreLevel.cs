@@ -3,6 +3,7 @@
  * when a new scene is loaded.
  * It restores the scene data from a saved game file after
  * the scene of the game file is loaded.
+ * 
  */
 
 using UnityEngine;

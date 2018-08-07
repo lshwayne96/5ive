@@ -1916,6 +1916,10 @@ Prefab:
       propertyPath: m_LocalScale.y
       value: 4.4704175
       objectReference: {fileID: 0}
+    - target: {fileID: 1791969017589060, guid: 4328a4d2fa0b8492e84e6233273304ac, type: 2}
+      propertyPath: m_Name
+      value: Centre
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4328a4d2fa0b8492e84e6233273304ac, type: 2}
   m_IsPrefabAsset: 0
@@ -5706,7 +5710,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1526306904}
   m_Layer: 0
-  m_Name: 2x2 Room
+  m_Name: Starting
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6520,6 +6524,10 @@ Prefab:
         type: 2}
       propertyPath: m_Material
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1989799134842168, guid: 234e3f36bf823124dae88c9b8fd7022c, type: 2}
+      propertyPath: m_Name
+      value: Ending
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 234e3f36bf823124dae88c9b8fd7022c, type: 2}
