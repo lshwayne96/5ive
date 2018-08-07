@@ -89,6 +89,7 @@ public class GameDataManager : MonoBehaviour {
 
     /* Game Data is saved when the editor is closed
      * Does not concern end users
+     * Only for our own convenience
      */
     private void OnApplicationQuit() {
         GameFile.Serialise(saveFilePath, gameData);

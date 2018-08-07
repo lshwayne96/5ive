@@ -10,8 +10,6 @@ public class Lever : MonoBehaviour {
 
     public GameObject interactable;
 
-    private PauseLevel pauseLevel;
-
     private Quaternion startRotation;
     private Quaternion endRotation;
     private Quaternion prevRotation;
@@ -38,8 +36,6 @@ public class Lever : MonoBehaviour {
     private float journeyLength;
     private float speed;
 
-
-
     /*
      * Awake() is used instead of Start() to allow the lever
      * to be rotated by Restore() in InteractablesData
@@ -57,8 +53,6 @@ public class Lever : MonoBehaviour {
             interactableState = interactable.activeSelf;
         }
         angleOfRotation = 90f;
-
-        pauseLevel = GameObject.FindGameObjectWithTag("Pause").GetComponent<PauseLevel>();
 
         Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
@@ -146,7 +140,7 @@ public class Lever : MonoBehaviour {
         }
 
         while (fracJourney < 1) {
-            if (!pauseLevel.IsScenePaused()) {
+            if (!PauseLevel.IsLevelPaused()) {
                 // Distance moved = time * speed.
                 distCovered = (Time.time - startTime) * speed;
 

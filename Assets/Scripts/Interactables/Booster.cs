@@ -2,7 +2,7 @@
 
 public class Booster : MonoBehaviour {
 
-    private Vector2 pushForce;
+    public Vector2 pushForce;
     private Rigidbody2D rb;
 
     void Start() {

@@ -13,8 +13,11 @@ public class Ball : MonoBehaviour {
 
     private GameObject player;
     private Transform playerTf;
+
     private bool playerHasBall;
     private bool canPickUpBall;
+
+    private Vector2 preVelocity;
 
     void Start() {
         player = GameObject.FindWithTag("Player");

@@ -28,11 +28,6 @@ public class DetectRoom : MonoBehaviour {
         UpdateCurrentRoom();
     }
 
-    private void Start() {
-        //playerCamera = GameObject.FindWithTag("MainCamera").transform;
-    }
-
-
     private void OnTriggerExit2D(Collider2D collision) {
         UpdateCurrentRoom();
     }
@@ -50,7 +45,9 @@ public class DetectRoom : MonoBehaviour {
             roomCollider.size.y - 10f,
             0f));
 
-            playerCamera = GameObject.FindWithTag("MainCamera").transform;
+            if (!playerCamera) {
+                playerCamera = GameObject.FindWithTag("MainCamera").transform;
+            }
 
             playerCamera.position = roomBounds.ClosestPoint(playerCamera.position);
         }

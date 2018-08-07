@@ -12,13 +12,17 @@ public class PauseLevel : MonoBehaviour {
     private GameObject pauseMenu;
     private GameObject player;
     private GameObject ball;
+
     private Platformer2DUserControl playerMovementScript;
     private Rigidbody2D playerRb;
     private Rigidbody2D ballRb;
-    private bool isPaused;
+
+    private static bool isPaused;
     private bool isActive;
-    // The original velocity of the player before it's movement script is disabled
-    private Vector2 prevVelocity;
+    // The original velocity of the player before it's rigidbody is disabled
+    private Vector2 prePlayerVelocity;
+    // The original velocity of the ball before it's rigidbody is disabled
+    private Vector2 preBallVelocity;
 
     void Start() {
         // pauseMenu is initially active to get it's reference
@@ -42,14 +46,16 @@ public class PauseLevel : MonoBehaviour {
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
             if (!isPaused) { // If the game is not paused, pause it
-                prevVelocity = playerRb.velocity;
+                prePlayerVelocity = playerRb.velocity;
+                preBallVelocity = ballRb.velocity;
                 playerRb.Sleep();
                 ballRb.Sleep();
                 pauseMenu.SetActive(true);
                 Time.timeScale = 0;
 
             } else { // If the game is paused, unpause it
-                playerRb.velocity = prevVelocity;
+                playerRb.velocity = prePlayerVelocity;
+                ballRb.velocity = preBallVelocity;
                 playerRb.WakeUp();
                 ballRb.WakeUp();
                 pauseMenu.SetActive(false);
@@ -61,7 +67,7 @@ public class PauseLevel : MonoBehaviour {
         }
     }
 
-    public bool IsScenePaused() {
+    public static bool IsLevelPaused() {
         return isPaused;
     }
 }
