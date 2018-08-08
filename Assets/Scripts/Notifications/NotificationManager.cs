@@ -66,6 +66,7 @@ public class NotificationManager : MonoBehaviour {
         // Clear the notification box of any messages
         message.text = System.String.Empty;
         hasVisibleMessage = false;
+        hasNewMessage = false;
         currentCoroutine = null;
     }
 }

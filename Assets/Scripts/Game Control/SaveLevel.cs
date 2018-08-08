@@ -26,8 +26,6 @@ public class SaveLevel : MonoBehaviour {
     private int numLadders;
 
     private void Start() {
-        inputField = GetComponent<InputField>();
-
         int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
         if (currentSceneBuildIndex == (int)Level.MainMenu) {
             fileButtonManager = transform.parent.GetComponent<FileButtonManager>();
@@ -100,6 +98,8 @@ public class SaveLevel : MonoBehaviour {
         GameDataManager.SetLastSavedFileName(fileName);
         // Used to decide between loading the last saved level or the newest unlocked level
         GameDataManager.SetLastSavedLevel(scene.buildIndex);
+        // Deactvate the input field
+        inputField.DeactivateInputField();
     }
 
     private PlayerData CachePlayerData() {
@@ -135,5 +135,13 @@ public class SaveLevel : MonoBehaviour {
             ladderDatas[i] = ladders[i].CacheData();
         }
         return ladderDatas;
+    }
+
+    private void OnEnable() {
+        inputField = GetComponent<InputField>();
+        // This script is used in both the input field game object and file button
+        if (inputField) {
+            inputField.ActivateInputField();
+        }
     }
 }

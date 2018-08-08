@@ -48,8 +48,8 @@ public class GameData {
         return hasAdvancedInGame;
     }
 
-    public void SetHasAdvancedInGame(bool boolean) {
-        hasAdvancedInGame = boolean;
+    public void SetHasAdvancedInGame(bool value) {
+        hasAdvancedInGame = value;
     }
 
     public void SetLastSavedFileName(string fileName) {

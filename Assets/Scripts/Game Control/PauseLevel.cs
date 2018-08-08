@@ -11,9 +11,9 @@ public class PauseLevel : MonoBehaviour {
 
     private GameObject pauseMenu;
     private GameObject player;
-    private GameObject ball;
 
-    private Platformer2DUserControl playerMovementScript;
+    private Platformer2DUserControl playerMovement;
+    private Animator playerAnimator;
     private Rigidbody2D playerRb;
     private Rigidbody2D ballRb;
 
@@ -27,20 +27,15 @@ public class PauseLevel : MonoBehaviour {
     void Start() {
         // pauseMenu is initially active to get it's reference
         pauseMenu = GameObject.FindWithTag("PauseControl");
-
         // Hide the pauseMenu
         pauseMenu.SetActive(false);
 
         player = GameObject.FindWithTag("Player");
-        ball = GameObject.FindWithTag("TeleportationBall");
-
         playerRb = player.GetComponent<Rigidbody2D>();
-        ballRb = ball.GetComponent<Rigidbody2D>();
+        playerMovement = player.GetComponent<Platformer2DUserControl>();
+        playerAnimator = player.GetComponent<Animator>();
 
-        // Get the player movement script
-        playerMovementScript = player.GetComponent<Platformer2DUserControl>();
-
-        Time.timeScale = 1;
+        ballRb = GameObject.FindWithTag("TeleportationBall").GetComponent<Rigidbody2D>();
     }
 
     void Update() {
@@ -51,7 +46,6 @@ public class PauseLevel : MonoBehaviour {
                 playerRb.Sleep();
                 ballRb.Sleep();
                 pauseMenu.SetActive(true);
-                Time.timeScale = 0;
 
             } else { // If the game is paused, unpause it
                 playerRb.velocity = prePlayerVelocity;
@@ -59,16 +53,19 @@ public class PauseLevel : MonoBehaviour {
                 playerRb.WakeUp();
                 ballRb.WakeUp();
                 pauseMenu.SetActive(false);
-                Time.timeScale = 1;
             }
 
-            playerMovementScript.enabled = !playerMovementScript.enabled;
-            Debug.Log("Script is " + playerMovementScript.enabled);
+            playerMovement.enabled = !playerMovement.enabled;
+            playerAnimator.enabled = !playerAnimator.enabled;
             isPaused = !isPaused;
         }
     }
 
     public static bool IsLevelPaused() {
         return isPaused;
+    }
+
+    public static void SetPause(bool value) {
+        isPaused = value;
     }
 }

@@ -27,6 +27,8 @@ public class Ball : MonoBehaviour {
     void Update() {
         // Enable the ball to follow slightly behind the player when picked up
         if (playerHasBall) {
+            // Stop the rotation of the ball
+            transform.rotation = Quaternion.Euler(Vector3.zero);
             Vector3 targetPosition = playerTf.position;
             GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
         }
