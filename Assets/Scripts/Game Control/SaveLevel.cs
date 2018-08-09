@@ -99,7 +99,9 @@ public class SaveLevel : MonoBehaviour {
         // Used to decide between loading the last saved level or the newest unlocked level
         GameDataManager.SetLastSavedLevel(scene.buildIndex);
         // Deactvate the input field
-        inputField.DeactivateInputField();
+        if (inputField) {
+            inputField.DeactivateInputField();
+        }
     }
 
     private PlayerData CachePlayerData() {

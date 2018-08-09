@@ -9,8 +9,8 @@ using UnityEngine.SceneManagement;
 public class OnClickLoadScene : MonoBehaviour {
 
     public void LoadByIndex(int sceneBuildIndex) {
-        int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        if (GameDataManager.HasAdvancedInGame() && currentSceneBuildIndex == (int)Level.MainMenu) {
+        //int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+        if (GameDataManager.HasAdvancedInGame() && gameObject.CompareTag("NewButton")) {
             if (GameDataManager.HasUnlockedNewLevelWithoutSaving()) { // A new level has been unlocked but not saved
                 SceneManager.LoadScene(GameDataManager.GetLastUnlockedLevel());
 

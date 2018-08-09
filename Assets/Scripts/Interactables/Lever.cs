@@ -12,36 +12,47 @@ public class Lever : MonoBehaviour {
 
     private Quaternion startRotation;
     private Quaternion endRotation;
-    private Quaternion prevRotation;
-    private Quaternion prevEndRotation;
     private Quaternion originalStartRotation;
     private Quaternion originalEndRotation;
 
-    private Vector3 currentAngle;
-    private Vector3 targetAngle;
     private float angleOfRotation;
 
     private Coroutine currentCoroutine;
     private Direction movementDirection;
 
     private bool interactableState;
-    private bool hasEnteredTrigger;
-    private bool toResume;
-    private bool hasSwitchedRotation;
+    private bool canPullLever;
+    private bool toResumeRotation;
+    public bool hasSwitchedRotation { get; private set; }
     private bool isRotating;
     private bool hasFinishedRotating;
-    private bool wasInterruptedWhileMoving;
+    private bool hasInitialised;
 
     private float startTime;
     private float journeyLength;
-    private float speed;
+    public float speed;
 
-    /*
-     * Awake() is used instead of Start() to allow the lever
-     * to be rotated by Restore() in InteractablesData
-     * to its previous state when a new game is loaded
-     * */
-    void Awake() {
+    void Start() {
+        angleOfRotation = 90f;
+        Vector3 angleDifference = Vector3.back * angleOfRotation;
+        Vector3 currentAngle = transform.eulerAngles;
+        Vector3 targetAngle = transform.eulerAngles + angleDifference;
+
+        if (!hasInitialised) {
+            startRotation = transform.rotation;
+            Vector3 eulerAngles = transform.eulerAngles;
+            endRotation = Quaternion.Euler(eulerAngles + angleDifference);
+
+            originalStartRotation = startRotation;
+            originalEndRotation = endRotation;
+
+            // Default movement direction initially since all levers start tilting to the left
+            movementDirection = Direction.Right;
+        }
+
+        speed = 300f;
+        journeyLength = Vector3.Distance(targetAngle, currentAngle);
+
         /*
          * It is possible that a number of levers control
          * a gameObject in unison. In that case, no gameObject
@@ -49,28 +60,9 @@ public class Lever : MonoBehaviour {
          * The InteractionManager will manage their collective
          * interaction.
          */
-        if (interactable != null) {
+        if (interactable) {
             interactableState = interactable.activeSelf;
         }
-        angleOfRotation = 90f;
-
-        Vector3 angleDifference = Vector3.back * angleOfRotation;
-        currentAngle = transform.eulerAngles;
-        targetAngle = transform.eulerAngles + angleDifference;
-
-        startRotation = transform.rotation;
-        Vector3 eulerAngles = transform.eulerAngles;
-        endRotation = Quaternion.Euler(eulerAngles + angleDifference);
-
-        originalStartRotation = startRotation;
-        originalEndRotation = endRotation;
-
-        movementDirection = Direction.Right;
-    }
-
-    void Start() {
-        speed = 300f;
-        journeyLength = Vector3.Distance(targetAngle, currentAngle);
     }
 
     /* 
@@ -79,65 +71,71 @@ public class Lever : MonoBehaviour {
      * and the interactable gameObject will disappear.
     */
     void Update() {
-        if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
+        if (LeverIsPulled()) {
+            // Start time for the rotation coroutine
             startTime = Time.time;
-            if (!isRotating) {
+            if (!isRotating) { // The lever is not already rotating
                 isRotating = true;
-                currentCoroutine = StartCoroutine(Rotate());
-            } else {
-                ChangeMovementDirection();
-                StopCoroutine(currentCoroutine);
-                wasInterruptedWhileMoving = true;
+                StartRotation();
+            } else { // The lever is already rotating
+                InterruptRotation();
 
-                Quaternion temp = startRotation;
-                startRotation = endRotation;
-                endRotation = temp;
-
+                // Set the start rotation as the current rotation
                 startRotation = transform.rotation;
-
-                if (movementDirection == Direction.Left) {
-                    endRotation = originalEndRotation;
-                } else {
-                    endRotation = originalStartRotation;
-                }
-
-                currentCoroutine = StartCoroutine(Rotate());
+                SetEndRotation();
+                StartRotation();
             }
         }
 
-        if (toResume) {
-            isRotating = true;
-            currentCoroutine = StartCoroutine(Rotate());
+        // Resuming rotation from a saved game
+        if (toResumeRotation) {
+            ResumeRotation();
+            StartRotation();
+        }
+    }
+
+    private void StartRotation() {
+        currentCoroutine = StartCoroutine(Rotate());
+    }
+
+    private bool LeverIsPulled() {
+        return canPullLever && Input.GetKeyUp(KeyCode.R) && !PauseLevel.IsLevelPaused();
+    }
+
+    private void InterruptRotation() {
+        StopCoroutine(currentCoroutine);
+        // Set the lever to rotate in the opposite direction
+        ChangeMovementDirection();
+    }
+
+    private void SetEndRotation() {
+        // Set the end rotation, depending on the movement direction
+        if (movementDirection == Direction.Left) {
+            endRotation = originalStartRotation;
+        } else {
+            endRotation = originalEndRotation;
         }
     }
 
     // When the player enters the lever
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            hasEnteredTrigger = true;
+            canPullLever = true;
         }
     }
 
     // When the player leaves the lever
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            hasEnteredTrigger = false;
+            canPullLever = false;
         }
     }
 
     private IEnumerator Rotate() {
         float distCovered;
         float fracJourney = 0;
-        Quaternion start;
-        Quaternion end;
-
-        if (toResume) {
-            start = prevRotation;
-            end = prevEndRotation;
-        } else {
-            start = startRotation;
-            end = endRotation;
-        }
+        // The lever cannot be both rotating and have its rotation switched simultaneously
+        hasSwitchedRotation = false;
 
         while (fracJourney < 1) {
             if (!PauseLevel.IsLevelPaused()) {
@@ -148,59 +146,40 @@ public class Lever : MonoBehaviour {
                 fracJourney = distCovered / journeyLength;
 
                 // Set our position as a fraction of the distance between the markers.
-                transform.rotation = Quaternion.Slerp(start, end, fracJourney);
-            } else {
+                transform.rotation = Quaternion.Slerp(startRotation, endRotation, fracJourney);
+            } else { // The game is paused
+                // Cache the current startRotation so that the rotation can be resumed when unpaused
+                startRotation = transform.rotation;
+                // Refresh the start time to get accurate distance covered
                 startTime = Time.time;
             }
             yield return null;
         }
 
-        if (interactable) {
-            ChangeInteractableState();
-        }
-
-        if (toResume) {
-            toResume = false;
-        }
-
-        Quaternion temp = startRotation;
-        startRotation = endRotation;
-        endRotation = temp;
+        isRotating = false;
+        ChangeInteractableState();
+        ChangeHasSwitchedRotation();
 
         ChangeMovementDirection();
+        RefreshStartEndRotations();
+    }
 
-        hasSwitchedRotation = !hasSwitchedRotation;
-        isRotating = false;
-
-        if (wasInterruptedWhileMoving && !hasSwitchedRotation) {
+    private void RefreshStartEndRotations() {
+        if (movementDirection == Direction.Left) {
+            startRotation = originalEndRotation;
+            endRotation = originalStartRotation;
+        } else {
             startRotation = originalStartRotation;
             endRotation = originalEndRotation;
-            wasInterruptedWhileMoving = false;
         }
-    }
-
-    // Allow the rotation to resume
-    public void ResumeRotation(Quaternion prevRotation, Quaternion prevEndRotation) {
-        toResume = true;
-        startTime = Time.time;
-        this.prevRotation = prevRotation;
-        this.prevEndRotation = prevEndRotation;
-    }
-
-    public void SwitchRotation() {
-        transform.rotation = endRotation;
-        ChangeInteractableState();
-        hasSwitchedRotation = true;
     }
 
     // Controls the interactable assigned to the lever
     private void ChangeInteractableState() {
-        interactable.SetActive(!interactableState);
-        interactableState = !interactableState;
-    }
-
-    public bool HasSwitchedRotation() {
-        return hasSwitchedRotation;
+        if (interactable) {
+            interactableState = !interactableState;
+            interactable.SetActive(interactableState);
+        }
     }
 
     private void ChangeMovementDirection() {
@@ -211,9 +190,51 @@ public class Lever : MonoBehaviour {
         }
     }
 
-    public LeverData CacheData() {
-        return new LeverData(transform.rotation, endRotation, hasSwitchedRotation, isRotating);
+    private void ChangeHasSwitchedRotation() {
+        if (movementDirection == Direction.Right) {
+            hasSwitchedRotation = true;
+        } else {
+            hasSwitchedRotation = false;
+        }
     }
 
+    public LeverData CacheData() {
+        return new LeverData(transform.rotation, endRotation,
+                             originalStartRotation, originalEndRotation,
+                             movementDirection, hasSwitchedRotation, isRotating);
+    }
+
+    public void Restore(Quaternion startRotation, Quaternion endRotation,
+                        Quaternion originalStartRotation, Quaternion originalEndRotation,
+                        Direction movementDirection, bool hasSwitchedRotation, bool isRotating) {
+        this.startRotation = startRotation;
+        this.endRotation = endRotation;
+        this.originalStartRotation = originalStartRotation;
+        this.originalEndRotation = originalEndRotation;
+        this.movementDirection = movementDirection;
+        this.hasSwitchedRotation = hasSwitchedRotation;
+        this.isRotating = isRotating;
+        hasInitialised = true;
+
+        if (isRotating) {
+            toResumeRotation = true;
+        }
+
+        if (hasSwitchedRotation) {
+            SwitchRotation();
+        }
+    }
+
+    private void ResumeRotation() {
+        isRotating = true;
+        // Refresh the start time for the rotation coroutine
+        startTime = Time.time;
+        toResumeRotation = false;
+    }
+
+    private void SwitchRotation() {
+        transform.rotation = startRotation;
+        ChangeInteractableState();
+    }
 }
 
