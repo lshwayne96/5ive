@@ -17,7 +17,7 @@ public class PauseLevel : MonoBehaviour {
     private Rigidbody2D playerRb;
     private Rigidbody2D ballRb;
 
-    private static bool isPaused;
+    public static bool isPaused { get; private set; }
     private bool isActive;
     // The original velocity of the player before it's rigidbody is disabled
     private Vector2 prePlayerVelocity;
@@ -59,13 +59,5 @@ public class PauseLevel : MonoBehaviour {
             playerAnimator.enabled = !playerAnimator.enabled;
             isPaused = !isPaused;
         }
-    }
-
-    public static bool IsLevelPaused() {
-        return isPaused;
-    }
-
-    public static void SetPause(bool value) {
-        isPaused = value;
     }
 }

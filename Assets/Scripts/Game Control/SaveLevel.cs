@@ -92,12 +92,8 @@ public class SaveLevel : MonoBehaviour {
         // Add new file buttons or update the information/ order of existing file buttons
         fileButtonManager.UpdateButtons();
 
-        // Used to know when to change the "New" text in the New Button to "Resume"
-        GameDataManager.SetHasAdvancedInGame();
-        // Used to allow clicking on the Resume button to load the latest saved level
-        GameDataManager.SetLastSavedFileName(fileName);
-        // Used to decide between loading the last saved level or the newest unlocked level
-        GameDataManager.SetLastSavedLevel(scene.buildIndex);
+        GameDataManager.Save(fileName, scene.buildIndex);
+
         // Deactvate the input field
         if (inputField) {
             inputField.DeactivateInputField();

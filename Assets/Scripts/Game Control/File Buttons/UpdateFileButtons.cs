@@ -18,7 +18,7 @@ public class UpdateFileButtons : MonoBehaviour {
         }
 
         // Set the fileButtonManager only once
-        if (fileButtonManager == null) {
+        if (!fileButtonManager) {
             fileButtonManager = GetComponentInChildren<FileButtonManager>();
         }
 

@@ -17,7 +17,6 @@ public class OnClickResetProgress : MonoBehaviour {
     }
 
     public void ResetProgress() {
-        GameDataManager.ResetGameData();
-        GameDataManager.ResetNewButtonText();
+        GameDataManager.ResetProgress();
     }
 }

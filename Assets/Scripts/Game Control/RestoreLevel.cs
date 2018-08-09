@@ -43,7 +43,6 @@ public class RestoreLevel : MonoBehaviour {
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
         if (hasSavedScene) {
             Restore();
-            PauseLevel.SetPause(false);
             hasSavedScene = false;
         }
     }

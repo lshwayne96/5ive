@@ -20,9 +20,7 @@ public class EndLevel : MonoBehaviour {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player") && !hasEnded) {
             hasEnded = true;
-
-            GameDataManager.UpdateNumLevelsCompleted();
-            GameDataManager.SetLastUnlockedLevel(sceneBuildIndex);
+            GameDataManager.EndLevel(sceneBuildIndex);
             SceneManager.LoadScene(sceneBuildIndex);
         }
     }

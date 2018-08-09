@@ -28,18 +28,18 @@ public class SetCurrentRoom : MonoBehaviour {
     void Start() {
         // Gets the current room of the player
         playerRoomScript = GetComponent<DetectRoom>();
-        currentPlayerRoom = playerRoomScript.GetCurrentRoom();
+        currentPlayerRoom = playerRoomScript.currentRoom;
 
         ball = GameObject.FindWithTag("TeleportationBall");
 
         // Gets the current room of the ball
         ballRoomScript = ball.GetComponent<DetectRoom>();
-        currentBallRoom = ballRoomScript.GetCurrentRoom();
+        currentBallRoom = ballRoomScript.currentRoom;
     }
 
     void Update() {
-        currentPlayerRoom = playerRoomScript.GetCurrentRoom();
-        currentBallRoom = ballRoomScript.GetCurrentRoom();
+        currentPlayerRoom = playerRoomScript.currentRoom;
+        currentBallRoom = ballRoomScript.currentRoom;
     }
 
     /*

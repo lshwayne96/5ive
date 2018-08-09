@@ -38,6 +38,11 @@ public class Lever : MonoBehaviour {
         Vector3 currentAngle = transform.eulerAngles;
         Vector3 targetAngle = transform.eulerAngles + angleDifference;
 
+        /*
+         * The variables here are stored in the lever data
+         * so no need to initialise them again
+         * Initialising them again also overwrites the previous lever state
+         */
         if (!hasInitialised) {
             startRotation = transform.rotation;
             Vector3 eulerAngles = transform.eulerAngles;
@@ -99,7 +104,7 @@ public class Lever : MonoBehaviour {
     }
 
     private bool LeverIsPulled() {
-        return canPullLever && Input.GetKeyUp(KeyCode.R) && !PauseLevel.IsLevelPaused();
+        return canPullLever && Input.GetKeyUp(KeyCode.R) && !PauseLevel.isPaused;
     }
 
     private void InterruptRotation() {
@@ -138,7 +143,7 @@ public class Lever : MonoBehaviour {
         hasSwitchedRotation = false;
 
         while (fracJourney < 1) {
-            if (!PauseLevel.IsLevelPaused()) {
+            if (!PauseLevel.isPaused) {
                 // Distance moved = time * speed.
                 distCovered = (Time.time - startTime) * speed;
 

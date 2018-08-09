@@ -75,7 +75,7 @@ public class StandButton : MonoBehaviour {
 
         // Move
         if (move) {
-            if (!PauseLevel.IsLevelPaused()) {
+            if (!PauseLevel.isPaused) {
                 Move();
             } else {
                 startTime = Time.time;
@@ -121,7 +121,7 @@ public class StandButton : MonoBehaviour {
                 // This startTime is to ensure smooth upward movement of the stand button
                 startTime = Time.time;
                 // Move upwards
-                if (!PauseLevel.IsLevelPaused()) {
+                if (!PauseLevel.isPaused) {
                     Move();
                 } else {
                     startTime = Time.time;
@@ -141,7 +141,7 @@ public class StandButton : MonoBehaviour {
         // Run the booster script when the stand button has just reached bottom
         if (HasJustReachedBottom()) {
             booster.Move();
-            if (PauseLevel.IsLevelPaused()) {
+            if (PauseLevel.isPaused) {
                 startTime = Time.time;
             }
             interactableHasMoved = true;
