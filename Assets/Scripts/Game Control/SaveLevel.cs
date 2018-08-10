@@ -57,7 +57,7 @@ public class SaveLevel : MonoBehaviour {
             if (!fileButtonManager.DoesFileExist(inputField.text)) {
                 Save(inputField.text);
             } else {
-                NotificationManager.Notifiy(new FileAlreadyExists());
+                MessageManager.Send(new FileAlreadyExists());
             }
 
             // Clear the input field
