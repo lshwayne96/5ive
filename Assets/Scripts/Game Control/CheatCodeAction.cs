@@ -13,7 +13,7 @@ public class CheatCodeAction : MonoBehaviour {
     }
 
     public void Action() {
-        if (inputField.text == "a") {
+        if (inputField.text == "a" || inputField.text == "Power Overwhelming") {
             for (int i = 0; i < 5; i++) {
                 levelButtons[i].interactable = true;
             }
