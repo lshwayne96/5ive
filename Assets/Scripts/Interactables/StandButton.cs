@@ -6,7 +6,7 @@
  * After a certain amount of time (as dictated by waitDuration),
  * the stand button will resurface from the ground.
  * While the stand button is resurfacing, it is still sensitive to
- * collisions and will still still depress if it senses one.
+ * collisions and will still depress if it senses one.
  * 
  * A stand button can be paired with another gameObject with an
  * attached script that implements the IMovable interface.
@@ -14,220 +14,200 @@
  * execute its Move().
  */
 
+using System.Collections;
 using UnityEngine;
 
 public class StandButton : MonoBehaviour {
 
     public GameObject interactable;
-
-    private Booster booster;
-
-    private float waitDuration;
-    private float translationDistY;
-    private float speed;
-    private float startTime;
-    private float journeyLength;
-
-    private bool move;
-    private bool wait;
-    private bool isAtRest;
-    private bool isBeingPressed;
-    private bool interactableHasMoved;
-    private bool toResume;
-    private bool wasInterruptedWhileMoving;
-
-    private Direction movementDirection;
+    public float waitDuration;
+    public float translationDistY;
+    public float speed;
 
     private Vector3 startPosition;
     private Vector3 endPosition;
-    private Vector3 prevPosition;
-    private Vector3 prevEndPosition;
     private Vector3 originalStartPosition;
     private Vector3 originalEndPosition;
+
+    private Booster booster;
+    private Coroutine currentCoroutine;
+    private Direction movementDirection;
+
+    private float startTime;
+    private float journeyLength;
+    private float originalWaitDuration;
+
+    private bool hasInitialised;
+    private bool toStartMoving;
+    private bool isMoving;
+    private bool hasStartedMovingDown;
+    private bool toStartWaiting;
+    private bool isWaiting;
+    private bool isBeingPressedDown;
+    private bool isDown;
 
     void Start() {
         booster = interactable.GetComponent<Booster>();
 
-        waitDuration = 2f;
         translationDistY = 0.15f;
         speed = 1f;
 
-        startPosition = gameObject.transform.position;
-        Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
-        endPosition = startPosition - vectorDifference;
+        if (!hasInitialised) {
+            waitDuration = 2f;
+            originalWaitDuration = waitDuration;
 
-        originalStartPosition = startPosition;
-        originalEndPosition = endPosition;
+            startPosition = gameObject.transform.position;
+            Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
+            endPosition = startPosition - vectorDifference;
+
+            originalStartPosition = startPosition;
+            originalEndPosition = endPosition;
+
+            movementDirection = Direction.Down;
+        }
+
         journeyLength = Vector3.Distance(startPosition, endPosition);
-
-        isAtRest = true;
-        movementDirection = Direction.Down;
     }
 
     void Update() {
-        if (toResume) {
-            move = true;
-            isAtRest = false;
-            isBeingPressed = true;
-            Move();
-            toResume = false;
+        if (toStartMoving) {
+            StartMovement();
+            toStartMoving = false;
         }
 
-        // Move
-        if (move) {
-            if (!PauseLevel.isPaused) {
-                Move();
-            } else {
-                startTime = Time.time;
-            }
+        if (toStartWaiting) {
+            StartWait();
+            toStartWaiting = false;
         }
 
-        // While moving and reaching the end
-        if (move && !isAtRest) {
-            // The end position has been reached
-            if (HasReachedFinalPosition(movementDirection)) {
-                // Stop moving
-                move = false;
-                isAtRest = true;
-
-                if (movementDirection == Direction.Down) { // Was moving down
-                    if (wasInterruptedWhileMoving) {
-                        startPosition = originalStartPosition;
-                        endPosition = originalEndPosition;
-                    }
-
-                    // Start waiting
-                    wait = true;
-                    // Get the time at which the waiting begins
-                    startTime = Time.time;
-                }
-
-                // Swap the start and end position
-                Vector3 temp = startPosition;
-                startPosition = endPosition;
-                endPosition = temp;
-                ChangeMovementDirection();
-            }
+        if (isBeingPressedDown) {
+            /* 
+             * Refresh the start time to make the stand button wait for
+             * the waitDuration even after it's not being pressed
+             */
+            startTime = Time.time;
         }
 
-        // Finished moving and now start waiting
-        if (wait) {
-            // If the wait is over and the stand button is not being pressed
-            if (IsWaitOver() && !isBeingPressed) {
-                move = true;
-                isAtRest = false;
-                wait = false;
-
-                // This startTime is to ensure smooth upward movement of the stand button
-                startTime = Time.time;
-                // Move upwards
-                if (!PauseLevel.isPaused) {
-                    Move();
-                } else {
-                    startTime = Time.time;
-                }
-            }
-
-            // If the stand button is still being pressed
-            if (isBeingPressed) {
-                /* 
-                 * Refresh the start time to make the stand button wait for
-                 * the waitDuration even after it's not being pressed
-                 */
-                startTime = Time.time;
-            }
-        }
-
-        // Run the booster script when the stand button has just reached bottom
-        if (HasJustReachedBottom()) {
-            booster.Move();
-            if (PauseLevel.isPaused) {
-                startTime = Time.time;
-            }
-            interactableHasMoved = true;
-
-        } else if (IsAtOriginalPosition()) {
-            interactableHasMoved = false;
+        if (IsMovingUp() && toStartMoving) {
+            InterruptMovement();
+            StartMovement();
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        // When contact is made while the stand button is at its original position
-        if (IsAtOriginalPosition()) {
-            startTime = Time.time;
-            move = true;
-            isAtRest = false;
-            isBeingPressed = true;
-        }
-
-        // When contact is made while the stand button is moving towards its original position
-        if (IsMovingUp()) {
-            isBeingPressed = true;
-            wasInterruptedWhileMoving = true;
-
-            Vector3 temp = startPosition;
-            startPosition = endPosition;
-            endPosition = temp;
-
-            ChangeMovementDirection();
-
-            // Set the startPosition as wherever the stand button is to began the movement up
-            startPosition = gameObject.transform.position;
+        if (!isWaiting && !hasStartedMovingDown) {
+            toStartMoving = true;
+            // Only one movement coroutine can be started on the way down
+            hasStartedMovingDown = true;
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision) { isBeingPressed = true; }
-    private void OnCollisionExit2D(Collision2D collision) { isBeingPressed = false; }
-
-    private bool IsAtOriginalPosition() {
-        return !move && isAtRest && !wait;
-    }
-
-    private bool HasJustReachedBottom() {
-        return !interactableHasMoved && isAtRest && movementDirection == Direction.Up;
-    }
-
-    // Determines if the stand button is at rest
-    private bool HasReachedFinalPosition(Direction direction) {
-        if (direction == Direction.Down) {
-            return gameObject.transform.position.y <= endPosition.y;
-        } else {
-            return gameObject.transform.position.y >= endPosition.y;
+    private void OnCollisionStay2D(Collision2D collision) {
+        // Only while waiting will the stand button be considered as being pressed
+        if (isWaiting) {
+            isBeingPressedDown = true;
         }
     }
 
-    private bool IsWaitOver() {
-        float currentWaitDuration = Time.time - startTime;
-        return currentWaitDuration >= waitDuration;
+    private void OnCollisionExit2D(Collision2D collision) {
+        isBeingPressedDown = false;
+    }
+
+    private void StartMovement() {
+        currentCoroutine = StartCoroutine(Move());
+    }
+
+    private void InterruptMovement() {
+        StopCoroutine(currentCoroutine);
+        ChangeMovementDirection();
+        // Set the start position as the current position
+        startPosition = transform.position;
+        // Set the end position as the original end position
+        endPosition = originalEndPosition;
+    }
+
+    private void StartWait() {
+        currentCoroutine = StartCoroutine(Wait());
     }
 
     private bool IsMovingUp() {
-        return move && !isAtRest && !wait && movementDirection == Direction.Up;
+        return isMoving && movementDirection == Direction.Up;
     }
 
-    public void Resume(Vector3 prevPosition, Vector3 prevEndPosition) {
-        toResume = true;
+    private IEnumerator Move() {
+        float fracJourney = 0;
+        isMoving = true;
         startTime = Time.time;
-        this.prevPosition = prevPosition;
-        this.prevEndPosition = prevEndPosition;
-    }
 
-    public void Move() {
-        Vector3 start;
-        Vector3 end;
-
-        if (toResume) {
-            start = prevPosition;
-            end = prevEndPosition;
-        } else {
-            start = startPosition;
-            end = endPosition;
+        // Start moving
+        while (fracJourney < 1) {
+            if (!PauseLevel.isPaused) {
+                float distCovered = (Time.time - startTime) * speed;
+                fracJourney = distCovered / journeyLength;
+                // Set our position as a fraction of the distance between the markers.
+                transform.position = Vector3.Lerp(startPosition, endPosition, fracJourney);
+            } else {
+                // Cache the current start position so that the movement can be resumed when unpaused
+                startPosition = transform.position;
+                // Refresh the start time to get accurate distance covered
+                startTime = Time.time;
+            }
+            yield return null;
         }
 
-        float distCovered = (Time.time - startTime) * speed;
-        float fracJourney = distCovered / journeyLength;
-        // Set our position as a fraction of the distance between the markers.
-        transform.position = Vector3.Lerp(start, end, fracJourney);
+        // Stop moving
+        isMoving = false;
+        ChangeMovementDirection();
+        RefreshStartEndPositions();
+
+        // The stand button has reached the bottom and will move upwards next
+        if (movementDirection == Direction.Up) {
+            // The booster will fire when the stand button is at the bottom
+            booster.Fire();
+            // Start waiting
+            toStartWaiting = true;
+            hasStartedMovingDown = false;
+        }
+    }
+
+    private IEnumerator Wait() {
+        float currentWaitDuration = 0;
+        bool hasAlreadyMinus = false;
+        isWaiting = true;
+        isDown = true;
+        startTime = Time.time;
+
+        // Start waiting
+        while (currentWaitDuration < waitDuration) {
+            if (!PauseLevel.isPaused) {
+                currentWaitDuration = Time.time - startTime;
+            } else {
+                if (!hasAlreadyMinus) {
+                    waitDuration -= currentWaitDuration;
+                    hasAlreadyMinus = true;
+                }
+                startTime = Time.time;
+            }
+            yield return null;
+        }
+
+        // Reset the wait duration
+        waitDuration = originalWaitDuration;
+
+        // Stop waiting and start moving up
+        isWaiting = false;
+        isDown = false;
+        toStartMoving = true;
+    }
+
+    private void RefreshStartEndPositions() {
+        if (movementDirection == Direction.Up) {
+            startPosition = originalEndPosition;
+            endPosition = originalStartPosition;
+        } else {
+            startPosition = originalStartPosition;
+            endPosition = originalEndPosition;
+        }
     }
 
     private void ChangeMovementDirection() {
@@ -239,6 +219,35 @@ public class StandButton : MonoBehaviour {
     }
 
     public StandButtonData CacheData() {
-        return new StandButtonData(transform.position, endPosition, move);
+        return new StandButtonData(transform.position, endPosition,
+                                   originalStartPosition, originalEndPosition,
+                                   movementDirection, isDown, isMoving,
+                                   waitDuration, originalWaitDuration);
+    }
+
+    public void Restore(Vector3 startPosition, Vector3 endPosition,
+                        Vector3 originalStartPosition, Vector3 originalEndPosition,
+                       Direction movementDirection, bool isDown, bool isMoving,
+                        float waitDuration, float originalWaitDuration) {
+        this.startPosition = startPosition;
+        this.endPosition = endPosition;
+        this.originalStartPosition = originalStartPosition;
+        this.originalEndPosition = originalEndPosition;
+        this.movementDirection = movementDirection;
+        this.isDown = isDown;
+        this.isMoving = isMoving;
+        this.waitDuration = waitDuration;
+        this.originalWaitDuration = originalWaitDuration;
+        hasInitialised = true;
+
+        if (isMoving) {
+            toStartMoving = true;
+        }
+
+        if (isDown) {
+            isWaiting = true;
+            toStartWaiting = true;
+            transform.position = originalEndPosition;
+        }
     }
 }

@@ -9,28 +9,29 @@ using UnityEngine;
 public class Lever : MonoBehaviour {
 
     public GameObject interactable;
+    public float speed;
 
     private Quaternion startRotation;
     private Quaternion endRotation;
     private Quaternion originalStartRotation;
     private Quaternion originalEndRotation;
 
-    private float angleOfRotation;
-
     private Coroutine currentCoroutine;
     private Direction movementDirection;
 
+    public bool hasSwitchedRotation { get; private set; }
     private bool interactableState;
     private bool canPullLever;
     private bool toResumeRotation;
-    public bool hasSwitchedRotation { get; private set; }
+
     private bool isRotating;
     private bool hasFinishedRotating;
     private bool hasInitialised;
 
+    private float angleOfRotation;
     private float startTime;
     private float journeyLength;
-    public float speed;
+
 
     void Start() {
         angleOfRotation = 90f;
@@ -137,7 +138,6 @@ public class Lever : MonoBehaviour {
     }
 
     private IEnumerator Rotate() {
-        float distCovered;
         float fracJourney = 0;
         // The lever cannot be both rotating and have its rotation switched simultaneously
         hasSwitchedRotation = false;
@@ -145,7 +145,7 @@ public class Lever : MonoBehaviour {
         while (fracJourney < 1) {
             if (!PauseLevel.isPaused) {
                 // Distance moved = time * speed.
-                distCovered = (Time.time - startTime) * speed;
+                float distCovered = (Time.time - startTime) * speed;
 
                 // Fraction of journey completed = current distance divided by total distance.
                 fracJourney = distCovered / journeyLength;

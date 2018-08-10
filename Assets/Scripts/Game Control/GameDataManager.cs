@@ -2,9 +2,8 @@
  * This script is attached to an empty prefab called StartGame
  * and will not destroyed when a new scene is loaded.
  * 
- * It can be said to encapsulates a GameData instance,
- * where some methods pertaining to the GameData class is
- * encapsulated into static methods in this script.
+ * It encapsulates a GameData instance and
+ * provides static methods that work on the GameData instance.
  * The aim is to reduce code complexity.
  *
  * It also handles the creation, deseralisation or destruction of

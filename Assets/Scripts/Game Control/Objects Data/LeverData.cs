@@ -10,25 +10,25 @@ using UnityEngine;
 [Serializable]
 public class LeverData {
 
-    private float qPSX;
-    private float qPSY;
-    private float qPSZ;
-    private float qPSW;
+    private float pSX;
+    private float pSY;
+    private float pSZ;
+    private float pSW;
 
-    private float qPEX;
-    private float qPEY;
-    private float qPEZ;
-    private float qPEW;
+    private float pEX;
+    private float pEY;
+    private float pEZ;
+    private float pEW;
 
-    private float qOSX;
-    private float qOSY;
-    private float qOSZ;
-    private float qOSW;
+    private float oSX;
+    private float oSY;
+    private float oSZ;
+    private float oSW;
 
-    private float qOEX;
-    private float qOEY;
-    private float qOEZ;
-    private float qOEW;
+    private float oEX;
+    private float oEY;
+    private float oEZ;
+    private float oEW;
 
     private Direction movementDirection;
     private bool hasSwitchedRotation;
@@ -38,41 +38,37 @@ public class LeverData {
                      Quaternion originalStartRotation, Quaternion originalEndRotation,
                      Direction movementDirection, bool hasSwitchedRotation, bool isRotating) {
         // Cache the prevStartRotation
-        qPSX = prevStartRotation.x;
-        qPSY = prevStartRotation.y;
-        qPSZ = prevStartRotation.z;
-        qPSW = prevStartRotation.w;
+        pSX = prevStartRotation.x;
+        pSY = prevStartRotation.y;
+        pSZ = prevStartRotation.z;
+        pSW = prevStartRotation.w;
 
         // Cache the prevEndRotation
-        qPEX = prevEndRotation.x;
-        qPEY = prevEndRotation.y;
-        qPEZ = prevEndRotation.z;
-        qPEW = prevEndRotation.w;
+        pEX = prevEndRotation.x;
+        pEY = prevEndRotation.y;
+        pEZ = prevEndRotation.z;
+        pEW = prevEndRotation.w;
 
         // Cache the originalStartRotation
-        qOSX = originalStartRotation.x;
-        qOSY = originalStartRotation.y;
-        qOSZ = originalStartRotation.z;
-        qOSW = originalStartRotation.w;
+        oSX = originalStartRotation.x;
+        oSY = originalStartRotation.y;
+        oSZ = originalStartRotation.z;
+        oSW = originalStartRotation.w;
 
         // Cache the originalEndRotation
-        qOEX = originalEndRotation.x;
-        qOEY = originalEndRotation.y;
-        qOEZ = originalEndRotation.z;
-        qOEW = originalEndRotation.w;
+        oEX = originalEndRotation.x;
+        oEY = originalEndRotation.y;
+        oEZ = originalEndRotation.z;
+        oEW = originalEndRotation.w;
 
         this.movementDirection = movementDirection;
         this.hasSwitchedRotation = hasSwitchedRotation;
         this.isRotating = isRotating;
     }
 
-    private Quaternion GetRotation(float x, float y, float z, float w) {
-        return new Quaternion(x, y, z, w);
-    }
-
     public void Restore(Lever lever) {
-        lever.Restore(new Quaternion(qPSX, qPSY, qPSZ, qPSW), new Quaternion(qPEX, qPEY, qPEZ, qPEW),
-                      new Quaternion(qOSX, qOSY, qOSZ, qOSW), new Quaternion(qOEX, qOEY, qOEZ, qOEW),
+        lever.Restore(new Quaternion(pSX, pSY, pSZ, pSW), new Quaternion(pEX, pEY, pEZ, pEW),
+                      new Quaternion(oSX, oSY, oSZ, oSW), new Quaternion(oEX, oEY, oEZ, oEW),
                       movementDirection, hasSwitchedRotation, isRotating);
     }
 }

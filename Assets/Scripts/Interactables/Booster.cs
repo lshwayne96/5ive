@@ -10,7 +10,7 @@ public class Booster : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Move() {
+    public void Fire() {
         rb.AddForce(pushForce, ForceMode2D.Impulse);
     }
 }
