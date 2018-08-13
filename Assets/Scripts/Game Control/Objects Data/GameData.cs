@@ -7,7 +7,6 @@ using System;
 
 [Serializable]
 public class GameData {
-    private int numLevels;
     private int numLevelsCompleted;
     private bool[] collectibleLocations;
 
@@ -17,7 +16,6 @@ public class GameData {
     private int lastUnlockedLevel;
 
     public GameData(int numLevels) {
-        this.numLevels = numLevels;
         this.numLevelsCompleted = 1;
         this.hasAdvancedInGame = false;
         this.collectibleLocations = new bool[numLevels + 1];

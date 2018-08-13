@@ -35,13 +35,13 @@ public class Ball : MonoBehaviour {
 
         // If the player has entered the ball's trigger, the player can pick it up
         if (canPickUpBall) {
-            if (Input.GetKeyDown(KeyCode.G) && !playerHasBall) {
+            if (Input.GetKeyDown(KeyCode.G) && !playerHasBall && PauseLevel.IsLevelPaused()) {
                 PickUp();
             }
         }
 
         // Enable the ball to be dropped anytime
-        if (Input.GetKeyDown(KeyCode.H) && playerHasBall) {
+        if (Input.GetKeyDown(KeyCode.H) && playerHasBall && PauseLevel.IsLevelPaused()) {
             Drop();
         }
     }

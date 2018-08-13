@@ -25,7 +25,7 @@ public class Lever : MonoBehaviour {
     private Direction movementDirection;
 
     private bool interactableState;
-    private bool hasEnteredTrigger;
+    private bool canPullLever;
     private bool toResume;
     private bool hasSwitchedRotation;
     private bool isRotating;
@@ -52,10 +52,14 @@ public class Lever : MonoBehaviour {
         if (interactable != null) {
             interactableState = interactable.activeSelf;
         }
+    }
+
+    void Start() {
         angleOfRotation = 90f;
 
         Vector3 angleDifference = Vector3.back * angleOfRotation;
         currentAngle = transform.eulerAngles;
+        // The angle to rotate by
         targetAngle = transform.eulerAngles + angleDifference;
 
         startRotation = transform.rotation;
@@ -65,10 +69,8 @@ public class Lever : MonoBehaviour {
         originalStartRotation = startRotation;
         originalEndRotation = endRotation;
 
+        // Default movement direction initially since all levers start tilting to the left
         movementDirection = Direction.Right;
-    }
-
-    void Start() {
         speed = 300f;
         journeyLength = Vector3.Distance(targetAngle, currentAngle);
     }
@@ -79,49 +81,65 @@ public class Lever : MonoBehaviour {
      * and the interactable gameObject will disappear.
     */
     void Update() {
-        if (hasEnteredTrigger && Input.GetKeyUp(KeyCode.R)) {
+        if (LeverIsPulled()) {
+            // Start time for the rotation coroutine
             startTime = Time.time;
-            if (!isRotating) {
+            if (!isRotating) { // The lever is not already rotating
                 isRotating = true;
-                currentCoroutine = StartCoroutine(Rotate());
-            } else {
-                ChangeMovementDirection();
-                StopCoroutine(currentCoroutine);
-                wasInterruptedWhileMoving = true;
+                StartRotation();
+            } else { // The lever is already rotating
+                InterruptRotation();
 
-                Quaternion temp = startRotation;
-                startRotation = endRotation;
-                endRotation = temp;
-
+                // Set the start rotation as the current rotation
                 startRotation = transform.rotation;
+                SetEndRotation();
 
-                if (movementDirection == Direction.Left) {
-                    endRotation = originalEndRotation;
-                } else {
-                    endRotation = originalStartRotation;
-                }
-
-                currentCoroutine = StartCoroutine(Rotate());
+                StartRotation();
             }
         }
 
+        // Resuming from a saved game
         if (toResume) {
             isRotating = true;
-            currentCoroutine = StartCoroutine(Rotate());
+            StartRotation();
+        }
+    }
+
+    private void StartRotation() {
+        currentCoroutine = StartCoroutine(Rotate());
+    }
+
+    private bool LeverIsPulled() {
+        return canPullLever && Input.GetKeyUp(KeyCode.R) && !PauseLevel.IsLevelPaused();
+    }
+
+    private void InterruptRotation() {
+        // Set the lever to rotate in the opposite direction
+        ChangeMovementDirection();
+        StopCoroutine(currentCoroutine);
+        wasInterruptedWhileMoving = true;
+    }
+
+    private void SetEndRotation() {
+        // Set the end rotation, depending on the movement direction
+        if (movementDirection == Direction.Left) {
+            endRotation = originalEndRotation;
+        } else {
+            endRotation = originalStartRotation;
         }
     }
 
     // When the player enters the lever
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            hasEnteredTrigger = true;
+            canPullLever = true;
         }
     }
 
     // When the player leaves the lever
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            hasEnteredTrigger = false;
+            canPullLever = false;
         }
     }
 
@@ -149,15 +167,15 @@ public class Lever : MonoBehaviour {
 
                 // Set our position as a fraction of the distance between the markers.
                 transform.rotation = Quaternion.Slerp(start, end, fracJourney);
-            } else {
+                start = transform.rotation;
+            } else { // The game is paused
+                // Refresh the start time to get accurate distance covered
                 startTime = Time.time;
             }
             yield return null;
         }
 
-        if (interactable) {
-            ChangeInteractableState();
-        }
+        ChangeInteractableState();
 
         if (toResume) {
             toResume = false;
@@ -195,8 +213,10 @@ public class Lever : MonoBehaviour {
 
     // Controls the interactable assigned to the lever
     private void ChangeInteractableState() {
-        interactable.SetActive(!interactableState);
-        interactableState = !interactableState;
+        if (interactable) {
+            interactable.SetActive(!interactableState);
+            interactableState = !interactableState;
+        }
     }
 
     public bool HasSwitchedRotation() {
