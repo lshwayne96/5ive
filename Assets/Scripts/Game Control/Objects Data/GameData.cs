@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿/*
  * This class represents the data of the game and is used to restore
  * the game to its saved state.
@@ -73,4 +74,21 @@ public class GameData {
     public void SetLastUnlockedLevel(int lastUnlockedLevel) {
         this.lastUnlockedLevel = lastUnlockedLevel;
     }
+=======
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameDa : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+>>>>>>> 3ae47c30b94e45541d67e8b8ee46f01a173c2acb
 }

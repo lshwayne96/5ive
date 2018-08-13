@@ -63,7 +63,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
             if (IsDoubleClick(pointerEventData)) {
                 SaveLevel saveLevel = GetComponent<SaveLevel>();
                 saveLevel.Overwrite(nameLabel.text);
-                NotificationManager.Notifiy(new OverwriteSuccessful());
+                MessageManager.Send(new OverwriteSuccessful());
             }
         }
     }

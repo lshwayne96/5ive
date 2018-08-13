@@ -10,12 +10,11 @@ using UnityEngine;
 public class DetectRoom : MonoBehaviour {
 
     public LayerMask roomLayer;
-
     /*
      * The room that the current object is in
      * The currentRoom variable is used in the SetCurrentRoom script
      */
-    private Transform currentRoom;
+    public Transform currentRoom { get; private set; }
     private Collider2D currentRoomCollider;
 
     private Transform playerCamera;
@@ -51,10 +50,6 @@ public class DetectRoom : MonoBehaviour {
 
             playerCamera.position = roomBounds.ClosestPoint(playerCamera.position);
         }
-    }
-
-    public Transform GetCurrentRoom() {
-        return currentRoom;
     }
 
     public void SetCurrentRoom() {

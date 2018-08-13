@@ -20,6 +20,6 @@ public class OnClickQuit : MonoBehaviour {
 
     private void SaveBeforeQuit() {
         string saveFilePath = GameFile.GetSaveFilePath();
-        GameFile.Serialise(saveFilePath, GameDataManager.GetGameData());
+        GameDataManager.SaveGame(saveFilePath);
     }
 }

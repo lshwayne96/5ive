@@ -34,6 +34,7 @@ public class Ball : MonoBehaviour {
         }
 
         // If the player has entered the ball's trigger, the player can pick it up
+<<<<<<< HEAD
         if (canPickUpBall) {
             if (Input.GetKeyDown(KeyCode.G) && !playerHasBall && PauseLevel.IsLevelPaused()) {
                 PickUp();
@@ -43,6 +44,15 @@ public class Ball : MonoBehaviour {
         // Enable the ball to be dropped anytime
         if (Input.GetKeyDown(KeyCode.H) && playerHasBall && PauseLevel.IsLevelPaused()) {
             Drop();
+=======
+        if (CanPickUpBall()) {
+            PickUpBall();
+        }
+
+        // Enable the ball to be dropped anytime
+        if (CanDropBall()) {
+            DropBall();
+>>>>>>> 3ae47c30b94e45541d67e8b8ee46f01a173c2acb
         }
     }
 
@@ -58,13 +68,21 @@ public class Ball : MonoBehaviour {
         }
     }
 
-    private void PickUp() {
+    private bool CanPickUpBall() {
+        return canPickUpBall && Input.GetKeyDown(KeyCode.G) && !playerHasBall && !PauseLevel.isPaused;
+    }
+
+    private bool CanDropBall() {
+        return Input.GetKeyDown(KeyCode.H) && playerHasBall && !PauseLevel.isPaused;
+    }
+
+    private void PickUpBall() {
         transform.position = playerTf.position;
         GetComponent<Rigidbody2D>().gravityScale = 0f;
         playerHasBall = true;
     }
 
-    private void Drop() {
+    private void DropBall() {
         GetComponent<Rigidbody2D>().gravityScale = 1f;
         playerHasBall = false;
     }

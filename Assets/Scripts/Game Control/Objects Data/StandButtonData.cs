@@ -10,39 +10,63 @@ using UnityEngine;
 [Serializable]
 public class StandButtonData {
 
-    private float pX;
-    private float pY;
-    private float pZ;
+    private float pSX;
+    private float pSY;
+    private float pSZ;
 
     private float pEX;
     private float pEY;
     private float pEZ;
 
-    private bool isMoving;
+    private float oSX;
+    private float oSY;
+    private float oSZ;
+    private float oSW;
 
-    public StandButtonData(Vector3 prevPosition, Vector3 prevEndPosition, bool isMoving) {
-        pX = prevPosition.x;
-        pY = prevPosition.y;
-        pZ = prevPosition.z;
+    private float oEX;
+    private float oEY;
+    private float oEZ;
+    private float oEW;
+
+    private Direction movementDirection;
+    private bool isDown;
+    private bool isMoving;
+    private float waitDuration;
+    private float originalWaitDuration;
+
+    public StandButtonData(Vector3 prevStartPosition, Vector3 prevEndPosition,
+                           Vector3 originalStartPosition, Vector3 originalEndPosition,
+                           Direction movementDirection, bool isDown, bool isMoving,
+                           float waitDuration, float originalWaitDuration) {
+        pSX = prevStartPosition.x;
+        pSY = prevStartPosition.y;
+        pSZ = prevStartPosition.z;
 
         pEX = prevEndPosition.x;
         pEY = prevEndPosition.y;
         pEZ = prevEndPosition.z;
 
+        // Cache the originalStartPosition
+        oSX = originalStartPosition.x;
+        oSY = originalStartPosition.y;
+        oSZ = originalStartPosition.z;
+
+        // Cache the originalEndPosition
+        oEX = originalEndPosition.x;
+        oEY = originalEndPosition.y;
+        oEZ = originalEndPosition.z;
+
+        this.movementDirection = movementDirection;
+        this.isDown = isDown;
         this.isMoving = isMoving;
-    }
-
-    private Vector3 GetPrevPosition() {
-        return new Vector3(pX, pY, pZ);
-    }
-
-    private Vector3 GetPrevEndPosition() {
-        return new Vector3(pEX, pEY, pEZ);
+        this.waitDuration = waitDuration;
+        this.originalWaitDuration = originalWaitDuration;
     }
 
     public void Restore(StandButton standButton) {
-        if (isMoving) {
-            standButton.Resume(GetPrevPosition(), GetPrevEndPosition());
-        }
+        standButton.Restore(new Vector3(pSX, pSY, pSZ), new Vector3(pEX, pEY, pEZ),
+                            new Vector3(oSX, oSY, oSZ), new Vector3(oEX, oEY, oEZ),
+                            movementDirection, isDown, isMoving,
+                            waitDuration, originalWaitDuration);
     }
 }
