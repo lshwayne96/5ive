@@ -22,6 +22,25 @@ public class MessageManager : MonoBehaviour {
         messageText = GetComponentInChildren<Text>();
     }
 
+    protected void Update() {
+        if (hasNewMessage) {
+            if (hasVisibleMessage) {
+                InterruptDisappearance();
+            }
+            StartTimerToDisappearance();
+        }
+    }
+
+    protected void StartTimerToDisappearance() {
+        currentCoroutine = StartCoroutine(Disappear());
+        hasNewMessage = false;
+    }
+
+    protected void InterruptDisappearance() {
+        StopCoroutine(currentCoroutine);
+        hasNewMessage = false;
+    }
+
     public static void Send(IMessage message) {
         SetUp();
         messageText.text = message.text;
@@ -31,9 +50,10 @@ public class MessageManager : MonoBehaviour {
     // Makes the notification disappear after a certain duration
     protected virtual IEnumerator Disappear() {
         hasVisibleMessage = true;
+        float difference = 0;
 
-        float difference = Time.time - startTime;
         while (difference < visibleDuration) {
+            difference = Time.time - startTime;
             yield return null;
         }
 

@@ -14,9 +14,10 @@ public class NotificationManager : MessageManager {
     // Makes the notification disappear after a certain duration
     protected override IEnumerator Disappear() {
         hasVisibleMessage = true;
+        float difference = 0;
 
-        float difference = Time.time - startTime;
         while (difference < visibleDuration) {
+            difference = Time.time - startTime;
             yield return null;
         }
 
