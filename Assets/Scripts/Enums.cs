@@ -7,5 +7,5 @@ public enum Level {
 }
 
 public enum Direction {
-    Up, Down, Left, Right
+    Up, Down, Left, Right, Undefined
 }

@@ -16,23 +16,40 @@ public class Player : MonoBehaviour {
 
     // LateUpdate() is used to allow Flip() in PlatformerCharacter2D to run first
     void LateUpdate() {
-        if (RestoreLevel.restoreLevel.hasRestoredScene && IsFacingLeft() && !hasRestoredOrientation
-            && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow))) {
-            Vector3 playerScale = transform.localScale;
-            playerScale.x *= -1;
-            transform.localScale = playerScale;
+        if (IsFacingLeftAfterRestore()) {
+            RestoreOrientation();
+            hasRestoredOrientation = true;
+        } else if (IsFacingRightAfterRestore()) {
             hasRestoredOrientation = true;
         }
     }
 
+    private bool IsFacingLeftAfterRestore() {
+        return RestoreLevel.restoreLevel.hasRestoredScene
+                           && (FacingDirection() == Direction.Left) && !hasRestoredOrientation
+                           && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
+    }
+
+    private bool IsFacingRightAfterRestore() {
+        return RestoreLevel.restoreLevel.hasRestoredScene
+                           && (FacingDirection() == Direction.Right) && !hasRestoredOrientation
+                           && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
+    }
+
     // Checks to see if the player is facing the left
-    private bool IsFacingLeft() {
-        if (transform.localScale.x < 0) { // Sprite is facing left
-            return true;
-        } else if (transform.localScale.x > 0) { // Sprite is facing right
-            return false;
-        } else { // Sprite has no width
-            return false;
+    private Direction FacingDirection() {
+        if (transform.localScale.x > 0) {
+            return Direction.Right;
+        } else if (transform.localScale.x < 0) {
+            return Direction.Left;
+        } else {
+            return Direction.Undefined;
         }
+    }
+
+    private void RestoreOrientation() {
+        Vector3 playerScale = transform.localScale;
+        playerScale.x *= -1;
+        transform.localScale = playerScale;
     }
 }

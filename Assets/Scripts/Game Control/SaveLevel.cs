@@ -1,6 +1,8 @@
 ﻿/*
  * This script is used to save the game.
  * It is called when the user presses enter on the attached InputField gameObject.
+ * 
+ * This script is used in both the input field game object and file button.
  */
 
 using System;
@@ -24,6 +26,9 @@ public class SaveLevel : MonoBehaviour {
 
     private Ladder[] ladders;
     private int numLadders;
+
+    private StoryLine[] storyLines;
+    private int numStoryLines;
 
     private void Start() {
         int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
@@ -49,6 +54,9 @@ public class SaveLevel : MonoBehaviour {
 
             ladders = componentManager.GetScripts<Ladder>();
             numLadders = ladders.Length;
+
+            storyLines = componentManager.GetScripts<StoryLine>();
+            numStoryLines = storyLines.Length;
         }
     }
 
@@ -82,9 +90,11 @@ public class SaveLevel : MonoBehaviour {
         LeverData[] leverDatas = CacheLeverData();
         StandButtonData[] standButtonDatas = CacheStandButtonData();
         LadderData[] ladderDatas = CacheLadderData();
+        StoryLineData[] storyLineDatas = CacheStoryLineData();
 
         LevelData levelData = new LevelData(scene, playerData, ballData,
-                                            leverDatas, standButtonDatas, ladderDatas);
+                                            leverDatas, standButtonDatas,
+                                            ladderDatas, storyLineDatas);
 
         string saveFilePath = LevelFile.ConvertToPath(fileName, true);
         LevelFile.Serialise(saveFilePath, levelData);
@@ -135,9 +145,16 @@ public class SaveLevel : MonoBehaviour {
         return ladderDatas;
     }
 
+    private StoryLineData[] CacheStoryLineData() {
+        StoryLineData[] storyLineDatas = new StoryLineData[numStoryLines];
+        for (int i = 0; i < numStoryLines; i++) {
+            storyLineDatas[i] = storyLines[i].CacheData();
+        }
+        return storyLineDatas;
+    }
+
     private void OnEnable() {
         inputField = GetComponent<InputField>();
-        // This script is used in both the input field game object and file button
         if (inputField) {
             inputField.ActivateInputField();
         }

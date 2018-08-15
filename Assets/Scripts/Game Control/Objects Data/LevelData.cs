@@ -18,15 +18,18 @@ public class LevelData {
     private StandButtonData[] standButtonDatas;
     private LadderData[] ladderDatas;
 
+    private StoryLineData[] storyLineDatas;
+
     public LevelData(Scene scene, PlayerData playerData, BallData ballData,
                      LeverData[] leverDatas, StandButtonData[] standButtonDatas,
-                     LadderData[] ladderDatas) {
+                     LadderData[] ladderDatas, StoryLineData[] storyLineDatas) {
         this.sceneBuildIndex = scene.buildIndex;
         this.playerData = playerData;
         this.ballData = ballData;
         this.leverDatas = leverDatas;
         this.standButtonDatas = standButtonDatas;
         this.ladderDatas = ladderDatas;
+        this.storyLineDatas = storyLineDatas;
     }
 
     public void Restore() {
@@ -51,6 +54,11 @@ public class LevelData {
             TopOfLadder[] topOfLadders = componentManager.GetScripts<TopOfLadder>();
             for (int i = 0; i < ladders.Length; i++) {
                 ladderDatas[i].Restore(ladders[i], topOfLadders[i]);
+            }
+
+            StoryLine[] storyLines = componentManager.GetScripts<StoryLine>();
+            for (int i = 0; i < storyLines.Length; i++) {
+                storyLineDatas[i].Restore(storyLines[i]);
             }
         }
     }

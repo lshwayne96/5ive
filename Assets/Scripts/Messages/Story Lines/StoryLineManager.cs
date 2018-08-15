@@ -28,7 +28,6 @@ public class StoryLineManager : MessageManager {
         SetUp();
         messageText.text = message.text;
         hasNewMessage = true;
-        Destroy(((MonoBehaviour)message).gameObject);
     }
 
     // Makes the notification disappear after a certain duration
