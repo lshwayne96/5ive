@@ -6,7 +6,7 @@
  */
 using UnityEngine;
 
-public class Ladder : MonoBehaviour {
+public class Ladder : MonoBehaviour, ICacheable<LadderData> {
 
     // Expose the climbingSpeed variable to the editor
     public float climbingSpeed;

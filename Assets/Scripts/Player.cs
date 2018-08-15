@@ -16,24 +16,24 @@ public class Player : MonoBehaviour {
 
     // LateUpdate() is used to allow Flip() in PlatformerCharacter2D to run first
     void LateUpdate() {
-        if (IsFacingLeftAfterRestore()) {
+        if ((IsFacingLeftAfterRestore() && Input.GetKeyDown(KeyCode.RightArrow)) ||
+             (IsFacingRightAfterRestore() && Input.GetKeyDown(KeyCode.LeftArrow))) {
             RestoreOrientation();
             hasRestoredOrientation = true;
-        } else if (IsFacingRightAfterRestore()) {
+            enabled = false;
+        } else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow)) {
             hasRestoredOrientation = true;
         }
     }
 
     private bool IsFacingLeftAfterRestore() {
         return RestoreLevel.restoreLevel.hasRestoredScene
-                           && (FacingDirection() == Direction.Left) && !hasRestoredOrientation
-                           && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
+                           && (FacingDirection() == Direction.Left) && !hasRestoredOrientation;
     }
 
     private bool IsFacingRightAfterRestore() {
         return RestoreLevel.restoreLevel.hasRestoredScene
-                           && (FacingDirection() == Direction.Right) && !hasRestoredOrientation
-                           && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow));
+                           && (FacingDirection() == Direction.Right) && !hasRestoredOrientation;
     }
 
     // Checks to see if the player is facing the left

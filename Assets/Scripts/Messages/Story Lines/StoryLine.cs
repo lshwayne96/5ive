@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class StoryLine : MonoBehaviour, IMessage {
+public class StoryLine : MonoBehaviour, IMessage, ICacheable<StoryLineData> {
     public virtual string text { get; }
     public bool hasBeenSent;
     protected bool toSend;

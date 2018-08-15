@@ -17,7 +17,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class StandButton : MonoBehaviour {
+public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
     public GameObject interactable;
     public float waitDuration;

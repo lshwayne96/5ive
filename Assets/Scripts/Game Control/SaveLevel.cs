@@ -87,10 +87,11 @@ public class SaveLevel : MonoBehaviour {
 
         PlayerData playerData = CachePlayerData();
         BallData ballData = CacheBallData();
-        LeverData[] leverDatas = CacheLeverData();
-        StandButtonData[] standButtonDatas = CacheStandButtonData();
-        LadderData[] ladderDatas = CacheLadderData();
-        StoryLineData[] storyLineDatas = CacheStoryLineData();
+
+        LeverData[] leverDatas = CacheData(levers, numLevers);
+        StandButtonData[] standButtonDatas = CacheData(standButtons, numStandButtons);
+        LadderData[] ladderDatas = CacheData(ladders, numLadders);
+        StoryLineData[] storyLineDatas = CacheData(storyLines, numStoryLines);
 
         LevelData levelData = new LevelData(scene, playerData, ballData,
                                             leverDatas, standButtonDatas,
@@ -121,36 +122,12 @@ public class SaveLevel : MonoBehaviour {
         return new BallData(velocity, position);
     }
 
-    private LeverData[] CacheLeverData() {
-        LeverData[] leverDatas = new LeverData[numLevers];
-        for (int i = 0; i < numLevers; i++) {
-            leverDatas[i] = levers[i].CacheData();
+    private T[] CacheData<T>(ICacheable<T>[] cacheable, int count) {
+        T[] datas = new T[count];
+        for (int i = 0; i < count; i++) {
+            datas[i] = cacheable[i].CacheData();
         }
-        return leverDatas;
-    }
-
-    private StandButtonData[] CacheStandButtonData() {
-        StandButtonData[] standButtonDatas = new StandButtonData[numStandButtons];
-        for (int i = 0; i < numStandButtons; i++) {
-            standButtonDatas[i] = standButtons[i].CacheData();
-        }
-        return standButtonDatas;
-    }
-
-    private LadderData[] CacheLadderData() {
-        LadderData[] ladderDatas = new LadderData[numLadders];
-        for (int i = 0; i < numLadders; i++) {
-            ladderDatas[i] = ladders[i].CacheData();
-        }
-        return ladderDatas;
-    }
-
-    private StoryLineData[] CacheStoryLineData() {
-        StoryLineData[] storyLineDatas = new StoryLineData[numStoryLines];
-        for (int i = 0; i < numStoryLines; i++) {
-            storyLineDatas[i] = storyLines[i].CacheData();
-        }
-        return storyLineDatas;
+        return datas;
     }
 
     private void OnEnable() {

@@ -156,10 +156,6 @@ public class GameDataManager : MonoBehaviour {
         GameFile.Serialise(saveFilePath, gameData);
     }
 
-    public bool DoesSceneContainCollectible(int sceneBuildIndex) {
-        return gameData.collectibleLocations[sceneBuildIndex];
-    }
-
     public static void UpdateCollectibleLocations(int sceneBuildIndex) {
         gameData.collectibleLocations[sceneBuildIndex] = false;
     }
