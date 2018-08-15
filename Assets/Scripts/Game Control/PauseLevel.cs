@@ -42,24 +42,32 @@ public class PauseLevel : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            if (!isPaused) { // If the game is not paused, pause it
-                prePlayerVelocity = playerRb.velocity;
-                preBallVelocity = ballRb.velocity;
-                playerRb.Sleep();
-                ballRb.Sleep();
-                pauseMenu.SetActive(true);
+            Debug.Log("IsPaused: " + isPaused + " pauseMenu: " + pauseMenu.activeSelf);
 
-            } else { // If the game is paused, unpause it
+            if (isPaused && pauseMenu.activeSelf) { // If the game is paused, unpause it
+                Debug.Log("Unpause game");
                 playerRb.velocity = prePlayerVelocity;
                 ballRb.velocity = preBallVelocity;
                 playerRb.WakeUp();
                 ballRb.WakeUp();
-                pauseMenu.SetActive(false);
-            }
 
-            playerMovement.enabled = !playerMovement.enabled;
-            playerAnimator.enabled = !playerAnimator.enabled;
-            isPaused = !isPaused;
+                pauseMenu.SetActive(false);
+                playerMovement.enabled = true;
+                playerAnimator.enabled = true;
+                isPaused = false;
+
+            } else if (!isPaused && !pauseMenu.activeSelf) { // If the game is not paused, pause it
+                Debug.Log("Pause game");
+                prePlayerVelocity = playerRb.velocity;
+                preBallVelocity = ballRb.velocity;
+                playerRb.Sleep();
+                ballRb.Sleep();
+
+                pauseMenu.SetActive(true);
+                playerMovement.enabled = false;
+                playerAnimator.enabled = false;
+                isPaused = true;
+            }
         }
     }
 }
