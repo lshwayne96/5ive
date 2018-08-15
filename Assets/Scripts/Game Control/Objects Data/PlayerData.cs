@@ -12,6 +12,11 @@ using UnityEngine;
 [Serializable]
 public class PlayerData {
 
+    // Vector3 scale
+    private float sX;
+    private float sY;
+    private float sZ;
+
     // Vector2 velocity
     private float vX;
     private float vY;
@@ -22,9 +27,14 @@ public class PlayerData {
 
     private float prevGravityScale;
 
-    public PlayerData(Rigidbody2D playerRigidBody) {
-        Vector2 velocity = playerRigidBody.velocity;
-        Vector3 position = playerRigidBody.position;
+    public PlayerData(Transform playerTf, Rigidbody2D playerRb) {
+        Vector3 scale = playerTf.localScale;
+        Vector2 velocity = playerRb.velocity;
+        Vector3 position = playerRb.position;
+
+        this.sX = scale.x;
+        this.sY = scale.y;
+        this.sZ = scale.z;
 
         this.vX = velocity.x;
         this.vY = velocity.y;
@@ -32,23 +42,14 @@ public class PlayerData {
         this.pX = position.x;
         this.pY = position.y;
 
-        this.prevGravityScale = playerRigidBody.gravityScale;
-    }
-
-    // Reconstruct the velocity
-    private Vector2 GetVelocity() {
-        return new Vector2(vX, vY);
-    }
-
-    // Reconstruct the position
-    private Vector3 GetPosition() {
-        return new Vector3(pX, pY);
+        this.prevGravityScale = playerRb.gravityScale;
     }
 
     public void Restore() {
         GameObject player = GameObject.FindWithTag("Player");
-        player.GetComponent<Rigidbody2D>().velocity = GetVelocity();
-        player.transform.position = GetPosition();
+        player.transform.localScale = new Vector3(sX, sY, sZ);
+        player.GetComponent<Rigidbody2D>().velocity = new Vector2(vX, vY);
+        player.transform.position = new Vector3(pX, pY);
         player.GetComponent<Rigidbody2D>().gravityScale = prevGravityScale;
 
         // Restore player camera

@@ -5,7 +5,6 @@ TagManager:
   serializedVersion: 2
   tags:
   - TeleportationBall
-  - PauseControl
   - SaveMenu
   - LoadMenu
   - DeleteButton
@@ -13,7 +12,6 @@ TagManager:
   - GameObjectPool
   - DeleteAllButton
   - Interactable
-  - Pause
   - SpecialRoom
   - Lever
   - StandButton
@@ -24,6 +22,9 @@ TagManager:
   - OptionsMenu
   - OverviewMenu
   - LevelButtons
+  - FileButtonManager
+  - PauseMenu
+  - PauseLevel
   layers:
   - Default
   - TransparentFX

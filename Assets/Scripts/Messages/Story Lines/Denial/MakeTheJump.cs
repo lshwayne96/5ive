@@ -7,7 +7,7 @@ public class MakeTheJump : StoryLine {
 
     protected override void Preprocess(Collider2D collision, int count) {
         if (count == 10) {
-            toTrigger = true;
+            toSend = true;
         }
     }
 }

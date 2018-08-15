@@ -13,6 +13,8 @@ public class RestoreLevel : MonoBehaviour {
 
     // The Singleton RestoreScene instance
     public static RestoreLevel restoreLevel;
+    public bool hasRestoredScene { get; private set; }
+
     private LevelData levelData;
     private bool hasSavedScene;
 
@@ -38,6 +40,7 @@ public class RestoreLevel : MonoBehaviour {
     // Restores the previous game data
     public void Restore() {
         levelData.Restore();
+        hasRestoredScene = true;
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {

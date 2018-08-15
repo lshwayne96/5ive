@@ -26,7 +26,7 @@ public class PauseLevel : MonoBehaviour {
 
     void Start() {
         // pauseMenu is initially active to get it's reference
-        pauseMenu = GameObject.FindWithTag("PauseControl");
+        pauseMenu = GameObject.FindWithTag("PauseMenu");
         // Hide the pauseMenu
         pauseMenu.SetActive(false);
         // Manually set isPaused to false since static variables don't reset when a scene is reloaded

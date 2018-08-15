@@ -30,7 +30,7 @@ public class SaveLevel : MonoBehaviour {
         if (currentSceneBuildIndex == (int)Level.MainMenu) {
             fileButtonManager = transform.parent.GetComponent<FileButtonManager>();
         } else {
-            fileButtonManager = GameObject.FindGameObjectWithTag("PauseControl")
+            fileButtonManager = GameObject.FindGameObjectWithTag("FileButtonManager")
                                   .GetComponentInChildren<FileButtonManager>();
         }
 
@@ -57,7 +57,7 @@ public class SaveLevel : MonoBehaviour {
             if (!fileButtonManager.DoesFileExist(inputField.text)) {
                 Save(inputField.text);
             } else {
-                MessageManager.Send(new FileAlreadyExists());
+                NotificationManager.Send(new FileAlreadyExists());
             }
 
             // Clear the input field
@@ -102,7 +102,7 @@ public class SaveLevel : MonoBehaviour {
 
     private PlayerData CachePlayerData() {
         Rigidbody2D playerRigidBody = player.GetComponent<Rigidbody2D>();
-        return new PlayerData(playerRigidBody);
+        return new PlayerData(player.transform, playerRigidBody);
     }
 
     private BallData CacheBallData() {
