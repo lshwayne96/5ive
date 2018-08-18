@@ -84,9 +84,9 @@ public class LeverData {
         oEZ = originalEndRotation.z;
         oEW = originalEndRotation.w;
 
-        this.MovementDirection = lever.MovementDirection;
-        this.HasSwitchedRotation = lever.HasSwitchedRotation;
-        this.IsRotating = lever.IsRotating;
+        MovementDirection = lever.MovementDirection;
+        HasSwitchedRotation = lever.HasSwitchedRotation;
+        IsRotating = lever.IsRotating;
     }
 
     public void Restore(Lever lever) {

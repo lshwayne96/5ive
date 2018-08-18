@@ -20,31 +20,32 @@ using UnityEngine;
 public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
     public GameObject interactable;
-    public float waitDuration;
+    public float waitDuration { get; set; }
     public float translationDistY;
     public float speed;
 
     private Vector3 startPosition;
-    private Vector3 endPosition;
-    private Vector3 originalStartPosition;
-    private Vector3 originalEndPosition;
+    public Vector3 EndPosition { get; private set; }
+    public Vector3 OriginalStartPosition { get; private set; }
+    public Vector3 OriginalEndPosition { get; private set; }
 
     private Booster booster;
     private Coroutine currentCoroutine;
-    private Direction movementDirection;
+    public Direction MovementDirection { get; private set; }
 
     private float startTime;
     private float journeyLength;
-    private float originalWaitDuration;
+
+    public float OriginalWaitDuration { get; private set; }
 
     private bool hasInitialised;
     private bool toStartMoving;
-    private bool isMoving;
+    public bool IsMoving { get; private set; }
     private bool hasStartedMovingDown;
     private bool toStartWaiting;
     private bool isWaiting;
     private bool isBeingPressedDown;
-    private bool isDown;
+    public bool IsDown { get; private set; }
 
     void Start() {
         booster = interactable.GetComponent<Booster>();
@@ -54,19 +55,19 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
         if (!hasInitialised) {
             waitDuration = 2f;
-            originalWaitDuration = waitDuration;
+            OriginalWaitDuration = waitDuration;
 
             startPosition = gameObject.transform.position;
             Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
-            endPosition = startPosition - vectorDifference;
+            EndPosition = startPosition - vectorDifference;
 
-            originalStartPosition = startPosition;
-            originalEndPosition = endPosition;
+            OriginalStartPosition = startPosition;
+            OriginalEndPosition = EndPosition;
 
-            movementDirection = Direction.Down;
+            MovementDirection = Direction.Down;
         }
 
-        journeyLength = Vector3.Distance(startPosition, endPosition);
+        journeyLength = Vector3.Distance(startPosition, EndPosition);
     }
 
     void Update() {
@@ -123,7 +124,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         // Set the start position as the current position
         startPosition = transform.position;
         // Set the end position as the original end position
-        endPosition = originalEndPosition;
+        EndPosition = OriginalEndPosition;
     }
 
     private void StartWait() {
@@ -131,12 +132,12 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
     }
 
     private bool IsMovingUp() {
-        return isMoving && movementDirection == Direction.Up;
+        return IsMoving && MovementDirection == Direction.Up;
     }
 
     private IEnumerator Move() {
         float fracJourney = 0;
-        isMoving = true;
+        IsMoving = true;
         startTime = Time.time;
 
         // Start moving
@@ -145,7 +146,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
                 float distCovered = (Time.time - startTime) * speed;
                 fracJourney = distCovered / journeyLength;
                 // Set our position as a fraction of the distance between the markers.
-                transform.position = Vector3.Lerp(startPosition, endPosition, fracJourney);
+                transform.position = Vector3.Lerp(startPosition, EndPosition, fracJourney);
             } else {
                 // Cache the current start position so that the movement can be resumed when unpaused
                 startPosition = transform.position;
@@ -156,12 +157,12 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         }
 
         // Stop moving
-        isMoving = false;
+        IsMoving = false;
         ChangeMovementDirection();
         RefreshStartEndPositions();
 
         // The stand button has reached the bottom and will move upwards next
-        if (movementDirection == Direction.Up) {
+        if (MovementDirection == Direction.Up) {
             // The booster will fire when the stand button is at the bottom
             booster.Fire();
             // Start waiting
@@ -174,7 +175,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         float currentWaitDuration = 0;
         bool hasAlreadyMinus = false;
         isWaiting = true;
-        isDown = true;
+        IsDown = true;
         startTime = Time.time;
 
         // Start waiting
@@ -192,62 +193,56 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         }
 
         // Reset the wait duration
-        waitDuration = originalWaitDuration;
+        waitDuration = OriginalWaitDuration;
 
         // Stop waiting and start moving up
         isWaiting = false;
-        isDown = false;
+        IsDown = false;
         toStartMoving = true;
     }
 
     private void RefreshStartEndPositions() {
-        if (movementDirection == Direction.Up) {
-            startPosition = originalEndPosition;
-            endPosition = originalStartPosition;
+        if (MovementDirection == Direction.Up) {
+            startPosition = OriginalEndPosition;
+            EndPosition = OriginalStartPosition;
         } else {
-            startPosition = originalStartPosition;
-            endPosition = originalEndPosition;
+            startPosition = OriginalStartPosition;
+            EndPosition = OriginalEndPosition;
         }
     }
 
     private void ChangeMovementDirection() {
-        if (movementDirection == Direction.Up) {
-            movementDirection = Direction.Down;
+        if (MovementDirection == Direction.Up) {
+            MovementDirection = Direction.Down;
         } else {
-            movementDirection = Direction.Up;
+            MovementDirection = Direction.Up;
         }
     }
 
     public StandButtonData CacheData() {
-        return new StandButtonData(transform.position, endPosition,
-                                   originalStartPosition, originalEndPosition,
-                                   movementDirection, isDown, isMoving,
-                                   waitDuration, originalWaitDuration);
+        return new StandButtonData(this);
     }
 
-    public void Restore(Vector3 startPosition, Vector3 endPosition,
-                        Vector3 originalStartPosition, Vector3 originalEndPosition,
-                       Direction movementDirection, bool isDown, bool isMoving,
-                        float waitDuration, float originalWaitDuration) {
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
-        this.originalStartPosition = originalStartPosition;
-        this.originalEndPosition = originalEndPosition;
-        this.movementDirection = movementDirection;
-        this.isDown = isDown;
-        this.isMoving = isMoving;
-        this.waitDuration = waitDuration;
-        this.originalWaitDuration = originalWaitDuration;
+    public void Restore(StandButtonData standButtonData) {
+        startPosition = standButtonData.PrevStartPosition;
+        EndPosition = standButtonData.PrevEndPosition;
+        OriginalStartPosition = standButtonData.OriginalStartPosition;
+        OriginalEndPosition = standButtonData.OriginalEndPosition;
+        MovementDirection = standButtonData.MovementDirection;
+        IsDown = standButtonData.IsDown;
+        IsMoving = standButtonData.IsMoving;
+        waitDuration = standButtonData.WaitDuration;
+        OriginalWaitDuration = standButtonData.OriginalWaitDuration;
         hasInitialised = true;
 
-        if (isMoving) {
+        if (IsMoving) {
             toStartMoving = true;
         }
 
-        if (isDown) {
+        if (IsDown) {
             isWaiting = true;
             toStartWaiting = true;
-            transform.position = originalEndPosition;
+            transform.position = OriginalEndPosition;
         }
     }
 }

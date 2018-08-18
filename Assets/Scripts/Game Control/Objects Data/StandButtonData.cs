@@ -10,34 +10,56 @@ using UnityEngine;
 [Serializable]
 public class StandButtonData {
 
+    public Vector3 PrevStartPosition {
+        get { return prevStartPosition; }
+    }
+    [NonSerialized]
+    private Vector3 prevStartPosition;
     private float pSX;
     private float pSY;
     private float pSZ;
 
+    public Vector3 PrevEndPosition {
+        get { return prevEndPosition; }
+    }
+    [NonSerialized]
+    private Vector3 prevEndPosition;
     private float pEX;
     private float pEY;
     private float pEZ;
 
+    public Vector3 OriginalStartPosition {
+        get { return originalStartPosition; }
+    }
+    [NonSerialized]
+    private Vector3 originalStartPosition;
     private float oSX;
     private float oSY;
     private float oSZ;
     private float oSW;
 
+    public Vector3 OriginalEndPosition {
+        get { return originalEndPosition; }
+    }
+    [NonSerialized]
+    private Vector3 originalEndPosition;
     private float oEX;
     private float oEY;
     private float oEZ;
     private float oEW;
 
-    private Direction movementDirection;
-    private bool isDown;
-    private bool isMoving;
-    private float waitDuration;
-    private float originalWaitDuration;
+    public Direction MovementDirection { get; private set; }
+    public bool IsDown { get; private set; }
+    public bool IsMoving { get; private set; }
+    public float WaitDuration { get; private set; }
+    public float OriginalWaitDuration { get; private set; }
 
-    public StandButtonData(Vector3 prevStartPosition, Vector3 prevEndPosition,
-                           Vector3 originalStartPosition, Vector3 originalEndPosition,
-                           Direction movementDirection, bool isDown, bool isMoving,
-                           float waitDuration, float originalWaitDuration) {
+    public StandButtonData(StandButton standButton) {
+        prevStartPosition = standButton.transform.position;
+        prevEndPosition = standButton.EndPosition;
+        originalStartPosition = standButton.OriginalStartPosition;
+        originalEndPosition = standButton.OriginalEndPosition;
+
         pSX = prevStartPosition.x;
         pSY = prevStartPosition.y;
         pSZ = prevStartPosition.z;
@@ -56,17 +78,14 @@ public class StandButtonData {
         oEY = originalEndPosition.y;
         oEZ = originalEndPosition.z;
 
-        this.movementDirection = movementDirection;
-        this.isDown = isDown;
-        this.isMoving = isMoving;
-        this.waitDuration = waitDuration;
-        this.originalWaitDuration = originalWaitDuration;
+        MovementDirection = MovementDirection;
+        IsDown = IsDown;
+        IsMoving = IsMoving;
+        WaitDuration = WaitDuration;
+        OriginalWaitDuration = OriginalWaitDuration;
     }
 
     public void Restore(StandButton standButton) {
-        standButton.Restore(new Vector3(pSX, pSY, pSZ), new Vector3(pEX, pEY, pEZ),
-                            new Vector3(oSX, oSY, oSZ), new Vector3(oEX, oEY, oEZ),
-                            movementDirection, isDown, isMoving,
-                            waitDuration, originalWaitDuration);
+        standButton.Restore(this);
     }
 }
