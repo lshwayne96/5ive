@@ -28,7 +28,7 @@ public class LeverManager : MonoBehaviour {
 
     private bool CanActivate() {
         for (int i = 0; i < bools.Length; i++) {
-            if (levers[i].hasSwitchedRotation != bools[i]) {
+            if (levers[i].HasSwitchedRotation != bools[i]) {
                 return false;
             }
         }

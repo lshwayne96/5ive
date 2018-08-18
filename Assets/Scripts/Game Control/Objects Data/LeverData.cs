@@ -10,33 +10,56 @@ using UnityEngine;
 [Serializable]
 public class LeverData {
 
+    public Quaternion PrevStartRotation {
+        get { return prevStartRotation; }
+    }
+    [NonSerialized]
+    private Quaternion prevStartRotation;
     private float pSX;
     private float pSY;
     private float pSZ;
     private float pSW;
 
+    public Quaternion PrevEndRotation {
+        get { return prevEndRotation; }
+    }
+    [NonSerialized]
+    private Quaternion prevEndRotation;
     private float pEX;
     private float pEY;
     private float pEZ;
     private float pEW;
 
+    public Quaternion OriginalStartRotation {
+        get { return originalStartRotation; }
+    }
+    [NonSerialized]
+    private Quaternion originalStartRotation;
     private float oSX;
     private float oSY;
     private float oSZ;
     private float oSW;
 
+    public Quaternion OriginalEndRotation {
+        get { return originalEndRotation; }
+    }
+    [NonSerialized]
+    private Quaternion originalEndRotation;
     private float oEX;
     private float oEY;
     private float oEZ;
     private float oEW;
 
-    private Direction movementDirection;
-    private bool hasSwitchedRotation;
-    private bool isRotating;
+    public Direction MovementDirection { get; private set; }
+    public bool HasSwitchedRotation { get; private set; }
+    public bool IsRotating { get; private set; }
 
-    public LeverData(Quaternion prevStartRotation, Quaternion prevEndRotation,
-                     Quaternion originalStartRotation, Quaternion originalEndRotation,
-                     Direction movementDirection, bool hasSwitchedRotation, bool isRotating) {
+    public LeverData(Lever lever) {
+        prevStartRotation = lever.transform.rotation;
+        prevEndRotation = lever.EndRotation;
+        originalStartRotation = lever.OriginalStartRotation;
+        originalEndRotation = lever.OriginalEndRotation;
+
         // Cache the prevStartRotation
         pSX = prevStartRotation.x;
         pSY = prevStartRotation.y;
@@ -61,14 +84,16 @@ public class LeverData {
         oEZ = originalEndRotation.z;
         oEW = originalEndRotation.w;
 
-        this.movementDirection = movementDirection;
-        this.hasSwitchedRotation = hasSwitchedRotation;
-        this.isRotating = isRotating;
+        this.MovementDirection = lever.MovementDirection;
+        this.HasSwitchedRotation = lever.HasSwitchedRotation;
+        this.IsRotating = lever.IsRotating;
     }
 
     public void Restore(Lever lever) {
-        lever.Restore(new Quaternion(pSX, pSY, pSZ, pSW), new Quaternion(pEX, pEY, pEZ, pEW),
-                      new Quaternion(oSX, oSY, oSZ, oSW), new Quaternion(oEX, oEY, oEZ, oEW),
-                      movementDirection, hasSwitchedRotation, isRotating);
+        prevStartRotation = new Quaternion(pSX, pSY, pSZ, pSW);
+        prevEndRotation = new Quaternion(pEX, pEY, pEZ, pEW);
+        originalStartRotation = new Quaternion(oSX, oSY, oSZ, oSW);
+        originalEndRotation = new Quaternion(oEX, oEY, oEZ, oEW);
+        lever.Restore(this);
     }
 }
