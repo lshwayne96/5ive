@@ -20,7 +20,7 @@ using UnityEngine;
 public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
     public GameObject interactable;
-    public float waitDuration { get; set; }
+    public float WaitDuration { get; set; }
     public float translationDistY;
     public float speed;
 
@@ -54,8 +54,8 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         speed = 1f;
 
         if (!hasInitialised) {
-            waitDuration = 2f;
-            OriginalWaitDuration = waitDuration;
+            WaitDuration = 2f;
+            OriginalWaitDuration = WaitDuration;
 
             startPosition = gameObject.transform.position;
             Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
@@ -179,12 +179,12 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         startTime = Time.time;
 
         // Start waiting
-        while (currentWaitDuration < waitDuration) {
+        while (currentWaitDuration < WaitDuration) {
             if (!PauseLevel.isPaused) {
                 currentWaitDuration = Time.time - startTime;
             } else {
                 if (!hasAlreadyMinus) {
-                    waitDuration -= currentWaitDuration;
+                    WaitDuration -= currentWaitDuration;
                     hasAlreadyMinus = true;
                 }
                 startTime = Time.time;
@@ -193,7 +193,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         }
 
         // Reset the wait duration
-        waitDuration = OriginalWaitDuration;
+        WaitDuration = OriginalWaitDuration;
 
         // Stop waiting and start moving up
         isWaiting = false;
@@ -231,7 +231,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         MovementDirection = standButtonData.MovementDirection;
         IsDown = standButtonData.IsDown;
         IsMoving = standButtonData.IsMoving;
-        waitDuration = standButtonData.WaitDuration;
+        WaitDuration = standButtonData.WaitDuration;
         OriginalWaitDuration = standButtonData.OriginalWaitDuration;
         hasInitialised = true;
 

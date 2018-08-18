@@ -78,14 +78,18 @@ public class StandButtonData {
         oEY = originalEndPosition.y;
         oEZ = originalEndPosition.z;
 
-        MovementDirection = MovementDirection;
-        IsDown = IsDown;
-        IsMoving = IsMoving;
-        WaitDuration = WaitDuration;
-        OriginalWaitDuration = OriginalWaitDuration;
+        MovementDirection = standButton.MovementDirection;
+        IsDown = standButton.IsDown;
+        IsMoving = standButton.IsMoving;
+        WaitDuration = standButton.WaitDuration;
+        OriginalWaitDuration = standButton.OriginalWaitDuration;
     }
 
     public void Restore(StandButton standButton) {
+        prevStartPosition = new Vector3(pSX, pSY, pSZ);
+        prevEndPosition = new Vector3(pEX, pEY, pEZ);
+        originalStartPosition = new Vector3(oSX, oSY, oSZ);
+        originalEndPosition = new Vector3(oEX, oEY, oEZ);
         standButton.Restore(this);
     }
 }
