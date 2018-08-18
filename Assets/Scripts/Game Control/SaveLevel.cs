@@ -15,20 +15,12 @@ public class SaveLevel : MonoBehaviour {
     private InputField inputField;
     private FileButtonManager fileButtonManager;
 
-    private GameObject player;
-    private GameObject ball;
-
+    private Player player;
+    private Ball ball;
     private Lever[] levers;
-    private int numLevers;
-
     private StandButton[] standButtons;
-    private int numStandButtons;
-
     private Ladder[] ladders;
-    private int numLadders;
-
     private StoryLine[] storyLines;
-    private int numStoryLines;
 
     private void Start() {
         int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
@@ -39,24 +31,17 @@ public class SaveLevel : MonoBehaviour {
                                   .GetComponentInChildren<FileButtonManager>();
         }
 
-        player = GameObject.FindWithTag("Player");
-        ball = GameObject.FindWithTag("TeleportationBall");
+        player = GameObject.FindWithTag("Player").GetComponent<Player>();
+        ball = GameObject.FindWithTag("TeleportationBall").GetComponent<Ball>();
 
         GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
         if (componentManagerGO) {
             ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
 
             levers = componentManager.GetScripts<Lever>();
-            numLevers = levers.Length;
-
             standButtons = componentManager.GetScripts<StandButton>();
-            numStandButtons = standButtons.Length;
-
             ladders = componentManager.GetScripts<Ladder>();
-            numLadders = ladders.Length;
-
             storyLines = componentManager.GetScripts<StoryLine>();
-            numStoryLines = storyLines.Length;
         }
     }
 
@@ -85,13 +70,13 @@ public class SaveLevel : MonoBehaviour {
     private void Save(String fileName) {
         Scene scene = SceneManager.GetActiveScene();
 
-        PlayerData playerData = CachePlayerData();
-        BallData ballData = CacheBallData();
+        PlayerData playerData = new PlayerData(player);
+        BallData ballData = ball.CacheData();
 
-        LeverData[] leverDatas = CacheData(levers, numLevers);
-        StandButtonData[] standButtonDatas = CacheData(standButtons, numStandButtons);
-        LadderData[] ladderDatas = CacheData(ladders, numLadders);
-        StoryLineData[] storyLineDatas = CacheData(storyLines, numStoryLines);
+        LeverData[] leverDatas = CacheData(levers, levers.Length);
+        StandButtonData[] standButtonDatas = CacheData(standButtons, standButtons.Length);
+        LadderData[] ladderDatas = CacheData(ladders, ladders.Length);
+        StoryLineData[] storyLineDatas = CacheData(storyLines, storyLines.Length);
 
         LevelData levelData = new LevelData(scene, playerData, ballData,
                                             leverDatas, standButtonDatas,
@@ -109,17 +94,6 @@ public class SaveLevel : MonoBehaviour {
         if (inputField) {
             inputField.DeactivateInputField();
         }
-    }
-
-    private PlayerData CachePlayerData() {
-        Rigidbody2D playerRigidBody = player.GetComponent<Rigidbody2D>();
-        return new PlayerData(player.transform, playerRigidBody);
-    }
-
-    private BallData CacheBallData() {
-        Vector2 velocity = ball.GetComponent<Rigidbody2D>().velocity;
-        Vector3 position = ball.transform.position;
-        return new BallData(velocity, position);
     }
 
     private T[] CacheData<T>(ICacheable<T>[] cacheable, int count) {

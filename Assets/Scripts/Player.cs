@@ -47,6 +47,19 @@ public class Player : MonoBehaviour {
         }
     }
 
+    public PlayerData CacheData() {
+        return new PlayerData(this);
+    }
+
+    public void Restore(PlayerData playerData) {
+        transform.localScale = playerData.PrevLocalScale;
+        GetComponent<Rigidbody2D>().velocity = playerData.PrevVelocity;
+        transform.position = playerData.PrevPosition;
+        GetComponent<Rigidbody2D>().gravityScale = playerData.PrevGravityScale;
+        // Restore player camera
+        GetComponent<DetectRoom>().SetCurrentRoom();
+    }
+
     private void RestoreOrientation() {
         Vector3 playerScale = transform.localScale;
         playerScale.x *= -1;

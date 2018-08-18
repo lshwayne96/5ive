@@ -33,8 +33,10 @@ public class LevelData {
     }
 
     public void Restore() {
-        playerData.Restore();
-        ballData.Restore();
+        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        playerData.Restore(player);
+        Ball ball = GameObject.FindGameObjectWithTag("TeleportationBall").GetComponent<Ball>();
+        ballData.Restore(ball);
 
         GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
         if (componentManagerGO) {

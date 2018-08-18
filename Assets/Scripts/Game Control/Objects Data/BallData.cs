@@ -13,41 +13,43 @@ using UnityEngine;
 [Serializable]
 public class BallData {
 
-    // Vector2 velocity
+    public Vector2 PrevVelocity {
+        get { return prevVelocity; }
+    }
+    [NonSerialized]
+    private Vector2 prevVelocity;
     private float vX;
     private float vY;
 
-    // Vector3 position
+    public Vector3 PrevPosition {
+        get { return prevPosition; }
+    }
+    [NonSerialized]
+    private Vector3 prevPosition;
     private float pX;
     private float pY;
     private float pZ;
 
-    public BallData(Vector2 velocity, Vector3 position) {
-        this.vX = velocity.x;
-        this.vY = velocity.y;
+    public bool PlayerHasBall { get; private set; }
+    public bool PlayerIsWithinRange { get; private set; }
 
-        this.pX = position.x;
-        this.pY = position.y;
-        this.pZ = position.z;
+    public BallData(Ball ball) {
+        prevVelocity = ball.GetComponent<Rigidbody2D>().velocity;
+        vX = prevVelocity.x;
+        vY = prevVelocity.y;
+
+        prevPosition = ball.transform.position;
+        pX = prevPosition.x;
+        pY = prevPosition.y;
+        pZ = prevPosition.z;
+
+        PlayerHasBall = ball.PlayerHasBall;
+        PlayerIsWithinRange = ball.PlayerIsWithinRange;
     }
 
-    // Reconstruct the velocity
-    private Vector2 GetVelocity() {
-        return new Vector2(vX, vY);
-    }
-
-    // Reconstruct the position
-    private Vector3 GetPosition() {
-        return new Vector3(pX, pY, pZ);
-    }
-
-    public void Restore() {
-        // Find the ball in the new scene
-        GameObject ball = GameObject.FindWithTag("TeleportationBall");
-        ball.GetComponent<Rigidbody2D>().velocity = GetVelocity();
-        ball.transform.position = GetPosition();
-
-        // Restore ball camera
-        ball.GetComponent<DetectRoom>().SetCurrentRoom();
+    public void Restore(Ball ball) {
+        prevVelocity = new Vector2(vX, vY);
+        prevPosition = new Vector3(pX, pY, pZ);
+        ball.Restore(this);
     }
 }
