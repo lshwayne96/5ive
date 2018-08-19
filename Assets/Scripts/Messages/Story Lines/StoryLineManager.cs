@@ -26,7 +26,7 @@ public class StoryLineManager : MessageManager {
 
     public static void Send(IMessage message) {
         SetUp();
-        messageText.text = message.text;
+        messageText.text = message.Text;
         hasNewMessage = true;
     }
 

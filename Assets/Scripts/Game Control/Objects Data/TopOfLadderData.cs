@@ -8,15 +8,15 @@ using System;
 
 [Serializable]
 public class TopOfLadderData {
-    private bool isNearTop;
-    private bool isLadderATrigger;
+    public bool IsNearTop { get; private set; }
+    public bool IsLadderATrigger { get; private set; }
 
-    public TopOfLadderData(bool isNearTop, bool isLadderATrigger) {
-        this.isNearTop = isNearTop;
-        this.isLadderATrigger = isLadderATrigger;
+    public TopOfLadderData(TopOfLadder topOfLadder) {
+        IsNearTop = topOfLadder.IsNearTop;
+        IsLadderATrigger = topOfLadder.IsLadderATrigger;
     }
 
     public void Restore(TopOfLadder topOfLadder) {
-        topOfLadder.Restore(isNearTop, isLadderATrigger);
+        topOfLadder.Restore(this);
     }
 }

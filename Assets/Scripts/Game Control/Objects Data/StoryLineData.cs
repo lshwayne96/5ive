@@ -2,15 +2,15 @@
 
 [Serializable]
 public class StoryLineData {
-    private bool hasBeenSent;
-    private int count;
+    public bool HasBeenSent { get; private set; }
+    public int Count { get; private set; }
 
-    public StoryLineData(bool hasBeenSent, int count) {
-        this.hasBeenSent = hasBeenSent;
-        this.count = count;
+    public StoryLineData(StoryLine storyLine) {
+        HasBeenSent = storyLine.HasBeenSent;
+        Count = storyLine.Count;
     }
 
     public void Restore(StoryLine storyLine) {
-        storyLine.Restore(hasBeenSent, count);
+        storyLine.Restore(this);
     }
 }

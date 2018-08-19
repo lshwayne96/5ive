@@ -1,38 +1,37 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class StoryLine : MonoBehaviour, IMessage, ICacheable<StoryLineData> {
-    public virtual string text { get; }
-    public bool hasBeenSent;
+    public virtual string Text { get; }
+    public bool HasBeenSent { get; set; }
+    public int Count { get; set; }
     protected bool toSend;
-    protected int count;
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        count++;
-        Preprocess(collision, count);
-        if (collision.CompareTag("Player") && toSend && !hasBeenSent) {
+        Count++;
+        Preprocess(collision, Count);
+        if (collision.CompareTag("Player") && toSend && !HasBeenSent) {
             StoryLineManager.Send(this);
-            hasBeenSent = true;
+            HasBeenSent = true;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.CompareTag("Player")) {
-            count = 0;
+            Count = 0;
         }
     }
 
     // Subclasses can use this method to customise the way the story line message is sent
-    protected virtual void Preprocess(Collider2D collision, int count) {
+    protected virtual void Preprocess(Collider2D collision, int Count) {
         toSend = true;
     }
 
     public StoryLineData CacheData() {
-        return new StoryLineData(hasBeenSent, count);
+        return new StoryLineData(this);
     }
 
-    public void Restore(bool hasBeenSent, int count) {
-        this.hasBeenSent = hasBeenSent;
-        this.count = count;
+    public void Restore(StoryLineData storyLineData) {
+        HasBeenSent = storyLineData.HasBeenSent;
+        Count = storyLineData.Count;
     }
 }

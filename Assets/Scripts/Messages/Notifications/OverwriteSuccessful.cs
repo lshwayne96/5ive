@@ -3,7 +3,7 @@
  */
 
 public class OverwriteSuccessful : IMessage {
-    public string text {
+    public string Text {
         get { return "Overwrite Successful!"; }
     }
 }

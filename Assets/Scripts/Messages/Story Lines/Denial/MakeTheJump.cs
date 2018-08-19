@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 public class MakeTheJump : StoryLine {
-    public override string text {
+    public override string Text {
         get { return "Make the jump"; }
     }
 

@@ -3,7 +3,7 @@
  */
 
 public class FileAlreadyExists : IMessage {
-    public string text {
+    public string Text {
         get { return "File Already Exists!"; }
     }
 }

@@ -56,6 +56,7 @@ public class Player : MonoBehaviour {
         GetComponent<Rigidbody2D>().velocity = playerData.PrevVelocity;
         transform.position = playerData.PrevPosition;
         GetComponent<Rigidbody2D>().gravityScale = playerData.PrevGravityScale;
+        Debug.Log("Gravity scale restored: " + GetComponent<Rigidbody2D>().gravityScale);
         // Restore player camera
         GetComponent<DetectRoom>().SetCurrentRoom();
     }

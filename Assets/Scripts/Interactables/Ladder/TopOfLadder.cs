@@ -9,61 +9,52 @@ using UnityEngine;
 
 public class TopOfLadder : MonoBehaviour {
 
-    // Whether the player is nearing or at the top
-    private bool isNearTop;
     private Ladder ladder;
-
-    private BoxCollider2D ladderBoxCollider;
-    private bool isLadderATrigger;
-    private bool hasRestored;
+    private BoxCollider2D ladderBC;
+    public bool IsNearTop { get; private set; }
+    public bool IsLadderATrigger { get; private set; }
 
     void Start() {
         ladder = GetComponentInParent<Ladder>();
-        ladderBoxCollider = ladder.GetComponent<BoxCollider2D>();
-        if (hasRestored) {
-            Debug.Log("Called");
-            ladderBoxCollider.isTrigger = isLadderATrigger;
-            hasRestored = false;
-        }
+        ladderBC = ladder.GetComponent<BoxCollider2D>();
     }
 
     void Update() {
         if (AtTopOfLadder()) {
             if (Input.GetKey(KeyCode.DownArrow)) {
-                ladderBoxCollider.isTrigger = true;
+                ladderBC.isTrigger = true;
             } else {
-                ladderBoxCollider.isTrigger = false;
+                ladderBC.isTrigger = false;
             }
         } else {
-            ladderBoxCollider.isTrigger = true;
+            ladderBC.isTrigger = true;
         }
     }
 
     private bool AtTopOfLadder() {
-        return ladder.IsOutsideLadder() && isNearTop;
+        return ladder.OutsideLadder && IsNearTop;
     }
 
     // When the player is standing or moving nearby the top
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            isNearTop = true;
+            IsNearTop = true;
         }
     }
 
     // When the player has begun descending the ladder or walked away from the top
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            isNearTop = false;
+            IsNearTop = false;
         }
     }
 
-    public void Restore(bool isNearTop, bool isLadderATrigger) {
-        this.isNearTop = isNearTop;
-        this.isLadderATrigger = isLadderATrigger;
-        //hasRestored = true;
+    public TopOfLadderData CacheData() {
+        return new TopOfLadderData(this);
     }
 
-    public TopOfLadderData CacheData() {
-        return new TopOfLadderData(isNearTop, ladderBoxCollider.isTrigger);
+    public void Restore(TopOfLadderData topOfLadderData) {
+        IsNearTop = topOfLadderData.IsNearTop;
+        IsLadderATrigger = topOfLadderData.IsLadderATrigger;
     }
 }

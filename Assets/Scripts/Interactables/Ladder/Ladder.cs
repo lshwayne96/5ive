@@ -12,59 +12,54 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
     public float climbingSpeed;
 
     // Is the player simply passing through the ladder?
-    private bool isPassingThrough;
+    public bool IsPassingThrough { get; private set; }
     // Was the player climbing (and has now stopped on it)?
-    private bool wasClimbing;
-    private bool outsideLadder;
-    private bool canClimb;
-
-    private TopOfLadder topOfLadder;
-    private GameObject player;
-
-    private Rigidbody2D playerRigidBody;
-    private float originalGravityScale;
+    public bool IsClimbing { get; private set; }
+    public bool OutsideLadder { get; private set; }
+    public bool CanClimb { get; private set; }
+    public float OriginalGravityScale { get; private set; }
     private bool hasRestored;
+
+    public TopOfLadder TopOfLadder { get; private set; }
+    private Rigidbody2D playerRb;
+
 
     void Start() {
         // Start the climbing speed to a default 6
         climbingSpeed = 6;
 
-        isPassingThrough = true;
-        outsideLadder = true;
+        IsPassingThrough = true;
+        OutsideLadder = true;
 
-        topOfLadder = GetComponentInChildren<TopOfLadder>();
-        player = GameObject.FindWithTag("Player");
-        playerRigidBody = player.GetComponent<Rigidbody2D>();
+        TopOfLadder = GetComponentInChildren<TopOfLadder>();
+        playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
 
         if (!hasRestored) {
-            originalGravityScale = playerRigidBody.gravityScale;
+            OriginalGravityScale = playerRb.gravityScale;
         }
     }
 
     // While on the ladder
     private void FixedUpdate() {
-        if (canClimb) {
+        if (CanClimb) {
             // Get the x of the velocity since only the y should change
-            float currentX = playerRigidBody.velocity.x;
-            if (!hasRestored) {
-                playerRigidBody.gravityScale = originalGravityScale;
-                wasClimbing = true;
-            }
+            float currentX = playerRb.velocity.x;
+            IsClimbing = true;
 
             if (Input.GetKey(KeyCode.UpArrow)) { // Moving up
-                playerRigidBody.velocity = new Vector2(currentX, climbingSpeed);
+                playerRb.velocity = new Vector2(currentX, climbingSpeed);
 
             } else if (Input.GetKey(KeyCode.DownArrow)) { // Moving down
-                playerRigidBody.velocity = new Vector2(currentX, -climbingSpeed);
+                playerRb.velocity = new Vector2(currentX, -climbingSpeed);
 
             } else { // Stopping in or on the leader
-                if (!isPassingThrough) {
-                    playerRigidBody.velocity = new Vector2(currentX, 0);
+                if (!IsPassingThrough) {
+                    playerRb.velocity = new Vector2(currentX, 0);
                     // Remove the effects of gravity on the player
-                    playerRigidBody.gravityScale = 0;
+                    playerRb.gravityScale = 0;
 
                 } else {
-                    wasClimbing = false;
+                    IsClimbing = false;
                 }
             }
         }
@@ -74,9 +69,9 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
     private void OnTriggerEnter2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             if (Input.GetKey(KeyCode.DownArrow) | Input.GetKey(KeyCode.UpArrow)) {
-                canClimb = true;
-                outsideLadder = false;
-                isPassingThrough = false;
+                CanClimb = true;
+                OutsideLadder = false;
+                IsPassingThrough = false;
             }
         }
     }
@@ -84,11 +79,11 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
     // When on the ladder
     private void OnTriggerStay2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            canClimb = true;
-            outsideLadder = false;
+            CanClimb = true;
+            OutsideLadder = false;
 
-            if (wasClimbing) {
-                isPassingThrough = false;
+            if (IsClimbing) {
+                IsPassingThrough = false;
             }
         }
     }
@@ -96,31 +91,26 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
     // When leaving the ladder
     private void OnTriggerExit2D(Collider2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
-            canClimb = false;
-            outsideLadder = true;
-            wasClimbing = false;
-            isPassingThrough = true;
+            CanClimb = false;
+            OutsideLadder = true;
+            IsClimbing = false;
+            IsPassingThrough = true;
             // Revert back so the player doesn't go flying
-            playerRigidBody.gravityScale = originalGravityScale;
+            playerRb.gravityScale = OriginalGravityScale;
         }
     }
 
-    public bool IsOutsideLadder() {
-        return outsideLadder;
-    }
-
     public LadderData CacheData() {
-        return new LadderData(isPassingThrough, wasClimbing, outsideLadder,
-                              canClimb, originalGravityScale, topOfLadder);
+        return new LadderData(this);
     }
 
-    public void Restore(bool isPassingThrough, bool wasClimbing, bool outsideLadder,
-                        bool canClimb, float originalGravityScale) {
-        this.isPassingThrough = isPassingThrough;
-        this.wasClimbing = wasClimbing;
-        this.outsideLadder = outsideLadder;
-        this.canClimb = canClimb;
-        this.originalGravityScale = originalGravityScale;
+    public void Restore(LadderData ladderData) {
+        IsPassingThrough = ladderData.IsPassingThrough;
+        IsClimbing = ladderData.IsClimbing;
+        OutsideLadder = ladderData.OutsideLadder;
+        CanClimb = ladderData.CanClimb;
+        GetComponent<BoxCollider2D>().isTrigger = ladderData.IsTrigger;
+        OriginalGravityScale = ladderData.OriginalGravityScale;
         hasRestored = true;
     }
 }

@@ -23,7 +23,7 @@ public class LevelData {
     public LevelData(Scene scene, PlayerData playerData, BallData ballData,
                      LeverData[] leverDatas, StandButtonData[] standButtonDatas,
                      LadderData[] ladderDatas, StoryLineData[] storyLineDatas) {
-        this.sceneBuildIndex = scene.buildIndex;
+        sceneBuildIndex = scene.buildIndex;
         this.playerData = playerData;
         this.ballData = ballData;
         this.leverDatas = leverDatas;
@@ -33,11 +33,6 @@ public class LevelData {
     }
 
     public void Restore() {
-        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        playerData.Restore(player);
-        Ball ball = GameObject.FindGameObjectWithTag("TeleportationBall").GetComponent<Ball>();
-        ballData.Restore(ball);
-
         GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
         if (componentManagerGO) {
             ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
@@ -63,6 +58,11 @@ public class LevelData {
                 storyLineDatas[i].Restore(storyLines[i]);
             }
         }
+
+        Player player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        playerData.Restore(player);
+        Ball ball = GameObject.FindGameObjectWithTag("TeleportationBall").GetComponent<Ball>();
+        ballData.Restore(ball);
     }
 
     public int GetSceneBuildIndex() {

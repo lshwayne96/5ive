@@ -1,5 +1,5 @@
 ﻿public class TheFall : StoryLine {
-    public override string text {
+    public override string Text {
         get { return "The fall is hard"; }
     }
 }
