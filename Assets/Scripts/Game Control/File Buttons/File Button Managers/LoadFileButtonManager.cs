@@ -46,6 +46,7 @@ public class LoadFileButtonManager : FileButtonManager {
         gameObjectPool.ReturnObject(fileButtonToActOn);
 
         uniqueTaggedFileNames.Remove(saveTaggedFileNameToDelete);
+        deletedFileNames.Add(filePath);
         buttons.Remove(fileButtonToActOn);
         EnableDisableActionButtons(false, loadButton, deleteButton);
 
