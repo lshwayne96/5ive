@@ -15,22 +15,26 @@ public class FileButtonManager : MonoBehaviour {
     // A gameObject pool where buttons are recycled
     protected GameObjectPool gameObjectPool;
 
-    protected HashSet<GameObject> buttons;
+    //protected HashSet<GameObject> buttons;
     protected Button[] actionButtons;
-    protected GameObject fileButtonToActOn;
-    // fileNames contain file names that have the LevelFile tag
-    protected HashSet<String> taggedFileNames;
-    protected static HashSet<String> deletedFileNames;
+    protected GameObject fileButtonGOToActOn;
+    protected Dictionary<String, GameObject> fileButtons;
+    protected string taggedFileNameToActOn;
+
+    protected static HashSet<String> deletedTaggedFileNames;
+    protected static Dictionary<String, DateTime> modifiedTaggedFileNamesAndDateTime;
 
     private DirectoryInfo saveDirectoryInfo;
     private string saveDirectoryPath;
 
+
     // Initialise the buttons associated with any save game files
     public virtual void Initialise() {
         gameObjectPool = GameObject.FindWithTag("GameObjectPool").GetComponent<GameObjectPool>();
-        buttons = new HashSet<GameObject>();
-        taggedFileNames = new HashSet<String>();
-        deletedFileNames = new HashSet<String>();
+        fileButtons = new Dictionary<string, GameObject>();
+
+        deletedTaggedFileNames = new HashSet<String>();
+        modifiedTaggedFileNamesAndDateTime = new Dictionary<String, DateTime>();
 
         saveDirectoryPath = LevelFile.GetSaveDirectoryPath();
         saveDirectoryInfo = Directory.CreateDirectory(saveDirectoryPath);
@@ -58,12 +62,11 @@ public class FileButtonManager : MonoBehaviour {
     // Creates a button associated with the fileInfo
     private void CreateFileButton(FileInfo fileInfo) {
         string filePath = fileInfo.FullName;
-        string fileName = LevelFile.ConvertToName(filePath);
+        string taggedFileName = LevelFile.ConvertToName(filePath);
 
-        if (!taggedFileNames.Contains(fileName) && LevelFile.ContainsTag(fileName)) {
-            taggedFileNames.Add(fileName);
+        if (!fileButtons.ContainsKey(taggedFileName) && LevelFile.ContainsTag(taggedFileName)) {
             LevelData sceneData = LevelFile.Deserialise<LevelData>(filePath);
-            SetUpFileButtonInfo(sceneData, fileInfo);
+            SetUpFileButtonInfo(sceneData, fileInfo, taggedFileName);
         }
     }
 
@@ -71,7 +74,7 @@ public class FileButtonManager : MonoBehaviour {
      * Retrieves a button from the game object pool and initialises it
      * with information from the levelData and fileInfo
      */
-    private void SetUpFileButtonInfo(LevelData levelData, FileInfo fileInfo) {
+    private void SetUpFileButtonInfo(LevelData levelData, FileInfo fileInfo, String taggedFileName) {
         // Get information to be displayed on the SaveLoadMenuButton button
         int sceneBuildIndex = levelData.GetSceneBuildIndex();
         DateTime dateTime = fileInfo.LastWriteTimeUtc;
@@ -82,7 +85,7 @@ public class FileButtonManager : MonoBehaviour {
         // Add the button to the top
         button.transform.SetAsFirstSibling();
         // Cache the buttons for easy deletion
-        buttons.Add(button);
+        fileButtons.Add(taggedFileName, button);
 
         FileButton fileButton = button.GetComponent<FileButton>();
         string fileName = LevelFile.RemoveTag(LevelFile.ConvertToName(fileInfo.FullName));
@@ -97,23 +100,11 @@ public class FileButtonManager : MonoBehaviour {
 
     // Recycle all the buttons on the Content gameObject and delete their associated files
     public virtual void DeleteAll() {
-        foreach (GameObject button in buttons) {
+        foreach (GameObject button in fileButtons.Values) {
             FileButton fileButton = button.GetComponent<FileButton>();
             fileButton.DeleteFile();
             // Recycle the button to the SimpleObjectPool instance
             gameObjectPool.ReturnObject(button);
-        }
-    }
-
-    private void DeleteOldFileButtons(FileInfo fileInfo) {
-        string filePath = fileInfo.FullName;
-        string fileName = LevelFile.ConvertToName(filePath);
-
-        foreach (String deletedFileName in deletedFileNames) {
-            string taggedDeletedFileName = LevelFile.AddTag(deletedFileName);
-            if (!taggedFileNames.Contains(taggedDeletedFileName)) {
-
-            }
         }
     }
 
@@ -131,12 +122,6 @@ public class FileButtonManager : MonoBehaviour {
 
     public virtual void Load() {
 
-    }
-
-    // Removes all references or values stored
-    protected void ClearCache() {
-        taggedFileNames.Clear();
-        buttons.Clear();
     }
 
     // Checks to see if there are still saved game files on the local machine
@@ -157,11 +142,11 @@ public class FileButtonManager : MonoBehaviour {
      * by checking the local cache taggedFileNames
      */
     protected bool StillHaveFiles() {
-        return taggedFileNames.Count > 0;
+        return fileButtons.Count > 0;
     }
 
     public bool DoesFileExist(string fileName) {
-        return taggedFileNames.Contains(LevelFile.AddTag(fileName));
+        return fileButtons.ContainsKey(LevelFile.AddTag(fileName));
     }
 
     protected void EnableDisableActionButtons(bool value, params Button[] actionButtons) {

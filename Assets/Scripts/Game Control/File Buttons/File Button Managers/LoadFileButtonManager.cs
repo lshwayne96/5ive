@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +9,6 @@ public class LoadFileButtonManager : FileButtonManager {
     private Button deleteButton;
     private Button deleteAllButton;
     private Button loadButton;
-    private string saveTaggedFileNameToDelete;
 
     public override void Initialise() {
         base.Initialise();
@@ -27,6 +28,7 @@ public class LoadFileButtonManager : FileButtonManager {
     public override void UpdateButtons() {
         if (HaveFiles()) {
             deleteAllButton.interactable = true;
+            ModifyButtons();
             CreateFileButtons();
         } else {
             deleteAllButton.interactable = false;
@@ -34,20 +36,34 @@ public class LoadFileButtonManager : FileButtonManager {
         }
     }
 
+    private void ModifyButtons() {
+        List<KeyValuePair<String, DateTime>> keyValuePairs = new List<KeyValuePair<String, DateTime>>(modifiedTaggedFileNamesAndDateTime);
+        keyValuePairs.Sort((pair1, pair2) => DateTime.Compare(pair1.Value, pair2.Value));
+
+        foreach (KeyValuePair<String, DateTime> keyValuePair in keyValuePairs) {
+            if (fileButtons.ContainsKey(keyValuePair.Key)) {
+                FileButton fileButton = fileButtons[keyValuePair.Key].GetComponent<FileButton>();
+                // Change the date and time shown on the button
+                fileButton.dateTimeLabel.text = keyValuePair.Value.ToUniversalTime().ToLocalTime().ToString("f");
+                fileButton.transform.SetAsFirstSibling();
+            }
+        }
+        modifiedTaggedFileNamesAndDateTime.Clear();
+    }
+
     public override void Load() {
-        FileButton fileButton = fileButtonToActOn.GetComponent<FileButton>();
+        FileButton fileButton = fileButtonGOToActOn.GetComponent<FileButton>();
         fileButton.LoadLevel();
         loadButton.interactable = false;
     }
 
     public override void DeleteOne() {
-        string filePath = LevelFile.ConvertToPath(saveTaggedFileNameToDelete, false);
+        string filePath = LevelFile.ConvertToPath(taggedFileNameToActOn, false);
         File.Delete(filePath);
-        gameObjectPool.ReturnObject(fileButtonToActOn);
+        gameObjectPool.ReturnObject(fileButtonGOToActOn);
 
-        uniqueTaggedFileNames.Remove(saveTaggedFileNameToDelete);
-        deletedFileNames.Add(filePath);
-        buttons.Remove(fileButtonToActOn);
+        fileButtons.Remove(taggedFileNameToActOn);
+        deletedTaggedFileNames.Add(taggedFileNameToActOn);
         EnableDisableActionButtons(false, loadButton, deleteButton);
 
         if (!StillHaveFiles()) {
@@ -59,12 +75,12 @@ public class LoadFileButtonManager : FileButtonManager {
         base.DeleteAll();
         loadButton.interactable = false;
         EnableDisableActionButtons(false, deleteButton, deleteAllButton);
-        ClearCache();
+        fileButtons.Clear();
     }
 
     public override void SetFileButtonToActOn(FileButton fileButton) {
-        saveTaggedFileNameToDelete = LevelFile.AddTag(fileButton.nameLabel.text);
-        fileButtonToActOn = fileButton.gameObject;
+        taggedFileNameToActOn = LevelFile.AddTag(fileButton.nameLabel.text);
+        fileButtonGOToActOn = fileButton.gameObject;
         // Allow the player to click the load and delete button
         EnableDisableActionButtons(true, loadButton, deleteButton);
     }

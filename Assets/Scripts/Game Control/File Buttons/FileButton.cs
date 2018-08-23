@@ -52,7 +52,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
             // If the button is double clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                LoadLevel();
+                fileButtonManager.Load();
             }
 
         }
@@ -69,7 +69,7 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
 
             // If the button is doubled clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                OverwriteFile();
+                fileButtonManager.Overwrite();
             }
         }
     }

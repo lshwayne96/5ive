@@ -1,10 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SaveFileButttonManager : FileButtonManager {
 
     private Button overwriteButton;
-    private string saveTaggedFileNameToOverwrite;
 
     public override void Initialise() {
         base.Initialise();
@@ -15,23 +15,43 @@ public class SaveFileButttonManager : FileButtonManager {
 
     public override void UpdateButtons() {
         if (HaveFiles()) {
+            DeleteOldFileButtons();
             CreateFileButtons();
         } else {
             DeleteAll();
-            ClearCache();
+            fileButtons.Clear();
         }
     }
 
+    private void DeleteOldFileButtons() {
+        foreach (String deletedTaggedFileName in deletedTaggedFileNames) {
+            if (fileButtons.ContainsKey(deletedTaggedFileName)) {
+                gameObjectPool.ReturnObject(fileButtons[deletedTaggedFileName]);
+                fileButtons.Remove(deletedTaggedFileName);
+            }
+        }
+        deletedTaggedFileNames.Clear();
+    }
+
     public override void Overwrite() {
-        FileButton fileButton = fileButtonToActOn.GetComponent<FileButton>();
+        FileButton fileButton = fileButtonGOToActOn.GetComponent<FileButton>();
         fileButton.OverwriteFile();
+
+        String taggedFileName = LevelFile.AddTag(fileButton.nameLabel.text);
+        String dateTimeText = fileButton.dateTimeLabel.text;
+        try {
+            modifiedTaggedFileNamesAndDateTime.Add(taggedFileName, DateTime.Parse(dateTimeText));
+        } catch (ArgumentException) {
+            modifiedTaggedFileNamesAndDateTime.Remove(taggedFileName);
+            modifiedTaggedFileNamesAndDateTime.Add(taggedFileName, DateTime.Parse(dateTimeText));
+        }
+
         overwriteButton.interactable = false;
     }
 
     public override void SetFileButtonToActOn(FileButton fileButton) {
-        saveTaggedFileNameToOverwrite = LevelFile.AddTag(fileButton.nameLabel.text);
-        fileButtonToActOn = fileButton.gameObject;
-        // Allow the player to click the overwrite button
+        taggedFileNameToActOn = LevelFile.AddTag(fileButton.nameLabel.text);
+        fileButtonGOToActOn = fileButton.gameObject;
         overwriteButton.interactable = true;
     }
 }
