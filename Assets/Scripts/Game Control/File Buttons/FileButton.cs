@@ -7,6 +7,7 @@
  */
 
 using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -21,49 +22,54 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     private bool isDoubleClick;
 
     private GameObject parentMenu;
+    private FileButtonManager fileButtonManager;
 
     public void SetUp(string fileName, int sceneBuildIndex, DateTime dateTime) {
         nameLabel.text = fileName;
-
         int prefixLength = 2;
         String levelName = LevelName.GetLevelName(sceneBuildIndex).Substring(prefixLength);
         levelLabel.text = levelName;
-
         // f stands for full date/time pattern (short time)
         dateTimeLabel.text = dateTime.ToLocalTime().ToString("f");
+
         parentMenu = LevelMenu.SetParentMenu(parentMenu);
+        fileButtonManager = transform.parent.GetComponent<FileButtonManager>();
 
         transform.localScale = Vector3.one;
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
         if (LevelMenu.IsLoadMenu(parentMenu)) {
-
             // If the button is clicked once by the left button on the mouse
             if (IsSingleClick(pointerEventData)) {
-                FileButtonManager buttonManager =
-                    transform.parent.GetComponent<FileButtonManager>();
                 /*
                  * Send the name of the file associated with the button to the ButtonManager instance
                  * The ButtonManager instance will then use that information to delete
                  * that file when the delete button is clicked on
                  */
-                buttonManager.SetFileButtonToDelete(this);
+                fileButtonManager.SetFileButtonToActOn(this);
             }
 
             // If the button is double clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                LoadLevel loadLevel = GetComponent<LoadLevel>();
-                loadLevel.Load(nameLabel.text);
+                LoadLevel();
             }
 
-        } else if (LevelMenu.IsSaveMenu(parentMenu)) {
+        }
+
+        if (LevelMenu.IsSaveMenu(parentMenu)) {
+            if (IsSingleClick(pointerEventData)) {
+                /*
+                 * Send the name of the file associated with the button to the ButtonManager instance
+                 * The ButtonManager instance will then use that information to delete
+                 * that file when the delete button is clicked on
+                 */
+                fileButtonManager.SetFileButtonToActOn(this);
+            }
 
             // If the button is doubled clicked by the left button on the mouse
             if (IsDoubleClick(pointerEventData)) {
-                SaveLevel saveLevel = GetComponent<SaveLevel>();
-                saveLevel.Overwrite(nameLabel.text);
-                NotificationManager.Send(new OverwriteSuccessful());
+                OverwriteFile();
             }
         }
     }
@@ -76,5 +82,26 @@ public class FileButton : MonoBehaviour, IPointerClickHandler {
     private bool IsDoubleClick(PointerEventData pointerEventData) {
         return pointerEventData.button == PointerEventData.InputButton.Left &&
                                pointerEventData.clickCount == 2;
+    }
+
+    public void DeleteFile() {
+        string saveFilePath = LevelFile.ConvertToPath(nameLabel.text, true);
+        File.Delete(saveFilePath);
+    }
+
+    public void OverwriteFile() {
+        string saveFilePath = LevelFile.ConvertToPath(nameLabel.text, true);
+        SaveLevel saveLevel = GetComponent<SaveLevel>();
+        saveLevel.Overwrite(nameLabel.text);
+
+        dateTimeLabel.text = File.GetLastWriteTimeUtc(saveFilePath).ToLocalTime().ToString("f");
+        transform.SetAsFirstSibling();
+
+        NotificationManager.Send(new OverwriteSuccessful());
+    }
+
+    public void LoadLevel() {
+        LoadLevel loadLevel = GetComponent<LoadLevel>();
+        loadLevel.Load(nameLabel.text);
     }
 }

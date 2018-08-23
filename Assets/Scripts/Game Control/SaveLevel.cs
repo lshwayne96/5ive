@@ -45,10 +45,13 @@ public class SaveLevel : MonoBehaviour {
         }
     }
 
-    public void NewSave() {
+    public void Save() {
         if (!inputField.text.Equals(System.String.Empty)) {
             if (!fileButtonManager.DoesFileExist(inputField.text)) {
                 Save(inputField.text);
+                fileButtonManager.UpdateButtons();
+                inputField.DeactivateInputField();
+
             } else {
                 NotificationManager.Send(new FileAlreadyExists());
             }
@@ -60,6 +63,7 @@ public class SaveLevel : MonoBehaviour {
 
     public void Overwrite(String fileName) {
         Save(fileName);
+        fileButtonManager.UpdateButtons();
     }
 
     /*
@@ -85,15 +89,7 @@ public class SaveLevel : MonoBehaviour {
         string saveFilePath = LevelFile.ConvertToPath(fileName, true);
         LevelFile.Serialise(saveFilePath, levelData);
 
-        // Add new file buttons or update the information/ order of existing file buttons
-        fileButtonManager.UpdateButtons();
-
         GameDataManager.Save(fileName, scene.buildIndex);
-
-        // Deactvate the input field
-        if (inputField) {
-            inputField.DeactivateInputField();
-        }
     }
 
     private T[] CacheData<T>(ICacheable<T>[] cacheable, int count) {

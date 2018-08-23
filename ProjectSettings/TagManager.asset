@@ -25,6 +25,10 @@ TagManager:
   - FileButtonManager
   - PauseMenu
   - PauseLevel
+  - Pause
+  - PauseControl
+  - OverwriteButton
+  - LoadButton
   layers:
   - Default
   - TransparentFX
