@@ -2,7 +2,7 @@
 
 public class LeverManager : MonoBehaviour {
 
-    public GameObject[] leverGameObjects;
+    public GameObject[] leverGOs;
     public GameObject interactable;
     public bool[] bools;
 
@@ -11,18 +11,16 @@ public class LeverManager : MonoBehaviour {
     private int numLevers;
 
     private void Start() {
-        numLevers = leverGameObjects.Length;
+        numLevers = leverGOs.Length;
         levers = new Lever[numLevers];
         for (int i = 0; i < numLevers; i++) {
-            levers[i] = leverGameObjects[i].GetComponent<Lever>();
+            levers[i] = leverGOs[i].GetComponent<Lever>();
         }
     }
 
     void Update() {
         if (CanActivate()) {
             interactable.SetActive(false);
-        } else {
-            interactable.SetActive(true);
         }
     }
 

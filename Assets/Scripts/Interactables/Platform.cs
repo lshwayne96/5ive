@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
-public class FallThrough : MonoBehaviour {
+public class Platform : MonoBehaviour {
+
+    public LayerMask excludePlayer;
 
     private PlatformEffector2D platformEffector2D;
-    public LayerMask excludePlayer;
 
     void Start() {
         platformEffector2D = GetComponent<PlatformEffector2D>();
-
     }
 
     void Update() {

@@ -10,18 +10,27 @@ public class EndLevel : MonoBehaviour {
 
     public int sceneBuildIndex;
 
-    /*
-     * Becomes true when one of the player collider enters the trigger
-     * When true, it prevents the other collider of the player from triggering
-     * the OnTriggerEnter2D method
-     */
-    private bool hasEnded;
+    private ActionableEnd actionableEnd;
+    private bool hasPlayerCollided;
+
+    private void Start() {
+        actionableEnd = GetComponent<ActionableEnd>();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Player") && !hasEnded) {
-            hasEnded = true;
-            GameDataManager.EndLevel(sceneBuildIndex);
-            SceneManager.LoadScene(sceneBuildIndex);
+        if (actionableEnd && actionableEnd.IsAbleToEnd) {
+            if (collision.gameObject.CompareTag("Player") && !hasPlayerCollided) {
+                End();
+            }
+
+        } else {
+            End();
         }
+    }
+
+    private void End() {
+        hasPlayerCollided = true;
+        GameDataManager.EndLevel(sceneBuildIndex);
+        SceneManager.LoadScene(sceneBuildIndex);
     }
 }

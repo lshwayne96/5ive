@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Booster : MonoBehaviour {
+public class Booster : MonoBehaviour, IActionable {
 
     public Vector2 pushForce;
     private Rigidbody2D rb;
@@ -10,7 +10,11 @@ public class Booster : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();
     }
 
-    public void Fire() {
+    public void StartAction() {
         rb.AddForce(pushForce, ForceMode2D.Impulse);
+    }
+
+    public void EndAction() {
+
     }
 }

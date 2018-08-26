@@ -19,9 +19,12 @@ using UnityEngine;
 
 public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
-    public GameObject interactable;
+    public GameObject[] interactables;
+    private IActionable[] actionables;
+    private int numActionables;
+
     public float WaitDuration { get; set; }
-    public float translationDistY;
+    public float translationDistance_y;
     public float speed;
 
     private Vector3 startPosition;
@@ -29,7 +32,6 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
     public Vector3 OriginalStartPosition { get; private set; }
     public Vector3 OriginalEndPosition { get; private set; }
 
-    private Booster booster;
     private Coroutine currentCoroutine;
     public Direction MovementDirection { get; private set; }
 
@@ -48,9 +50,13 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
     public bool IsDown { get; private set; }
 
     void Start() {
-        booster = interactable.GetComponent<Booster>();
+        numActionables = interactables.Length;
+        actionables = new IActionable[numActionables];
+        for (int i = 0; i < numActionables; i++) {
+            actionables[i] = interactables[i].GetComponent<IActionable>();
+        }
 
-        translationDistY = 0.15f;
+        translationDistance_y = 0.15f;
         speed = 1f;
 
         if (!hasInitialised) {
@@ -58,7 +64,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
             OriginalWaitDuration = WaitDuration;
 
             startPosition = gameObject.transform.position;
-            Vector3 vectorDifference = new Vector3(0, translationDistY, 0);
+            Vector3 vectorDifference = new Vector3(0, translationDistance_y, 0);
             EndPosition = startPosition - vectorDifference;
 
             OriginalStartPosition = startPosition;
@@ -163,11 +169,17 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
         // The stand button has reached the bottom and will move upwards next
         if (MovementDirection == Direction.Up) {
-            // The booster will fire when the stand button is at the bottom
-            booster.Fire();
+            // The actionable will act when the stand button is at the bottom
+            for (int i = 0; i < numActionables; i++) {
+                actionables[i].StartAction();
+            }
             // Start waiting
             toStartWaiting = true;
             hasStartedMovingDown = false;
+        } else {
+            for (int i = 0; i < numActionables; i++) {
+                actionables[i].EndAction();
+            }
         }
     }
 
