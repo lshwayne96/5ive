@@ -1,16 +1,19 @@
 ﻿using UnityEngine;
+using UnityStandardAssets._2D;
 
 public class Crate : MonoBehaviour {
 
-    public Vector3 rightPosition;
-
     private Player player;
+    private PlatformerCharacter2D playerMovement;
+    private Rigidbody2D crateRb;
 
     private bool isCrateMoveable;
     private bool isMovingCrate;
 
     void Start() {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        playerMovement = player.GetComponent<PlatformerCharacter2D>();
+        crateRb = GetComponent<Rigidbody2D>();
     }
 
     void Update() {
@@ -34,11 +37,15 @@ public class Crate : MonoBehaviour {
         transform.SetParent(player.transform);
         isCrateMoveable = false;
         isMovingCrate = true;
+        playerMovement.ReduceSlowMovement();
+        crateRb.simulated = false;
     }
 
     private void StopMovingCrate() {
         transform.parent = null;
         isCrateMoveable = true;
         isMovingCrate = false;
+        playerMovement.RestoreMovementSpeed();
+        crateRb.simulated = true;
     }
 }

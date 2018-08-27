@@ -97,5 +97,15 @@ namespace UnityStandardAssets._2D {
             theScale.x *= -1;
             transform.localScale = theScale;
         }
+
+        public void ReduceSlowMovement() {
+            m_MaxSpeed = 6f;
+            m_JumpForce = 0f;
+        }
+
+        public void RestoreMovementSpeed() {
+            m_MaxSpeed = 10f;
+            m_JumpForce = 800f;
+        }
     }
 }
