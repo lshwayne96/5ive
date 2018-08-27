@@ -37,7 +37,7 @@ public class Crate : MonoBehaviour {
         transform.SetParent(player.transform);
         isCrateMoveable = false;
         isMovingCrate = true;
-        playerMovement.ReduceSlowMovement();
+        playerMovement.SlowMovementSpeed();
         crateRb.simulated = false;
     }
 
