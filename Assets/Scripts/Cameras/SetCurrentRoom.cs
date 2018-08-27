@@ -1,8 +1,8 @@
 ﻿/*
  * This script caches the DetectRoom scripts
  * attached to both the player and the ball.
- * It uses GetCurrentRoom() to set the currentPlayerRoom
- * and the currentBallRoom.
+ * It uses GetCurrentRoom() to set the currentPlayerRoomTf
+ * and the currentBallRoomTf.
  */
 
 using UnityEngine;
@@ -10,16 +10,16 @@ using UnityEngine;
 public class SetCurrentRoom : MonoBehaviour {
 
     /*
-     * Both currentPlayerRoom and currentBallRoom
+     * Both currentPlayerRoomTf and currentBallRoomTf
      * are used in the Teleportation script.
-     * currentPlayerRoom is used in PlayerCamera.
-     * currentBallRoom is used in BallCamera.
+     * currentPlayerRoomTf is used in PlayerCamera.
+     * currentBallRoomTf is used in BallCamera.
      */
 
     // The room that the player is currently in
-    public static Transform currentPlayerRoom;
+    public static Transform currentPlayerRoomTf;
     // The room the ball is currently in
-    public static Transform currentBallRoom;
+    public static Transform currentBallRoomTf;
     public static GameObject ball;
 
     private DetectRoom playerRoomScript;
@@ -28,24 +28,17 @@ public class SetCurrentRoom : MonoBehaviour {
     void Start() {
         // Gets the current room of the player
         playerRoomScript = GetComponent<DetectRoom>();
-        currentPlayerRoom = playerRoomScript.currentRoom;
+        currentPlayerRoomTf = playerRoomScript.CurrentRoomTf;
 
         ball = GameObject.FindWithTag("TeleportationBall");
 
         // Gets the current room of the ball
         ballRoomScript = ball.GetComponent<DetectRoom>();
-        currentBallRoom = ballRoomScript.currentRoom;
+        currentBallRoomTf = ballRoomScript.CurrentRoomTf;
     }
 
     void Update() {
-        currentPlayerRoom = playerRoomScript.currentRoom;
-        currentBallRoom = ballRoomScript.currentRoom;
+        currentPlayerRoomTf = playerRoomScript.CurrentRoomTf;
+        currentBallRoomTf = ballRoomScript.CurrentRoomTf;
     }
-
-    /*
-    private void OnTriggerExit2D(Collider2D collision) {
-        currentPlayerRoom = playerRoomScript.GetCurrentRoom();
-        currentBallRoom = ballRoomScript.GetCurrentRoom();
-    }
-    */
 }

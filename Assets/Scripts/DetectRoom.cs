@@ -14,48 +14,60 @@ public class DetectRoom : MonoBehaviour {
      * The room that the current object is in
      * The currentRoom variable is used in the SetCurrentRoom script
      */
-    public Transform currentRoom { get; private set; }
+    public Transform CurrentRoomTf { get; private set; }
     private Collider2D currentRoomCollider;
 
     private Transform playerCamera;
 
     private void Awake() {
-        /*
-         * Initialise currentRoom here instead of Start() so that
-         * dependent scripts like SetCurrentRoom work properly
-         */
-        UpdateCurrentRoom();
+        InitialiseRoom();
     }
 
     private void OnTriggerExit2D(Collider2D collision) {
-        UpdateCurrentRoom();
+        MoveToNewRoom();
     }
 
-    private void UpdateCurrentRoom() {
-        // Get collider of current room
-        currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
-        // Update currentRoom
-        currentRoom = currentRoomCollider.transform;
+    private void InitialiseRoom() {
+        if (!playerCamera) {
+            playerCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
+        }
+        MoveToNewRoom();
+    }
+
+    private void MoveToNewRoom() {
+        SetCurrentRoom();
 
         if (CompareTag("Player")) {
-            BoxCollider2D roomCollider = currentRoom.GetComponent<BoxCollider2D>();
-            Bounds roomBounds = new Bounds(new Vector3(currentRoom.position.x, currentRoom.position.y, -10f),
-            new Vector3(roomCollider.size.x - 18f,
-            roomCollider.size.y - 10f,
-            0f));
-
-            if (!playerCamera) {
-                playerCamera = GameObject.FindWithTag("MainCamera").transform;
-            }
-
-            playerCamera.position = roomBounds.ClosestPoint(playerCamera.position);
+            /*
+             * The code below is used to ensure that the transition of the camera
+             * from one big room to the other is smooth.
+             * However, the code works for small rooms as well
+             */
+            Bounds currentRoomBounds = GetCurrentRoomBounds();
+            playerCamera.position = currentRoomBounds.ClosestPoint(playerCamera.position);
         }
     }
 
     public void SetCurrentRoom() {
         // Get collider of current room
         currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayer);
-        // Update currentRoom
-        currentRoom = currentRoomCollider.transform;
+        CurrentRoomTf = currentRoomCollider.transform;
+    }
+
+    private Bounds GetCurrentRoomBounds() {
+        BoxCollider2D roomBoxCollider = CurrentRoomTf.GetComponent<BoxCollider2D>();
+
+        Vector3 currentRoomCenter = GetRoomCenter();
+        Vector3 currentRoomSize = GetRoomSizeSubset(roomBoxCollider);
+
+        return new Bounds(currentRoomCenter, currentRoomSize);
+    }
+
+    private Vector3 GetRoomCenter() {
+        return new Vector3(CurrentRoomTf.position.x, CurrentRoomTf.position.y, Constants.CAMERA_DEPTH);
+    }
+
+    private Vector3 GetRoomSizeSubset(BoxCollider2D roomBoxCollider) {
+        return new Vector3(roomBoxCollider.size.x - Constants.CAMERA_LENGTH, roomBoxCollider.size.y - Constants.CAMERA_HEIGHT, 0f);
     }
 }

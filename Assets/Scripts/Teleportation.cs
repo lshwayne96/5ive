@@ -9,23 +9,33 @@ using UnityEngine.SceneManagement;
 
 public class Teleportation : MonoBehaviour {
 
-    private MeshRenderer preview;
     private GameObject mainCamera;
+    private MeshRenderer preview;
+    private Ball ball;
+
+    private DetectRoom playerDetectRoom;
+    private DetectRoom ballDetectRoom;
 
     private float startTime;
-    private float previewDuration;
+    private float previewDuration = 3f;
     private bool previewHasExpired;
 
     // Whether the scene allow teleportation freely
     private bool isInAllowedScene;
-    // Whether the location allows teleportation freely given that the scene does not
-    private bool isInAllowedLocation;
+
+    /* Whether the locations that the player and ball are in
+     * allow teleportation freely given that the scene does not
+     */
+    private bool areInAllowedLocations;
 
     void Start() {
         mainCamera = GameObject.FindWithTag("MainCamera");
         preview = mainCamera.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
+        ball = GameObject.FindGameObjectWithTag("TeleportationBall").GetComponent<Ball>();
 
-        previewDuration = 3f;
+        playerDetectRoom = GetComponent<DetectRoom>();
+        ballDetectRoom = ball.GetComponent<DetectRoom>();
+
         isInAllowedScene = IsInAllowedScene();
     }
 
@@ -50,25 +60,27 @@ public class Teleportation : MonoBehaviour {
     }
 
     private void OnTriggerStay2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("SpecialRoom")) {
-            isInAllowedLocation = true;
+        bool isPlayerInSpecialRoom = playerDetectRoom.CurrentRoomTf.CompareTag("SpecialRoom");
+        bool isBallInSpecialRoom = ballDetectRoom.CurrentRoomTf.CompareTag("SpecialRoom");
+        if (isPlayerInSpecialRoom && isBallInSpecialRoom) {
+            areInAllowedLocations = true;
         } else {
-            isInAllowedLocation = false;
+            areInAllowedLocations = false;
         }
     }
 
     private void Teleport() {
         // Swap the Player's and ball's rooms
-        Vector3 positionDifference = SetCurrentRoom.currentBallRoom.position - SetCurrentRoom.currentPlayerRoom.position;
+        Vector3 positionDifference = SetCurrentRoom.currentBallRoomTf.position - SetCurrentRoom.currentPlayerRoomTf.position;
 
         // Offset of player from centre of room
-        Vector3 playerOffset = transform.position - SetCurrentRoom.currentPlayerRoom.position;
+        Vector3 playerOffset = transform.position - SetCurrentRoom.currentPlayerRoomTf.position;
 
         // Offset of ball from centre of room
-        Vector3 ballOffset = SetCurrentRoom.ball.transform.position - SetCurrentRoom.currentBallRoom.position;
+        Vector3 ballOffset = SetCurrentRoom.ball.transform.position - SetCurrentRoom.currentBallRoomTf.position;
 
-        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom.GetComponent<BoxCollider2D>();
-        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoom.GetComponent<BoxCollider2D>();
+        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
+        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoomTf.GetComponent<BoxCollider2D>();
 
         // Difference in scale of 2 rooms
         float scaleFactor_x = playerRoomCollider.size.x / ballRoomCollider.size.x;
@@ -88,10 +100,9 @@ public class Teleportation : MonoBehaviour {
     }
 
     private bool CanTeleport() {
-        if (!PauseLevel.isPaused) {
-            return isInAllowedScene || isInAllowedLocation;
-        } else {
+        if (PauseLevel.isPaused) {
             return false;
         }
+        return isInAllowedScene || areInAllowedLocations;
     }
 }

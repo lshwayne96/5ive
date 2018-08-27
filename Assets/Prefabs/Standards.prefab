@@ -737,13 +737,13 @@ GameObject:
   - component: {fileID: 58952595535224508}
   - component: {fileID: 50159217160071044}
   - component: {fileID: 61537811857822952}
+  - component: {fileID: 251896662337396590}
   - component: {fileID: 114011803074100128}
   - component: {fileID: 114406942465696736}
   - component: {fileID: 114404232170514772}
-  - component: {fileID: 114421823443647692}
   - component: {fileID: 114359927363074734}
-  - component: {fileID: 251896662337396590}
   - component: {fileID: 114276036359777442}
+  - component: {fileID: 114421823443647692}
   m_Layer: 8
   m_Name: Character Robot Boy
   m_TagString: Player
@@ -1216,7 +1216,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1675578101490656}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 38.5, z: 0}
+  m_LocalPosition: {x: 28, y: -7.2, z: 0}
   m_LocalScale: {x: 1.771533, y: 1.7715304, z: 1}
   m_Children:
   - {fileID: 4950239511775146}
@@ -1231,7 +1231,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1867711311732374}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.03, y: 0, z: 0.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4033809542280810}
@@ -1252,8 +1252,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1678763819297440}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 78.5, y: 6.53, z: 0}
-  m_LocalScale: {x: 3.4126477, y: 3.4126484, z: 1}
+  m_LocalPosition: {x: 1.15, y: 6.35, z: 0}
+  m_LocalScale: {x: 3.8020308, y: 3.8020315, z: 1.1141}
   m_Children:
   - {fileID: 4023685491773408}
   m_Father: {fileID: 4299881487994338}
@@ -1305,7 +1305,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1316801319422286}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 91.999, y: -11.999, z: -0.07755715}
+  m_LocalPosition: {x: 59.96, y: -12, z: -0.07755715}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 4299881487994338}
@@ -3506,7 +3506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b7eb4da505324222b4a75af4b1ce6be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneBuildIndex: 2
+  sceneBuildIndex: 3
 --- !u!114 &114645260201104748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -4496,7 +4496,7 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1316801319422286}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -5094,7 +5094,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000061035156}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: -728.77795}
   m_Pivot: {x: 0, y: 1}
 --- !u!224 &224247032073720644

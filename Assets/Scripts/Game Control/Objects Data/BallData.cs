@@ -31,7 +31,7 @@ public class BallData {
     private float pZ;
 
     public bool PlayerHasBall { get; private set; }
-    public bool PlayerIsWithinRange { get; private set; }
+    public bool IsPlayerWithinRange { get; private set; }
 
     public BallData(Ball ball) {
         prevVelocity = ball.GetComponent<Rigidbody2D>().velocity;
@@ -44,7 +44,7 @@ public class BallData {
         pZ = prevPosition.z;
 
         PlayerHasBall = ball.PlayerHasBall;
-        PlayerIsWithinRange = ball.PlayerIsWithinRange;
+        IsPlayerWithinRange = ball.IsPlayerWithinRange;
     }
 
     public void Restore(Ball ball) {

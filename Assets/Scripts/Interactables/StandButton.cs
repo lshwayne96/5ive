@@ -23,9 +23,7 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
     private IActionable[] actionables;
     private int numActionables;
 
-    public float WaitDuration { get; set; }
-    public float translationDistance_y;
-    public float speed;
+
 
     private Vector3 startPosition;
     public Vector3 EndPosition { get; private set; }
@@ -37,7 +35,10 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
 
     private float startTime;
     private float journeyLength;
+    private float translationDistance_y = 0.15f;
+    private float speed = 1f;
 
+    public float WaitDuration { get; private set; }
     public float OriginalWaitDuration { get; private set; }
 
     private bool hasInitialised;
@@ -56,11 +57,8 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
             actionables[i] = interactables[i].GetComponent<IActionable>();
         }
 
-        translationDistance_y = 0.15f;
-        speed = 1f;
-
         if (!hasInitialised) {
-            WaitDuration = 2f;
+            WaitDuration = 5f;
             OriginalWaitDuration = WaitDuration;
 
             startPosition = gameObject.transform.position;

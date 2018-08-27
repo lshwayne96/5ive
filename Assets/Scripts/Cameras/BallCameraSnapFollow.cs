@@ -1,6 +1,6 @@
 ﻿/*
  * The script attached to the camera pointing at the ball.
- * The camera knows where the ball is by using the currentBallRoom
+ * The camera knows where the ball is by using the currentBallRoomTf
  * from the SetCurrentRoom script.
  */
 
@@ -19,13 +19,12 @@ public class BallCameraSnapFollow : MonoBehaviour {
     }
 
     void Update() {
-
         playerCameraTf = playerCameraGO.transform;
 
-        Vector3 offset = playerCameraTf.position - SetCurrentRoom.currentPlayerRoom.position;
+        Vector3 offset = playerCameraTf.position - SetCurrentRoom.currentPlayerRoomTf.position;
 
-        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoom.GetComponent<BoxCollider2D>();
-        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoom.GetComponent<BoxCollider2D>();
+        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
+        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoomTf.GetComponent<BoxCollider2D>();
 
         // Difference in scale of 2 rooms
         float scaleFactor_x = ballRoomCollider.size.x / playerRoomCollider.size.x;
@@ -44,8 +43,8 @@ public class BallCameraSnapFollow : MonoBehaviour {
         }
 
         gameObject.transform.position =
-            new Vector3(SetCurrentRoom.currentBallRoom.position.x + offset.x * scaleFactor_x,
-                        SetCurrentRoom.currentBallRoom.position.y + offset.y * scaleFactor_y,
+            new Vector3(SetCurrentRoom.currentBallRoomTf.position.x + offset.x * scaleFactor_x,
+                        SetCurrentRoom.currentBallRoomTf.position.y + offset.y * scaleFactor_y,
                         -10f);
     }
 }
