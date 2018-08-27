@@ -6,7 +6,6 @@ public class T : MonoBehaviour {
 
     void Start() {
         spriteRenderer = transform.parent.GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = false;
     }
 
     private void OnTriggerEnter2D(Collider2D collision) {

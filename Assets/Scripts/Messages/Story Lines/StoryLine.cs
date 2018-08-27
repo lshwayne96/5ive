@@ -15,12 +15,6 @@ public class StoryLine : MonoBehaviour, IMessage, ICacheable<StoryLineData> {
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.CompareTag("Player")) {
-            Count = 0;
-        }
-    }
-
     // Subclasses can use this method to customise the way the story line message is sent
     protected virtual void Preprocess(Collider2D collision, int Count) {
         toSend = true;

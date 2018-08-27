@@ -5,8 +5,8 @@ public class MakeTheJump : StoryLine {
         get { return "Make the jump"; }
     }
 
-    protected override void Preprocess(Collider2D collision, int count) {
-        if (count == 10) {
+    protected override void Preprocess(Collider2D collision, int Count) {
+        if (Count == 10) {
             toSend = true;
         }
     }
