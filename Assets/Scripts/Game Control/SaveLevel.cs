@@ -18,7 +18,7 @@ public class SaveLevel : MonoBehaviour {
     private Player player;
     private Ball ball;
     private Lever[] levers;
-    private StandButton[] standButtons;
+    private FloorButton[] standButtons;
     private Ladder[] ladders;
     private StoryLine[] storyLines;
 
@@ -39,7 +39,7 @@ public class SaveLevel : MonoBehaviour {
             ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
 
             levers = componentManager.GetScripts<Lever>();
-            standButtons = componentManager.GetScripts<StandButton>();
+            standButtons = componentManager.GetScripts<FloorButton>();
             ladders = componentManager.GetScripts<Ladder>();
             storyLines = componentManager.GetScripts<StoryLine>();
         }
@@ -78,7 +78,7 @@ public class SaveLevel : MonoBehaviour {
         BallData ballData = ball.CacheData();
 
         LeverData[] leverDatas = CacheData(levers, levers.Length);
-        StandButtonData[] standButtonDatas = CacheData(standButtons, standButtons.Length);
+        FloorButtonData[] standButtonDatas = CacheData(standButtons, standButtons.Length);
         LadderData[] ladderDatas = CacheData(ladders, ladders.Length);
         StoryLineData[] storyLineDatas = CacheData(storyLines, storyLines.Length);
 

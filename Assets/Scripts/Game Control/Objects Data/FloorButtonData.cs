@@ -8,7 +8,7 @@ using System;
 using UnityEngine;
 
 [Serializable]
-public class StandButtonData {
+public class FloorButtonData {
 
     public Vector3 PrevStartPosition {
         get { return prevStartPosition; }
@@ -54,7 +54,7 @@ public class StandButtonData {
     public float WaitDuration { get; private set; }
     public float OriginalWaitDuration { get; private set; }
 
-    public StandButtonData(StandButton standButton) {
+    public FloorButtonData(FloorButton standButton) {
         prevStartPosition = standButton.transform.position;
         prevEndPosition = standButton.EndPosition;
         originalStartPosition = standButton.OriginalStartPosition;
@@ -85,7 +85,7 @@ public class StandButtonData {
         OriginalWaitDuration = standButton.OriginalWaitDuration;
     }
 
-    public void Restore(StandButton standButton) {
+    public void Restore(FloorButton standButton) {
         prevStartPosition = new Vector3(pSX, pSY, pSZ);
         prevEndPosition = new Vector3(pEX, pEY, pEZ);
         originalStartPosition = new Vector3(oSX, oSY, oSZ);

@@ -17,13 +17,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
+public class FloorButton : MonoBehaviour, ICacheable<FloorButtonData> {
 
     public GameObject[] interactables;
     private IActionable[] actionables;
     private int numActionables;
-
-
 
     private Vector3 startPosition;
     public Vector3 EndPosition { get; private set; }
@@ -229,11 +227,11 @@ public class StandButton : MonoBehaviour, ICacheable<StandButtonData> {
         }
     }
 
-    public StandButtonData CacheData() {
-        return new StandButtonData(this);
+    public FloorButtonData CacheData() {
+        return new FloorButtonData(this);
     }
 
-    public void Restore(StandButtonData standButtonData) {
+    public void Restore(FloorButtonData standButtonData) {
         startPosition = standButtonData.PrevStartPosition;
         EndPosition = standButtonData.PrevEndPosition;
         OriginalStartPosition = standButtonData.OriginalStartPosition;
