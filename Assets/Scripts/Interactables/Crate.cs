@@ -7,7 +7,7 @@ public class Crate : MonoBehaviour {
     private PlatformerCharacter2D playerMovement;
     private Rigidbody2D crateRb;
 
-    private bool isCrateMoveable;
+    private bool isPlayerInContactWithCrate;
     private bool isMovingCrate;
 
     void Start() {
@@ -18,7 +18,7 @@ public class Crate : MonoBehaviour {
 
     void Update() {
         if (Input.GetKeyDown(KeyCode.E)) {
-            if (isCrateMoveable) {
+            if (isPlayerInContactWithCrate) {
                 StartMovingCrate();
             } else {
                 StopMovingCrate();
@@ -29,23 +29,22 @@ public class Crate : MonoBehaviour {
     private void OnCollisionStay2D(Collision2D collision) {
         if (collision.gameObject.CompareTag("Player") && Input.GetKeyDown(KeyCode.E)
             && !isMovingCrate) {
-            isCrateMoveable = true;
+            isPlayerInContactWithCrate = true;
         }
     }
 
     private void StartMovingCrate() {
         transform.SetParent(player.transform);
-        isCrateMoveable = false;
+        isPlayerInContactWithCrate = false;
         isMovingCrate = true;
         playerMovement.SlowMovementSpeed();
-        crateRb.simulated = false;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+        crateRb.velocity = Vector3.zero;
     }
 
     private void StopMovingCrate() {
         transform.parent = null;
-        isCrateMoveable = true;
         isMovingCrate = false;
         playerMovement.RestoreMovementSpeed();
-        crateRb.simulated = true;
     }
 }
