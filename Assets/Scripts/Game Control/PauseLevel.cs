@@ -17,20 +17,20 @@ public class PauseLevel : MonoBehaviour {
     private Rigidbody2D playerRb;
     private Rigidbody2D ballRb;
 
-    public static bool isPaused { get; private set; }
+    public static bool IsPaused { get; private set; }
     private bool isActive;
     // The original velocity of the player before it's rigidbody is disabled
     private Vector2 prePlayerVelocity;
     // The original velocity of the ball before it's rigidbody is disabled
     private Vector2 preBallVelocity;
 
-    void Start() {
+    private void Start() {
         // pauseMenu is initially active to get it's reference
         pauseMenu = GameObject.FindWithTag("PauseMenu");
         // Hide the pauseMenu
         pauseMenu.SetActive(false);
         // Manually set isPaused to false since static variables don't reset when a scene is reloaded
-        isPaused = false;
+        IsPaused = false;
 
         player = GameObject.FindWithTag("Player");
         playerRb = player.GetComponent<Rigidbody2D>();
@@ -40,30 +40,46 @@ public class PauseLevel : MonoBehaviour {
         ballRb = GameObject.FindWithTag("TeleportationBall").GetComponent<Rigidbody2D>();
     }
 
-    void Update() {
+    private void Update() {
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            if (isPaused && pauseMenu.activeSelf) { // If the game is paused, unpause it
-                playerRb.velocity = prePlayerVelocity;
-                ballRb.velocity = preBallVelocity;
-                playerRb.WakeUp();
-                ballRb.WakeUp();
+            if (IsGamePaused()) { // If the game is paused, unpause it
+                Unpause();
 
-                pauseMenu.SetActive(false);
-                playerMovement.enabled = true;
-                playerAnimator.enabled = true;
-                isPaused = false;
-
-            } else if (!isPaused && !pauseMenu.activeSelf) { // If the game is not paused, pause it
-                prePlayerVelocity = playerRb.velocity;
-                preBallVelocity = ballRb.velocity;
-                playerRb.Sleep();
-                ballRb.Sleep();
-
-                pauseMenu.SetActive(true);
-                playerMovement.enabled = false;
-                playerAnimator.enabled = false;
-                isPaused = true;
+            } else if (IsGameUnpaused()) { // If the game is not paused, pause it
+                Pause();
             }
         }
+    }
+
+    private bool IsGamePaused() {
+        return IsPaused && pauseMenu.activeSelf;
+    }
+
+    private bool IsGameUnpaused() {
+        return !IsPaused && !pauseMenu.activeSelf;
+    }
+
+    private void Pause() {
+        prePlayerVelocity = playerRb.velocity;
+        preBallVelocity = ballRb.velocity;
+        playerRb.Sleep();
+        ballRb.Sleep();
+
+        pauseMenu.SetActive(true);
+        playerMovement.enabled = false;
+        playerAnimator.enabled = false;
+        IsPaused = true;
+    }
+
+    private void Unpause() {
+        playerRb.velocity = prePlayerVelocity;
+        ballRb.velocity = preBallVelocity;
+        playerRb.WakeUp();
+        ballRb.WakeUp();
+
+        pauseMenu.SetActive(false);
+        playerMovement.enabled = true;
+        playerAnimator.enabled = true;
+        IsPaused = false;
     }
 }

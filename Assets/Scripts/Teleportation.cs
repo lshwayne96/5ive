@@ -100,7 +100,7 @@ public class Teleportation : MonoBehaviour {
     }
 
     private bool CanTeleport() {
-        if (PauseLevel.isPaused) {
+        if (PauseLevel.IsPaused) {
             return false;
         }
         return isInAllowedScene || areInAllowedLocations;
