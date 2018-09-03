@@ -9,7 +9,7 @@ using UnityEngine;
 public class Ladder : MonoBehaviour, ICacheable<LadderData> {
 
     // Expose the climbingSpeed variable to the editor
-    public float climbingSpeed;
+    public readonly float climbingSpeed = 6;
 
     // Is the player simply passing through the ladder?
     public bool IsPassingThrough { get; private set; }
@@ -25,9 +25,6 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
 
 
     void Start() {
-        // Start the climbing speed to a default 6
-        climbingSpeed = 6;
-
         IsPassingThrough = true;
         OutsideLadder = true;
 
@@ -43,27 +40,40 @@ public class Ladder : MonoBehaviour, ICacheable<LadderData> {
     private void FixedUpdate() {
         if (CanClimb) {
             // Get the x of the velocity since only the y should change
-            float currentX = playerRb.velocity.x;
-            IsClimbing = true;
+            float current_x = playerRb.velocity.x;
 
-            if (Input.GetKey(KeyCode.UpArrow)) { // Moving up
-                playerRb.velocity = new Vector2(currentX, climbingSpeed);
+            if (Input.GetKey(KeyCode.UpArrow)) {
+                MoveUp(current_x);
 
-            } else if (Input.GetKey(KeyCode.DownArrow)) { // Moving down
-                playerRb.velocity = new Vector2(currentX, -climbingSpeed);
+            } else if (Input.GetKey(KeyCode.DownArrow)) {
+                MoveDown(current_x);
 
-            } else { // Stopping in or on the leader
-                if (!IsPassingThrough) {
-                    playerRb.velocity = new Vector2(currentX, 0);
-                    // Remove the effects of gravity on the player
-                    playerRb.gravityScale = 0;
-
-                } else {
-                    IsClimbing = false;
-                }
+            } else {
+                Stop(current_x);
             }
         }
     }
+
+    private void MoveUp(float currentX) {
+        playerRb.velocity = new Vector2(currentX, climbingSpeed);
+        IsClimbing = true;
+    }
+
+    private void MoveDown(float currentX) {
+        playerRb.velocity = new Vector2(currentX, -climbingSpeed);
+        IsClimbing = true;
+    }
+
+    private void Stop(float currentX) {
+        if (IsPassingThrough) { // In front of ladder
+            IsClimbing = false;
+        } else { // On ladder
+            playerRb.velocity = new Vector2(currentX, 0);
+            // Remove the effects of gravity on the player
+            playerRb.gravityScale = 0;
+        }
+    }
+
 
     // When entering the ladder
     private void OnTriggerEnter2D(Collider2D collision) {
