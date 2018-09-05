@@ -12,7 +12,6 @@ public class StoryLine : MonoBehaviour, IMessage, ICacheable<StoryLineData> {
         if (collision.CompareTag("Player") && toSend && !HasBeenSent) {
             StoryLineManager.Send(this);
             HasBeenSent = true;
-            Debug.Log("Has been sent");
         }
     }
 
@@ -22,13 +21,11 @@ public class StoryLine : MonoBehaviour, IMessage, ICacheable<StoryLineData> {
     }
 
     public StoryLineData CacheData() {
-        Debug.Log("Hello" + HasBeenSent);
         return new StoryLineData(this);
     }
 
     public void Restore(StoryLineData storyLineData) {
         HasBeenSent = storyLineData.HasBeenSent;
-        Debug.Log(HasBeenSent);
         Count = storyLineData.Count;
     }
 }

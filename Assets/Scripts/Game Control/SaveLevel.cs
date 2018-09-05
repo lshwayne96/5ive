@@ -97,7 +97,6 @@ public class SaveLevel : MonoBehaviour {
         for (int i = 0; i < count; i++) {
             datas[i] = cacheable[i].CacheData();
         }
-        Debug.Log("Saving");
         return datas;
     }
 
