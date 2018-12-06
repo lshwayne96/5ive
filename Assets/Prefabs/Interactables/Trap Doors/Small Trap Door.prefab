@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 61629787284261750}
   - component: {fileID: 50684944467001462}
   m_Layer: 0
-  m_Name: Trap Door Small
+  m_Name: Small Trap Door
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
