@@ -1,3 +1,3 @@
-﻿public interface IPersistent<T> {
-    T Save();
+﻿public interface IPersistent {
+	Data Save();
 }

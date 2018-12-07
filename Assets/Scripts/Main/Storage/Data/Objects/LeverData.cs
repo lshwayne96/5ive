@@ -1,99 +1,116 @@
-﻿/*
- * This class represents the data of a lever.
- * It is is used to restore a lver to
- * its previous rotation.
- */
-
-using System;
+﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the data of a lever.
+/// </summary>
+/// <remarks>
+/// It is used to restore the lever to its previous state.
+/// </remarks>
+/// The data includes:
+/// <list type="number">
+/// <item>The previous start rotation</item>
+/// <item>The previous end rotation</item>
+/// <item>The original start rotation</item>
+/// <item>The original end rotation</item>
+/// </list>
 [Serializable]
-public class LeverData {
+public class LeverData : Data {
 
-    public Quaternion PrevStartRotation {
-        get { return prevStartRotation; }
-    }
-    [NonSerialized]
-    private Quaternion prevStartRotation;
-    private float pSX;
-    private float pSY;
-    private float pSZ;
-    private float pSW;
+	public Quaternion PrevStartRotation {
+		get { return prevStartRotation; }
+	}
 
-    public Quaternion PrevEndRotation {
-        get { return prevEndRotation; }
-    }
-    [NonSerialized]
-    private Quaternion prevEndRotation;
-    private float pEX;
-    private float pEY;
-    private float pEZ;
-    private float pEW;
+	[NonSerialized]
+	private Quaternion prevStartRotation;
+	private readonly float pSX;
+	private readonly float pSY;
+	private readonly float pSZ;
+	private readonly float pSW;
 
-    public Quaternion OriginalStartRotation {
-        get { return originalStartRotation; }
-    }
-    [NonSerialized]
-    private Quaternion originalStartRotation;
-    private float oSX;
-    private float oSY;
-    private float oSZ;
-    private float oSW;
+	public Quaternion PrevEndRotation {
+		get { return prevEndRotation; }
+	}
 
-    public Quaternion OriginalEndRotation {
-        get { return originalEndRotation; }
-    }
-    [NonSerialized]
-    private Quaternion originalEndRotation;
-    private float oEX;
-    private float oEY;
-    private float oEZ;
-    private float oEW;
+	[NonSerialized]
+	private Quaternion prevEndRotation;
+	private readonly float pEX;
+	private readonly float pEY;
+	private readonly float pEZ;
+	private readonly float pEW;
 
-    public Direction MovementDirection { get; private set; }
-    public bool HasSwitchedRotation { get; private set; }
-    public bool IsRotating { get; private set; }
+	public Quaternion OriginalStartRotation {
+		get { return originalStartRotation; }
+	}
 
-    public LeverData(Lever lever) {
-        prevStartRotation = lever.transform.rotation;
-        prevEndRotation = lever.EndRotation;
-        originalStartRotation = lever.OriginalStartRotation;
-        originalEndRotation = lever.OriginalEndRotation;
+	[NonSerialized]
+	private Quaternion originalStartRotation;
+	private readonly float oSX;
+	private readonly float oSY;
+	private readonly float oSZ;
+	private readonly float oSW;
 
-        // Cache the prevStartRotation
-        pSX = prevStartRotation.x;
-        pSY = prevStartRotation.y;
-        pSZ = prevStartRotation.z;
-        pSW = prevStartRotation.w;
+	public Quaternion OriginalEndRotation {
+		get { return originalEndRotation; }
+	}
 
-        // Cache the prevEndRotation
-        pEX = prevEndRotation.x;
-        pEY = prevEndRotation.y;
-        pEZ = prevEndRotation.z;
-        pEW = prevEndRotation.w;
+	[NonSerialized]
+	private Quaternion originalEndRotation;
+	private readonly float oEX;
+	private readonly float oEY;
+	private readonly float oEZ;
+	private readonly float oEW;
 
-        // Cache the originalStartRotation
-        oSX = originalStartRotation.x;
-        oSY = originalStartRotation.y;
-        oSZ = originalStartRotation.z;
-        oSW = originalStartRotation.w;
+	public Direction MovementDirection { get; private set; }
 
-        // Cache the originalEndRotation
-        oEX = originalEndRotation.x;
-        oEY = originalEndRotation.y;
-        oEZ = originalEndRotation.z;
-        oEW = originalEndRotation.w;
+	public bool HasSwitchedRotation { get; private set; }
 
-        MovementDirection = lever.MovementDirection;
-        HasSwitchedRotation = lever.HasSwitchedRotation;
-        IsRotating = lever.IsRotating;
-    }
+	public bool IsRotating { get; private set; }
 
-    public void Restore(Lever lever) {
-        prevStartRotation = new Quaternion(pSX, pSY, pSZ, pSW);
-        prevEndRotation = new Quaternion(pEX, pEY, pEZ, pEW);
-        originalStartRotation = new Quaternion(oSX, oSY, oSZ, oSW);
-        originalEndRotation = new Quaternion(oEX, oEY, oEZ, oEW);
-        lever.Restore(this);
-    }
+	/// <summary>
+	/// Initializes a new instance of the <see cref="T:LeverData"/> class.
+	/// </summary>
+	/// <param name="lever">Lever.</param>
+	public LeverData(Lever lever) {
+		prevStartRotation = lever.transform.rotation;
+		prevEndRotation = lever.EndRotation;
+		originalStartRotation = lever.OriginalStartRotation;
+		originalEndRotation = lever.OriginalEndRotation;
+
+		// Previous start rotation
+		pSX = prevStartRotation.x;
+		pSY = prevStartRotation.y;
+		pSZ = prevStartRotation.z;
+		pSW = prevStartRotation.w;
+
+		// Previous end rotation
+		pEX = prevEndRotation.x;
+		pEY = prevEndRotation.y;
+		pEZ = prevEndRotation.z;
+		pEW = prevEndRotation.w;
+
+		// Original start rotation
+		oSX = originalStartRotation.x;
+		oSY = originalStartRotation.y;
+		oSZ = originalStartRotation.z;
+		oSW = originalStartRotation.w;
+
+		// Original end rotation
+		oEX = originalEndRotation.x;
+		oEY = originalEndRotation.y;
+		oEZ = originalEndRotation.z;
+		oEW = originalEndRotation.w;
+
+		MovementDirection = lever.MovementDirection;
+		HasSwitchedRotation = lever.HasSwitchedRotation;
+		IsRotating = lever.IsRotating;
+	}
+
+	public override void Restore(IRestorable restorable) {
+		prevStartRotation = new Quaternion(pSX, pSY, pSZ, pSW);
+		prevEndRotation = new Quaternion(pEX, pEY, pEZ, pEW);
+		originalStartRotation = new Quaternion(oSX, oSY, oSZ, oSW);
+		originalEndRotation = new Quaternion(oEX, oEY, oEZ, oEW);
+		restorable.RestoreWith(this);
+	}
 }

@@ -12,7 +12,9 @@ public static class StorageUtil {
 
 	private const string FileExtension = ".dat";
 
-	/// <summary>/// A tag added to game files to distinguish them from non-game files./// </summary>
+	/// <summary>
+	/// A tag added to game files to distinguish them from non-game files.
+	/// </summary>
 	private const string tag = "Unity";
 
 	/// <summary>

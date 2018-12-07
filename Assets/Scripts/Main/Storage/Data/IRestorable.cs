@@ -7,5 +7,5 @@ public interface IRestorable {
     /// Restores this with <c>data></c>
     /// </summary>
     /// <param name="data">Data.</param>
-    void RestoreWith(IData data);
+    void RestoreWith(Data data);
 }

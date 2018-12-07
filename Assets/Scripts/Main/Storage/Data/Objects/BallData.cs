@@ -2,11 +2,10 @@
 using UnityEngine;
 
 /// <summary>
-/// This class represents the data of ball.
+/// This class represents the data of a ball.
 /// </summary>
 /// <remarks>
-/// It is used to restore the ball to it's previous state
-/// when the game starts.
+/// It is used to restore the ball to its previous state.
 /// </remarks>
 /// The data includes:
 /// <list type="number">
@@ -14,7 +13,7 @@ using UnityEngine;
 /// <item>The last velocity</item>
 /// </list>
 [Serializable]
-public class BallData : IData {
+public class BallData : Data {
 
 	public Vector2 PrevVelocity {
 		get { return prevVelocity; }
@@ -31,13 +30,17 @@ public class BallData : IData {
 
 	[NonSerialized]
 	private Vector3 prevPosition;
-	private float pX;
-	private float pY;
-	private float pZ;
+	private readonly float pX;
+	private readonly float pY;
+	private readonly float pZ;
 
 	public bool PlayerHasBall { get; private set; }
 	public bool IsPlayerWithinRange { get; private set; }
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="T:BallData"/> class.
+	/// </summary>
+	/// <param name="ball">Ball.</param>
 	public BallData(Ball ball) {
 		prevVelocity = ball.GetComponent<Rigidbody2D>().velocity;
 		vX = prevVelocity.x;
@@ -52,9 +55,9 @@ public class BallData : IData {
 		IsPlayerWithinRange = ball.IsPlayerWithinRange;
 	}
 
-	public void Restore(IRestorable ball) {
+	public override void Restore(IRestorable restorable) {
 		prevVelocity = new Vector2(vX, vY);
 		prevPosition = new Vector3(pX, pY, pZ);
-		ball.RestoreWith(this);
+		restorable.RestoreWith(this);
 	}
 }

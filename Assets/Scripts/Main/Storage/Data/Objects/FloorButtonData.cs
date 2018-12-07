@@ -1,95 +1,115 @@
-﻿/*
- * This class represents the data of a stand button.
- * It is is used to restore a stand button to
- * its previous position.
- */
-
-using System;
+﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the data of a floor button.
+/// </summary>
+/// <remarks>
+/// It is used to restore the floor button to its previous state.
+/// </remarks>
+/// The data includes:
+/// <list type="number">
+/// <item>The previous start position</item>
+/// <item>The previous end position</item>
+/// <item>The original start position</item>
+/// <item>The original end position</item>
+/// <item>The movement direction</item>
+/// <item>And many more...</item>
+/// </list>
 [Serializable]
-public class FloorButtonData : IData {
+public class FloorButtonData : Data {
 
-    public Vector3 PrevStartPosition {
-        get { return prevStartPosition; }
-    }
-    [NonSerialized]
-    private Vector3 prevStartPosition;
-    private float pSX;
-    private float pSY;
-    private float pSZ;
+	public Vector3 PrevStartPosition {
+		get { return prevStartPosition; }
+	}
 
-    public Vector3 PrevEndPosition {
-        get { return prevEndPosition; }
-    }
-    [NonSerialized]
-    private Vector3 prevEndPosition;
-    private float pEX;
-    private float pEY;
-    private float pEZ;
+	[NonSerialized]
+	private Vector3 prevStartPosition;
+	private readonly float pSX;
+	private readonly float pSY;
+	private readonly float pSZ;
 
-    public Vector3 OriginalStartPosition {
-        get { return originalStartPosition; }
-    }
-    [NonSerialized]
-    private Vector3 originalStartPosition;
-    private float oSX;
-    private float oSY;
-    private float oSZ;
-    private float oSW;
+	public Vector3 PrevEndPosition {
+		get { return prevEndPosition; }
+	}
 
-    public Vector3 OriginalEndPosition {
-        get { return originalEndPosition; }
-    }
-    [NonSerialized]
-    private Vector3 originalEndPosition;
-    private float oEX;
-    private float oEY;
-    private float oEZ;
-    private float oEW;
+	[NonSerialized]
+	private Vector3 prevEndPosition;
+	private readonly float pEX;
+	private readonly float pEY;
+	private readonly float pEZ;
 
-    public Direction MovementDirection { get; private set; }
-    public bool IsDown { get; private set; }
-    public bool IsMoving { get; private set; }
-    public float WaitDuration { get; private set; }
-    public float OriginalWaitDuration { get; private set; }
+	public Vector3 OriginalStartPosition {
+		get { return originalStartPosition; }
+	}
 
-    public FloorButtonData(FloorButton standButton) {
-        prevStartPosition = standButton.transform.position;
-        prevEndPosition = standButton.EndPosition;
-        originalStartPosition = standButton.OriginalStartPosition;
-        originalEndPosition = standButton.OriginalEndPosition;
+	[NonSerialized]
+	private Vector3 originalStartPosition;
+	private readonly float oSX;
+	private readonly float oSY;
+	private readonly float oSZ;
+	private readonly float oSW;
 
-        pSX = prevStartPosition.x;
-        pSY = prevStartPosition.y;
-        pSZ = prevStartPosition.z;
+	public Vector3 OriginalEndPosition {
+		get { return originalEndPosition; }
+	}
 
-        pEX = prevEndPosition.x;
-        pEY = prevEndPosition.y;
-        pEZ = prevEndPosition.z;
+	[NonSerialized]
+	private Vector3 originalEndPosition;
+	private readonly float oEX;
+	private readonly float oEY;
+	private readonly float oEZ;
+	private readonly float oEW;
 
-        // Cache the originalStartPosition
-        oSX = originalStartPosition.x;
-        oSY = originalStartPosition.y;
-        oSZ = originalStartPosition.z;
+	public Direction MovementDirection { get; private set; }
+	public bool IsDown { get; private set; }
+	public bool IsMoving { get; private set; }
+	public float WaitDuration { get; private set; }
+	public float OriginalWaitDuration { get; private set; }
 
-        // Cache the originalEndPosition
-        oEX = originalEndPosition.x;
-        oEY = originalEndPosition.y;
-        oEZ = originalEndPosition.z;
+	/// <summary>
+	/// Initializes a new instance of the <see cref="T:FloorButtonData"/> class.
+	/// </summary>
+	/// <param name="floorButton">Floor button.</param>
+	public FloorButtonData(FloorButton floorButton) {
+		prevStartPosition = floorButton.transform.position;
+		prevEndPosition = floorButton.EndPosition;
+		originalStartPosition = floorButton.OriginalStartPosition;
+		originalEndPosition = floorButton.OriginalEndPosition;
 
-        MovementDirection = standButton.MovementDirection;
-        IsDown = standButton.IsDown;
-        IsMoving = standButton.IsMoving;
-        WaitDuration = standButton.WaitDuration;
-        OriginalWaitDuration = standButton.OriginalWaitDuration;
-    }
+		// Previous start position
+		pSX = prevStartPosition.x;
+		pSY = prevStartPosition.y;
+		pSZ = prevStartPosition.z;
 
-    public void Restore(IRestorable floorButton) {
-        prevStartPosition = new Vector3(pSX, pSY, pSZ);
-        prevEndPosition = new Vector3(pEX, pEY, pEZ);
-        originalStartPosition = new Vector3(oSX, oSY, oSZ);
-        originalEndPosition = new Vector3(oEX, oEY, oEZ);
-        floorButton.RestoreWith(this);
-    }
+		// Previous end position
+		pEX = prevEndPosition.x;
+		pEY = prevEndPosition.y;
+		pEZ = prevEndPosition.z;
+
+		// Original start position
+		oSX = originalStartPosition.x;
+		oSY = originalStartPosition.y;
+		oSZ = originalStartPosition.z;
+
+		// Original end position
+		oEX = originalEndPosition.x;
+		oEY = originalEndPosition.y;
+		oEZ = originalEndPosition.z;
+
+		// Other data
+		MovementDirection = floorButton.MovementDirection;
+		IsDown = floorButton.IsDown;
+		IsMoving = floorButton.IsMoving;
+		WaitDuration = floorButton.WaitDuration;
+		OriginalWaitDuration = floorButton.OriginalWaitDuration;
+	}
+
+	public override void Restore(IRestorable restorable) {
+		prevStartPosition = new Vector3(pSX, pSY, pSZ);
+		prevEndPosition = new Vector3(pEX, pEY, pEZ);
+		originalStartPosition = new Vector3(oSX, oSY, oSZ);
+		originalEndPosition = new Vector3(oEX, oEY, oEZ);
+		restorable.RestoreWith(this);
+	}
 }

@@ -11,47 +11,47 @@ using UnityEngine.SceneManagement;
 
 public class RestoreLevel : MonoBehaviour {
 
-    public static RestoreLevel restoreLevel;
-    public bool hasRestoredScene { get; private set; }
+	public static RestoreLevel restoreLevel;
+	public bool hasRestoredScene { get; private set; }
 
-    private LevelData levelData;
-    private bool hasSavedScene;
+	private LevelData levelData;
+	private bool hasSavedScene;
 
-    // Ensures that there is only one RestoreGame instance
-    private void Awake() {
-        if (restoreLevel == null) {
-            DontDestroyOnLoad(gameObject);
-            restoreLevel = this;
+	// Ensures that there is only one RestoreGame instance
+	private void Awake() {
+		if (restoreLevel == null) {
+			DontDestroyOnLoad(gameObject);
+			restoreLevel = this;
 
-        } else if (restoreLevel != this) {
-            Destroy(gameObject);
-        }
+		} else if (restoreLevel != this) {
+			Destroy(gameObject);
+		}
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
+		SceneManager.sceneLoaded += OnSceneLoaded;
+	}
 
-    // Caches data from the LoadGame script
-    public void Cache(LevelData levelData) {
-        this.levelData = levelData;
-        hasSavedScene = true;
-    }
+	// Caches data from the LoadGame script
+	public void Cache(LevelData levelData) {
+		this.levelData = levelData;
+		hasSavedScene = true;
+	}
 
-    // Restores the previous game data
-    public void Restore() {
-        levelData.Restore();
-        hasRestoredScene = true;
-    }
+	// Restores the previous game data
+	public void Restore() {
+		levelData.Restore();
+		hasRestoredScene = true;
+	}
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
-        if (hasSavedScene) {
-            Restore();
-            hasSavedScene = false;
-        }
-    }
+	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
+		if (hasSavedScene) {
+			Restore();
+			hasSavedScene = false;
+		}
+	}
 
-    private void OnDisable() {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+	private void OnDisable() {
+		SceneManager.sceneLoaded -= OnSceneLoaded;
+	}
 
 
 }

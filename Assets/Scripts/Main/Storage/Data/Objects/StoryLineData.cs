@@ -1,16 +1,21 @@
 ﻿using System;
 
 [Serializable]
-public class StoryLineData {
-    public bool HasBeenSent { get; private set; }
-    public int Count { get; private set; }
+public class StoryLineData : Data {
 
-    public StoryLineData(StoryLine storyLine) {
-        HasBeenSent = storyLine.HasBeenSent;
-        Count = storyLine.Count;
-    }
+	public bool HasBeenSent { get; private set; }
+	public int Count { get; private set; }
 
-    public void Restore(StoryLine storyLine) {
-        storyLine.Restore(this);
-    }
+	/// <summary>
+	/// Initializes a new instance of the <see cref="T:StoryLineData"/> class.
+	/// </summary>
+	/// <param name="storyLine">Story line.</param>
+	public StoryLineData(StoryLine storyLine) {
+		HasBeenSent = storyLine.HasBeenSent;
+		Count = storyLine.Count;
+	}
+
+	public override void Restore(IRestorable restorable) {
+		restorable.RestoreWith(this);
+	}
 }

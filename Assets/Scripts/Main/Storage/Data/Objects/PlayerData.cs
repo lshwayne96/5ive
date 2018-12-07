@@ -1,67 +1,84 @@
-﻿/*
- * This class represents a player and the player camera.
- * It is used to restore a player to its saved position
- * and velocity in the saved level.
- * It is also used to reposition the player camera
- * to the correct room.
- */
-
-using System;
+﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// This class represents the data of a player.
+/// </summary>
+/// <remarks>
+/// It is used to restore the player to its previous state.
+/// </remarks>
+/// /// The data includes:
+/// <list type="number">
+/// <item>The previous local scale</item>
+/// <item>The previous velocity</item>
+/// <item>The previous position</item>
+/// <item>The previous gravity scale</item>
+/// </list>
 [Serializable]
-public class PlayerData {
+public class PlayerData : Data {
 
-    public Vector3 PrevLocalScale {
-        get { return prevLocalScale; }
-    }
-    [NonSerialized]
-    private Vector3 prevLocalScale;
-    private float sX;
-    private float sY;
-    private float sZ;
+	public Vector3 PrevLocalScale {
+		get { return prevLocalScale; }
+	}
 
-    public Vector2 PrevVelocity {
-        get { return prevVelocity; }
-    }
-    [NonSerialized]
-    private Vector2 prevVelocity;
-    private float vX;
-    private float vY;
+	[NonSerialized]
+	private Vector3 prevLocalScale;
+	private readonly float sX;
+	private readonly float sY;
+	private readonly float sZ;
 
-    public Vector2 PrevPosition {
-        get { return position; }
-    }
-    [NonSerialized]
-    private Vector3 position;
-    private float pX;
-    private float pY;
+	public Vector2 PrevVelocity {
+		get { return prevVelocity; }
+	}
 
-    public float PrevGravityScale { get; private set; }
+	[NonSerialized]
+	private Vector2 prevVelocity;
+	private readonly float vX;
+	private readonly float vY;
 
-    public PlayerData(Player player) {
-        prevLocalScale = player.transform.localScale;
-        Rigidbody2D rigidbody2D = player.GetComponent<Rigidbody2D>();
-        prevVelocity = rigidbody2D.velocity;
-        position = rigidbody2D.position;
+	public Vector2 PrevPosition {
+		get { return prevPosition; }
+	}
 
-        sX = prevLocalScale.x;
-        sY = prevLocalScale.y;
-        sZ = prevLocalScale.z;
+	[NonSerialized]
+	private Vector3 prevPosition;
+	private readonly float pX;
+	private readonly float pY;
 
-        vX = prevVelocity.x;
-        vY = prevVelocity.y;
+	public float PrevGravityScale { get; private set; }
 
-        pX = position.x;
-        pY = position.y;
+	/// <summary>
+	/// Initializes a new instance of the <see cref="T:PlayerData"/> class.
+	/// </summary>
+	/// <param name="player">Player.</param>
+	public PlayerData(Player player) {
+		prevLocalScale = player.transform.localScale;
 
-        PrevGravityScale = rigidbody2D.gravityScale;
-    }
+		Rigidbody2D rigidbody2D = player.GetComponent<Rigidbody2D>();
+		prevVelocity = rigidbody2D.velocity;
+		prevPosition = rigidbody2D.position;
 
-    public void Restore(Player player) {
-        prevLocalScale = new Vector3(sX, sY, sZ);
-        prevVelocity = new Vector2(vX, vY);
-        position = new Vector3(pX, pY);
-        player.Restore(this);
-    }
+		// Previous local scale
+		sX = prevLocalScale.x;
+		sY = prevLocalScale.y;
+		sZ = prevLocalScale.z;
+
+		// Previous velocity
+		vX = prevVelocity.x;
+		vY = prevVelocity.y;
+
+		// Previous position
+		pX = prevPosition.x;
+		pY = prevPosition.y;
+
+		// Previous gravity scale
+		PrevGravityScale = rigidbody2D.gravityScale;
+	}
+
+	public override void Restore(IRestorable restorable) {
+		prevLocalScale = new Vector3(sX, sY, sZ);
+		prevVelocity = new Vector2(vX, vY);
+		prevPosition = new Vector3(pX, pY);
+		restorable.RestoreWith(this);
+	}
 }

@@ -46,7 +46,7 @@ public class SaveLevel : MonoBehaviour {
 	}
 
 	public void Save() {
-		if (!inputField.text.Equals(System.String.Empty)) {
+		if (!inputField.text.Equals(string.Empty)) {
 			if (!fileButtonManager.DoesFileExist(inputField.text)) {
 				Save(inputField.text);
 				fileButtonManager.UpdateButtons();
@@ -57,11 +57,11 @@ public class SaveLevel : MonoBehaviour {
 			}
 
 			// Clear the input field
-			inputField.text = System.String.Empty;
+			inputField.text = string.Empty;
 		}
 	}
 
-	public void Overwrite(String fileName) {
+	public void Overwrite(string fileName) {
 		Save(fileName);
 		fileButtonManager.UpdateButtons();
 	}
@@ -78,9 +78,11 @@ public class SaveLevel : MonoBehaviour {
 		BallData ballData = ball.CacheData();
 
 		LeverData[] leverDatas = Save(levers, levers.Length);
-		FloorButtonData[] floorButtonDatas = Save(floorButtons, floorButtons.Length);
+		Data[] floorButtonDatas = Save(floorButtons, floorButtons.Length);
 		LadderData[] ladderDatas = Save(ladders, ladders.Length);
 		StoryLineData[] storyLineDatas = Save(storyLines, storyLines.Length);
+
+
 
 		LevelData levelData = new LevelData(scene, playerData, ballData,
 											leverDatas, floorButtonDatas,
@@ -92,8 +94,8 @@ public class SaveLevel : MonoBehaviour {
 		GameDataManager.Save(fileName, scene.buildIndex);
 	}
 
-	private T[] Save<T>(IPersistent<T>[] items, int count) {
-		T[] datas = new T[count];
+	private Data[] Save(IPersistent[] items, int count) {
+		Data[] datas = new Data[count];
 		for (int i = 0; i < count; i++) {
 			datas[i] = items[i].Save();
 		}
