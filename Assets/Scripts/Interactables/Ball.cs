@@ -1,12 +1,0 @@
-﻿/*  * This script enables interaction with the  * attached gameObject, namely a ball gameObject.  * Interactions includes picking and dropping the ball.  */  using UnityEngine;  public class Ball : MonoBehaviour {
-
-    // Expose the speed variable to the editor
-    public float speed = 10f;      private Transform playerTf;      public bool PlayerHasBall { get; private set; }     public bool IsPlayerWithinRange { get; private set; }      void Start() {
-        playerTf = GameObject.FindWithTag("Player").transform;     }      void Update() {
-        // Enable the ball to follow slightly behind the player when picked up
-        if (PlayerHasBall && !PauseLevel.IsPaused) {
-            // Stop the rotation of the ball
-            transform.rotation = Quaternion.Euler(Vector3.zero);             Vector3 targetPosition = playerTf.position;             GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);         }
-
-        if (CanPickUpBall()) {             PickUpBall();         } else if (CanDropBall()) {
-            DropBall();         }     }      private void OnTriggerEnter2D(Collider2D collision) {         if (collision.gameObject.CompareTag("Player")) {             IsPlayerWithinRange = true;         }     }      private void OnTriggerExit2D(Collider2D collision) {         if (collision.gameObject.CompareTag("Player")) {             IsPlayerWithinRange = false;         }     }      private bool CanPickUpBall() {         return IsPlayerWithinRange && Input.GetKeyDown(KeyCode.E) && !PlayerHasBall && !PauseLevel.IsPaused;     }      private bool CanDropBall() {         return Input.GetKeyDown(KeyCode.E) && PlayerHasBall && !PauseLevel.IsPaused;     }      private void PickUpBall() {         transform.position = playerTf.position;         GetComponent<Rigidbody2D>().gravityScale = 0f;         PlayerHasBall = true;     }      private void DropBall() {         GetComponent<Rigidbody2D>().gravityScale = 1f;         PlayerHasBall = false;     }      public BallData CacheData() {         return new BallData(this);     }      public void Restore(BallData ballData) {         GetComponent<Rigidbody2D>().velocity = ballData.PrevVelocity;         transform.position = ballData.PrevPosition;         // Restore ball camera         GetComponent<DetectRoom>().SetCurrentRoom();         PlayerHasBall = ballData.PlayerHasBall;         IsPlayerWithinRange = ballData.IsPlayerWithinRange;     } }  

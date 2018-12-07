@@ -1,0 +1,10 @@
+{
+    "name": "CommonsUtil",
+    "references": [
+        "Main.Commons"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false
+}
