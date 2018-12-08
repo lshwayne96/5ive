@@ -1,9 +1,4 @@
-﻿/*
- * This class represents the data of a level and is used to restore
- * a level to its saved state.
- */
-
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -35,9 +30,9 @@ public class LevelData {
 		if (componentManagerGO != null) {
 			ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
 
-			IRestorable[] restorables = componentManager.GetScripts<IRestorable>();
-			for (int i = 0; i < restorables.Length; i++) {
-				datas[i].Restore(restorables[i]);
+			RestorableMonoBehaviour[] restorableMonoBehaviours = componentManager.GetScripts<RestorableMonoBehaviour>();
+			for (int i = 0; i < restorableMonoBehaviours.Length; i++) {
+				datas[i].Restore(restorableMonoBehaviours[i]);
 			}
 		}
 	}

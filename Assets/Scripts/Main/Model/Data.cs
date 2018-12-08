@@ -5,8 +5,8 @@
 public abstract class Data {
 
 	/// <summary>
-	/// Restores the <c>restorable</c> with this.
+	/// Restore the specified restorable.
 	/// </summary>
 	/// <param name="restorable">Restorable.</param>
-	public abstract void Restore(IRestorable restorable);
+	public abstract void Restore(RestorableMonoBehaviour restorable);
 }

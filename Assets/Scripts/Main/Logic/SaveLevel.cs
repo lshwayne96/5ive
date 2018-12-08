@@ -15,7 +15,7 @@ public class SaveLevel : MonoBehaviour {
 	private InputField inputField;
 	private FileButtonManager fileButtonManager;
 
-	private Player player;
+	private ReponsePlayer player;
 	private Ball ball;
 	private Lever[] levers;
 	private FloorButton[] floorButtons;
@@ -31,7 +31,7 @@ public class SaveLevel : MonoBehaviour {
 								  .GetComponentInChildren<FileButtonManager>();
 		}
 
-		player = GameObject.FindWithTag("Player").GetComponent<Player>();
+		player = GameObject.FindWithTag("Player").GetComponent<ReponsePlayer>();
 		ball = GameObject.FindWithTag("TeleportationBall").GetComponent<Ball>();
 
 		GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
@@ -75,7 +75,7 @@ public class SaveLevel : MonoBehaviour {
 		Scene scene = SceneManager.GetActiveScene();
 
 		PlayerData playerData = new PlayerData(player);
-		BallData ballData = ball.CacheData();
+		BallData ballData = ball.Save();
 
 		LeverData[] leverDatas = Save(levers, levers.Length);
 		Data[] floorButtonDatas = Save(floorButtons, floorButtons.Length);

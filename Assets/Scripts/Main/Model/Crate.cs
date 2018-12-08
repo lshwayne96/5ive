@@ -3,7 +3,7 @@ using UnityStandardAssets._2D;
 
 public class Crate : MonoBehaviour {
 
-    private Player player;
+    private ReponsePlayer player;
     private PlatformerCharacter2D playerMovement;
     private Rigidbody2D crateRb;
 
@@ -11,7 +11,7 @@ public class Crate : MonoBehaviour {
     private bool isMovingCrate;
 
     void Start() {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<ReponsePlayer>();
         playerMovement = player.GetComponent<PlatformerCharacter2D>();
         crateRb = GetComponent<Rigidbody2D>();
     }
