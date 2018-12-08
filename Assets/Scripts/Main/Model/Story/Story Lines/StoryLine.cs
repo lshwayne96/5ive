@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class StoryLine : RestorableMonoBehaviour {
+public class StoryLine : RestorableMonoBehaviour, IMessage {
 	public virtual string Text { get; }
 	public bool HasBeenSent { get; set; }
 	public int Count { get; set; }

@@ -5,7 +5,6 @@
  * This script is used in both the input field game object and file button.
  */
 
-using System;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine;
@@ -74,32 +73,21 @@ public class SaveLevel : MonoBehaviour {
 	private void Save(string fileName) {
 		Scene scene = SceneManager.GetActiveScene();
 
-		PlayerData playerData = new PlayerData(player);
-		BallData ballData = ball.Save();
+		GameObject componentManagerGO = GameObject.FindGameObjectWithTag("ComponentManager");
+		ComponentManager componentManager = componentManagerGO.GetComponent<ComponentManager>();
 
-		LeverData[] leverDatas = Save(levers, levers.Length);
-		Data[] floorButtonDatas = Save(floorButtons, floorButtons.Length);
-		LadderData[] ladderDatas = Save(ladders, ladders.Length);
-		StoryLineData[] storyLineDatas = Save(storyLines, storyLines.Length);
+		RestorableMonoBehaviour[] restorables = componentManager.GetScripts<RestorableMonoBehaviour>();
+		Data[] datas = new Data[restorables.Length];
+		for (int i = 0; i < restorables.Length; i++) {
+			datas[i] = restorables[i].Save();
+		}
 
+		LevelData levelData = new LevelData(scene, datas);
 
-
-		LevelData levelData = new LevelData(scene, playerData, ballData,
-											leverDatas, floorButtonDatas,
-											ladderDatas, storyLineDatas);
-
-		string saveFilePath = StorageUtil.FileNameToPath(fileName, true);
-		StorageUtil.Serialise(FileType.Level, saveFilePath, levelData);
+		string filePath = StorageUtil.FileNameToPath(fileName, true);
+		StorageUtil.Serialise(FileType.Level, filePath, levelData);
 
 		GameDataManager.Save(fileName, scene.buildIndex);
-	}
-
-	private Data[] Save(IPersistent[] items, int count) {
-		Data[] datas = new Data[count];
-		for (int i = 0; i < count; i++) {
-			datas[i] = items[i].Save();
-		}
-		return datas;
 	}
 
 	private void OnEnable() {

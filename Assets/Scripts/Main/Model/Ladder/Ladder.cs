@@ -4,7 +4,7 @@ using UnityEngine;
 /// <summary>
 /// This script represents a ladder and its interactions.
 /// </summary>
-public class Ladder : RestorableMonoBehaviour {
+public class Ladder : MonoBehaviour {
 
 	// Expose the climbingSpeed variable to the editor
 	public readonly float climbingSpeed = 6;
@@ -108,6 +108,8 @@ public class Ladder : RestorableMonoBehaviour {
 		}
 	}
 
+	/*
+
 	public override Data Save() {
 		return new LadderData(this);
 	}
@@ -122,6 +124,7 @@ public class Ladder : RestorableMonoBehaviour {
 		OriginalGravityScale = ladderData.OriginalGravityScale;
 		hasRestored = true;
 	}
+	*/
 
 	/// <summary>
 	/// This class represents the data of a ladder.
@@ -135,8 +138,9 @@ public class Ladder : RestorableMonoBehaviour {
 	/// <item></item>
 	/// </list>
 	[Serializable]
-	public class LadderData : Data {
+	public class LadderData {
 
+		/*
 		public bool IsPassingThrough { get; private set; }
 		public bool IsClimbing { get; private set; }
 		public bool OutsideLadder { get; private set; }
@@ -163,5 +167,6 @@ public class Ladder : RestorableMonoBehaviour {
 			ladder.Restore(this);
 			TopOfLadderData.Restore(topOfLadder);
 		}
+		*/
 	}
 }
