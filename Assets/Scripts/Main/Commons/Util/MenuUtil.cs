@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// This is a utility class that contains menu utility methods
+/// This is a utility class that contains utility methods
 /// pertaining to menu interaction.
 /// </summary>
 public static class MenuUtil {

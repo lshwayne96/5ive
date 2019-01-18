@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 /// <summary>
-/// This is a utility class that contains a util method
+/// This is a utility class that contains a utility method
 /// pertaining to level mapping.
 /// </summary>
 public static class SceneUtil {
