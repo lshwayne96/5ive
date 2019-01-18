@@ -71,16 +71,16 @@ public class Teleportation : MonoBehaviour {
 
     private void Teleport() {
         // Swap the Player's and ball's rooms
-        Vector3 positionDifference = SetCurrentRoom.currentBallRoomTf.position - SetCurrentRoom.currentPlayerRoomTf.position;
+        Vector3 positionDifference = CurrentRoomSetter.currentBallRoomTf.position - CurrentRoomSetter.currentPlayerRoomTf.position;
 
         // Offset of player from centre of room
-        Vector3 playerOffset = transform.position - SetCurrentRoom.currentPlayerRoomTf.position;
+        Vector3 playerOffset = transform.position - CurrentRoomSetter.currentPlayerRoomTf.position;
 
         // Offset of ball from centre of room
-        Vector3 ballOffset = SetCurrentRoom.ball.transform.position - SetCurrentRoom.currentBallRoomTf.position;
+        Vector3 ballOffset = CurrentRoomSetter.ball.transform.position - CurrentRoomSetter.currentBallRoomTf.position;
 
-        BoxCollider2D playerRoomCollider = SetCurrentRoom.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
-        BoxCollider2D ballRoomCollider = SetCurrentRoom.currentBallRoomTf.GetComponent<BoxCollider2D>();
+        BoxCollider2D playerRoomCollider = CurrentRoomSetter.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
+        BoxCollider2D ballRoomCollider = CurrentRoomSetter.currentBallRoomTf.GetComponent<BoxCollider2D>();
 
         // Difference in scale of 2 rooms
         float scaleFactor_x = playerRoomCollider.size.x / ballRoomCollider.size.x;
@@ -89,7 +89,7 @@ public class Teleportation : MonoBehaviour {
         transform.position += positionDifference
             + Vector3.Scale(playerOffset, new Vector3(1 / scaleFactor_x - 1, 1 / scaleFactor_y - 1, 0));
 
-        SetCurrentRoom.ball.transform.position -= positionDifference
+        CurrentRoomSetter.ball.transform.position -= positionDifference
             - Vector3.Scale(ballOffset, new Vector3(scaleFactor_x - 1, scaleFactor_y - 1, 0));
     }
 
