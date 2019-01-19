@@ -22,9 +22,10 @@ public static class StorageUtil {
 	/// </summary>
 	/// <returns>The path.</returns>
 	/// <param name="fileName">Name.</param>
-	/// <param name="toAddTag">If set to <c>true</c> to add tag.</param>
-	public static string FileNameToPath(string fileName, bool toAddTag) {
-		if (toAddTag) {
+	/// <param name="addition">If addition is TagAddition.Enable, a tag will be added.
+	/// If addition is TagAddition.Disable, no tag will be added.</param>
+	public static string FileNameToPath(string fileName, TagAddition addition) {
+		if (addition == TagAddition.Enable) {
 			return LevelDirectoryPath + AddTag(fileName) + FileExtension;
 		}
 		return LevelDirectoryPath + fileName + FileExtension;
@@ -132,4 +133,8 @@ public static class StorageUtil {
 		fileStream.Close();
 		return data;
 	}
+}
+
+public enum TagAddition {
+	Enable, Disable
 }

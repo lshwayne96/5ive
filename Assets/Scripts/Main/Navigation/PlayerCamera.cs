@@ -11,64 +11,69 @@ public class PlayerCamera : MonoBehaviour {
 	public float lookAheadMoveThreshold;
 
 	private Transform playerTf;
-	private Vector3 lastPlayerTfPosition;
+	private Vector3 prevPlayerPos;
 	private Vector3 currentVelocity;
 	private Vector3 lookAheadPos;
 
-	private BoxCollider2D currentRoomBoxCollider;
+	private BoxCollider2D currentRoomBC;
+
+	private RoomDetector roomDetector;
 
 	private void Start() {
-		playerTf = GameObject.FindWithTag("Player").transform;
-		lastPlayerTfPosition = playerTf.position;
+		playerTf = GameObject.FindWithTag(Tags.Player).transform;
+		prevPlayerPos = playerTf.position;
 		transform.parent = null;
+
+		roomDetector = GetComponent<RoomDetector>();
 	}
 
 	private void Update() {
-		currentRoomBoxCollider = CurrentRoomSetter.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
+		currentRoomBC = roomDetector.CurrentRoomTf.GetComponent<BoxCollider2D>();
 
-		float offset_x = Mathf.Abs(currentRoomBoxCollider.size.x - CameraDimensions.CameraLength) / 2;
-		float offset_y = Mathf.Abs(currentRoomBoxCollider.size.y - CameraDimensions.CameraHeight) / 2;
+		Vector3 futurePos = GetFuturePos();
 
-		SetLookAheadPos();
+		SetPos(futurePos);
 
-		Vector3 potentialFuturePlayerPosition = GetPotentialFuturePlayerPosition(offset_x, offset_y);
-		SetCameraPosition(potentialFuturePlayerPosition);
-
-		lastPlayerTfPosition = playerTf.position;
+		prevPlayerPos = playerTf.position;
 	}
 
-	private void SetLookAheadPos() {
-		// only update lookahead pos if accelerating or changed direction
-		float xMoveDelta = (playerTf.position - lastPlayerTfPosition).x;
-		bool updateLookAheadPlayerTf = Mathf.Abs(xMoveDelta) > lookAheadMoveThreshold;
+	private void UpdateLookAheadPos() {
+		// only update look ahead position if accelerating or changing direction
+		float moveDeltaX = (playerTf.position - prevPlayerPos).x;
+		bool toUpdateLookAheadPos = Mathf.Abs(moveDeltaX) > lookAheadMoveThreshold;
 
-		if (updateLookAheadPlayerTf) {
-			lookAheadPos = lookAheadFactor * Vector3.right * Mathf.Sign(xMoveDelta);
+		if (toUpdateLookAheadPos) {
+			lookAheadPos = lookAheadFactor * Vector3.right * Mathf.Sign(moveDeltaX);
 		} else {
 			lookAheadPos = Vector3.MoveTowards(lookAheadPos, Vector3.zero, Time.deltaTime * lookAheadReturnSpeed);
 		}
 	}
 
-	private Vector3 GetPotentialFuturePlayerPosition(float offset_x, float offset_y) {
-		Vector3 potentialFuturePlayerPosition = playerTf.position + lookAheadPos + Vector3.forward * CameraDimensions.CameraDepth;
-		potentialFuturePlayerPosition = KeepCameraWithinRoomBounds(offset_x, offset_y, potentialFuturePlayerPosition);
-		return potentialFuturePlayerPosition;
+	private Vector3 GetFuturePos() {
+		UpdateLookAheadPos();
+
+		float offsetX = Mathf.Abs(currentRoomBC.size.x - CameraDimensions.CameraLength) / 2;
+		float offsetY = Mathf.Abs(currentRoomBC.size.y - CameraDimensions.CameraHeight) / 2;
+
+		Vector3 futurePos = playerTf.position + lookAheadPos + Vector3.forward * CameraDimensions.CameraDepth;
+		futurePos = ModerateCameraPos(offsetX, offsetY, futurePos);
+		return futurePos;
 	}
 
-	private void SetCameraPosition(Vector3 potentialFuturePlayerPosition) {
-		Vector3 newPos = Vector3.SmoothDamp(transform.position, potentialFuturePlayerPosition, ref currentVelocity, damping);
+	private void SetPos(Vector3 futurePos) {
+		Vector3 newPos = Vector3.SmoothDamp(transform.position, futurePos, ref currentVelocity, damping);
 		transform.position = newPos;
 	}
 
-	private Vector3 KeepCameraWithinRoomBounds(float offset_x, float offset_y, Vector3 potentialFuturePlayerPosition) {
-		potentialFuturePlayerPosition = new Vector3(Mathf.Max(potentialFuturePlayerPosition.x, currentRoomBoxCollider.transform.position.x - offset_x),
-					Mathf.Max(potentialFuturePlayerPosition.y, currentRoomBoxCollider.transform.position.y - offset_y),
-					potentialFuturePlayerPosition.z);
+	private Vector3 ModerateCameraPos(float offsetX, float offsetY, Vector3 futurePos) {
+		float x = Mathf.Max(futurePos.x, currentRoomBC.transform.position.x - offsetX);
+		float y = Mathf.Max(futurePos.y, currentRoomBC.transform.position.y - offsetY);
+		futurePos = new Vector3(x, y, futurePos.z);
 
-		potentialFuturePlayerPosition = new Vector3(Mathf.Min(potentialFuturePlayerPosition.x, currentRoomBoxCollider.transform.position.x + offset_x),
-			Mathf.Min(potentialFuturePlayerPosition.y, currentRoomBoxCollider.transform.position.y + offset_y),
-			potentialFuturePlayerPosition.z);
+		x = Mathf.Min(futurePos.x, currentRoomBC.transform.position.x + offsetX);
+		y = Mathf.Min(futurePos.y, currentRoomBC.transform.position.y + offsetY);
+		futurePos = new Vector3(x, y, futurePos.z);
 
-		return potentialFuturePlayerPosition;
+		return futurePos;
 	}
 }

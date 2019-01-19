@@ -76,7 +76,7 @@ public class FileButtonManager : MonoBehaviour {
      */
 	private void SetUpFileButtonInfo(LevelData levelData, FileInfo fileInfo, String taggedFileName) {
 		// Get information to be displayed on the SaveLoadMenuButton button
-		int sceneBuildIndex = levelData.sceneBuildIndex;
+		int sceneBuildIndex = levelData.SceneBuildIndex;
 		DateTime dateTime = fileInfo.LastWriteTimeUtc;
 
 		GameObject button = gameObjectPool.GetObject();
