@@ -5,7 +5,10 @@
 
 using UnityEngine;
 
-public class OnClickQuit : MonoBehaviour {
+/// <summary>
+/// This script exits the game.
+/// </summary>
+public class QuitOnClick : MonoBehaviour {
 
 	public void Quit() {
 		SaveBeforeQuit();
