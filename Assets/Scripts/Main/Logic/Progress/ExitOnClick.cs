@@ -1,14 +1,9 @@
-﻿/*
- * This script quits the game upon
- * interacting with the attached gameObject.
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// This script exits the game.
 /// </summary>
-public class QuitOnClick : MonoBehaviour {
+public class ExitOnClick : MonoBehaviour {
 
 	public void Quit() {
 		SaveBeforeQuit();
@@ -22,7 +17,7 @@ public class QuitOnClick : MonoBehaviour {
 	}
 
 	private void SaveBeforeQuit() {
-		string saveFilePath = StorageUtil.GetDirectoryPath(FileType.Game);
-		GameDataManager.SaveGame(saveFilePath);
+		string path = StorageUtil.GetDirectoryPath(FileType.Game);
+		GameDataManager.SaveGame(path);
 	}
 }
