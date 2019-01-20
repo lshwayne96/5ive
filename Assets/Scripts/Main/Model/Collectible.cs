@@ -11,32 +11,32 @@ using UnityEngine.SceneManagement;
 
 public class Collectible : MonoBehaviour {
 
-    private SpriteRenderer[] spriteRenderers;
+	private SpriteRenderer[] spriteRenderers;
 
-    private void Start() {
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-    }
+	private void Start() {
+		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+	}
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("Player")) {
-            StartCoroutine(Collected());
-        }
-    }
+	private void OnTriggerEnter2D(Collider2D collision) {
+		if (collision.gameObject.CompareTag(Tags.Player)) {
+			StartCoroutine(Collected());
+		}
+	}
 
-    // Collect this collectible and destroy it
-    private IEnumerator Collected() {
-        for (float f = 1f; f >= 0; f -= 0.1f) {
-            foreach (SpriteRenderer spriteRenderer in spriteRenderers) {
-                Color c = spriteRenderer.material.color;
-                c.a = f;
-                spriteRenderer.material.color = c;
-            }
-            yield return null;
-        }
+	// Collect this collectible and destroy it
+	private IEnumerator Collected() {
+		for (float f = 1f; f >= 0; f -= 0.1f) {
+			foreach (SpriteRenderer spriteRenderer in spriteRenderers) {
+				Color c = spriteRenderer.material.color;
+				c.a = f;
+				spriteRenderer.material.color = c;
+			}
+			yield return null;
+		}
 
-        int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        Game.MarkSceneCollectibleAsCollected(currentSceneBuildIndex);
+		int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+		Game.MarkSceneCollectibleAsCollected(currentSceneBuildIndex);
 
-        Destroy(gameObject);
-    }
+		Destroy(gameObject);
+	}
 }
