@@ -18,9 +18,7 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 	public Text LevelLabel { get; private set; }
 	public Text DateTimeLabel { get; private set; }
 
-	private GameObject parentMenu;
-
-	private Menu buttonManager;
+	private Menu parentMenu;
 
 	/// <summary>
 	///  f stands for full date/time pattern (short time)
@@ -35,30 +33,28 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 
 		DateTimeLabel.text = dateTime.ToLocalTime().ToString(DateTimePattern);
 
-		MenuUtil.Set(parentMenu);
-		buttonManager = transform.parent.GetComponent<Menu>();
+		parentMenu = MenuUtil.GetSuitableMenu();
+		parentMenu = transform.parent.GetComponent<Menu>();
 
 		transform.localScale = Vector3.one;
 	}
 
 	public void OnPointerClick(PointerEventData pointerEventData) {
-		if (MenuUtil.IsLoadMenu(parentMenu)) {
-			if (IsSingleClick(pointerEventData)) {
-				buttonManager.SetTargetButton(this);
-			}
-
-			if (IsDoubleClick(pointerEventData)) {
-				buttonManager.Load();
-			}
+		if (IsSingleClick(pointerEventData)) {
+			parentMenu.SetTargetButton(this);
 		}
 
 		if (MenuUtil.IsSaveMenu(parentMenu)) {
-			if (IsSingleClick(pointerEventData)) {
-				buttonManager.SetTargetButton(this);
-			}
-
+			SaveMenu menu = (SaveMenu) parentMenu;
 			if (IsDoubleClick(pointerEventData)) {
-				buttonManager.OverwriteTargetButton();
+				menu.OverwriteTargetButton();
+			}
+		}
+
+		if (MenuUtil.IsLoadMenu(parentMenu)) {
+			LoadMenu menu = (LoadMenu) parentMenu;
+			if (IsDoubleClick(pointerEventData)) {
+				menu.LoadTargetButton();
 			}
 		}
 	}
@@ -90,8 +86,7 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 	}
 
 	public void LoadLevel() {
-		LoadLevel loadLevel = GetComponent<LoadLevel>();
-		loadLevel.Load(NameLabel.text);
+		Game.Load(NameLabel.text);
 	}
 
 	public void AttachToMenu(Transform menu) {
