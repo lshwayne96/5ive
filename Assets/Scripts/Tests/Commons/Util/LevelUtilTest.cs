@@ -1,4 +1,6 @@
-﻿using NUnit.Framework;
+﻿/*
+
+using NUnit.Framework;
 
 public class SceneUtilTest {
 
@@ -7,3 +9,5 @@ public class SceneUtilTest {
 		Assert.AreEqual(LevelUtil.GetLevelName(0), "Main_Menu");
 	}
 }
+
+*/

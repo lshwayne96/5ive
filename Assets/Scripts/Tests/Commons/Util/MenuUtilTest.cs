@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿/*
+
+using UnityEngine;
 using NUnit.Framework;
 
 public class MenuUtilTest {
@@ -27,3 +29,5 @@ public class MenuUtilTest {
 		Assert.IsTrue(MenuUtil.IsLoadMenu(menu2));
 	}
 }
+
+*/
