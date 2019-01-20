@@ -7,35 +7,35 @@
 public static class MenuUtil {
 
 	/// <summary>
-	/// Sets the menu to either the <c>SaveMenu</c>
-	/// or the <c>LoadMenu</c> depending on the scene.
+	/// Gets a suitable menu dependng on which
+	/// menu is active in the scene.
 	/// </summary>
-	public static void Set(GameObject menu) {
-		menu = GameObject.FindWithTag("SaveMenu");
-		if (menu == null) {
-			menu = GameObject.FindWithTag("LoadMenu");
+	/// <returns>A suitable menu.</returns>
+	public static Menu GetSuitableMenu() {
+		GameObject menuGO = GameObject.FindWithTag(Tags.SaveMenu);
+		if (menuGO == null) {
+			menuGO = GameObject.FindWithTag(Tags.LoadMenu);
 		}
+		return menuGO.GetComponent<Menu>();
 	}
 
 	/// <summary>
-	/// Checks if the menu is the <c>SaveMenu</c>.
+	/// Checks if the <code>menu</code> is of <code>SaveMenu</code> type.
 	/// </summary>
-	/// <returns>
-	/// <c>true</c>, if menu is the <c>SaveMenu</c>,
+	/// <returns><c>true</c>, if the menu is of <code>SaveMenu</code> type,
 	/// <c>false</c> otherwise.</returns>
 	/// <param name="menu">Menu.</param>
-	public static bool IsSaveMenu(GameObject menu) {
-		return menu.CompareTag("SaveMenu");
+	public static bool IsSaveMenu(Menu menu) {
+		return menu.CompareTag(Tags.SaveMenu);
 	}
 
 	/// <summary>
-	/// Checks if the menu is the <c>LoadMenu</c>.
+	/// Checks if the <code>menu</code> is of <code>LoadMenu</code> type.
 	/// </summary>
-	/// <returns>
-	/// <c>true</c>, if menu is the <c>LoadMenu</c>,
+	/// <returns><c>true</c>, if the menu is of <code>LoadMenu</code> type,
 	/// <c>false</c> otherwise.</returns>
 	/// <param name="menu">Menu.</param>
-	public static bool IsLoadMenu(GameObject menu) {
-		return menu.CompareTag("LoadMenu");
+	public static bool IsLoadMenu(Menu menu) {
+		return menu.CompareTag(Tags.LoadMenu);
 	}
 }
