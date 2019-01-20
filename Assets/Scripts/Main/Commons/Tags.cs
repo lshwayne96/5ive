@@ -29,5 +29,11 @@ public static class Tags {
 
 	public const string DeleteAllButton = "DeleteAllButton";
 
+	/****** Tags for menus ******/
+
+	public const string SaveMenu = "SaveMenu";
+
+	public const string LoadMenu = "LoadMenu";
+
 	public const string ComponentManager = "ComponentManager";
 }
