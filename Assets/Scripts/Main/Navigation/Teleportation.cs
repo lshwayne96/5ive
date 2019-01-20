@@ -105,7 +105,7 @@ public class Teleportation : MonoBehaviour {
 	}
 
 	private bool CanTeleport() {
-		if (PauseGame.IsPaused) {
+		if (PauseLevel.IsPaused) {
 			return false;
 		}
 		return doesSceneAllowTeleportation || doesLocationAllowTeleportation;

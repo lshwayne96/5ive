@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 
 public class MessageManager : MonoBehaviour {
-    public virtual float visibleDuration { get; }
+	public virtual float VisibleDuration { get; }
 
-    protected Coroutine currentCoroutine;
-    protected bool hasVisibleMessage;
+	protected Coroutine currentCoroutine;
+
+	protected bool hasVisibleMessage;
 }

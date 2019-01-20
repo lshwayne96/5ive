@@ -13,7 +13,7 @@ using UnityEngine.UI;
 public class SaveLevel : MonoBehaviour {
 
 	private InputField inputField;
-	private FileButtonManager buttonManager;
+	private Menu buttonManager;
 
 	private ComponentManager comManager;
 
@@ -34,10 +34,10 @@ public class SaveLevel : MonoBehaviour {
 	private void InitButtonManager(int currentSceneBuildIndex) {
 		bool isInMainMenu = currentSceneBuildIndex == (int) LevelNames.MainMenu;
 		if (isInMainMenu) {
-			buttonManager = transform.parent.GetComponent<FileButtonManager>();
+			buttonManager = transform.parent.GetComponent<Menu>();
 		} else {
 			buttonManager = GameObject.FindGameObjectWithTag(Tags.ButtonManager)
-								  .GetComponentInChildren<FileButtonManager>();
+								  .GetComponentInChildren<Menu>();
 		}
 	}
 
@@ -53,8 +53,7 @@ public class SaveLevel : MonoBehaviour {
 		bool hasInput = !fileName.Equals(string.Empty);
 		if (hasInput) {
 			if (buttonManager.DoesFileExist(fileName)) {
-				NotificationManager.Send(new FileAlreadyExists());
-				inputField.DeactivateInputField();
+				NotificationManager.Send(new FileAlreadyExistsMessage());
 				ClearInputField();
 				return;
 			}
@@ -69,6 +68,10 @@ public class SaveLevel : MonoBehaviour {
 	/// <summary>
 	/// This is the core implementation of <code>SaveLevel#Save()</code>.
 	/// </summary>
+	/// <remarks>
+	/// This method uses the <see cref="Game.Save(string, Data[])"/>
+	/// method for the actual serialisation of the data.
+	/// </remarks>
 	/// <param name="fileName">File name.</param>
 	private void Save(string fileName) {
 		Data[] datas = new Data[restorables.Length];
@@ -76,12 +79,7 @@ public class SaveLevel : MonoBehaviour {
 			datas[i] = restorables[i].Save();
 		}
 
-		string path = StorageUtil.FileNameToPath(fileName, true);
-		Scene scene = SceneManager.GetActiveScene();
-		LevelData levelData = new LevelData(scene, datas);
-
-		StorageUtil.Serialise(FileType.Level, path, levelData);
-		GameDataManager.Save(fileName, scene.buildIndex);
+		Game.Save(fileName, datas);
 	}
 
 	private void ClearInputField() {

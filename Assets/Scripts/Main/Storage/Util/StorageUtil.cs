@@ -15,7 +15,7 @@ public static class StorageUtil {
 	/// <summary>
 	/// A tag added to game files to distinguish them from non-game files.
 	/// </summary>
-	private const string tag = "Unity";
+	private const string Tag = "Unity";
 
 	/// <summary>
 	/// Converts the file name to its corresponding path.
@@ -56,7 +56,7 @@ public static class StorageUtil {
 	/// <returns>The tagged file name.</returns>
 	/// <param name="fileName">File name.</param>
 	public static string AddTag(string fileName) {
-		return string.Concat(tag, fileName);
+		return string.Concat(Tag, fileName);
 	}
 
 	/// <summary>
@@ -72,7 +72,7 @@ public static class StorageUtil {
 		if (!ContainsTag(fileName)) {
 			return string.Empty;
 		}
-		return tag;
+		return Tag;
 	}
 
 	/// <summary>
@@ -83,8 +83,8 @@ public static class StorageUtil {
 	/// <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
 	public static bool ContainsTag(string fileName) {
-		string potentialTag = fileName.Substring(0, tag.Length);
-		return potentialTag.Equals(tag);
+		string potentialTag = fileName.Substring(0, Tag.Length);
+		return potentialTag.Equals(Tag);
 	}
 
 	/// <summary>

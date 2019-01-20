@@ -1,18 +1,33 @@
-﻿public static class Tags {
+﻿/// <summary>
+/// This class contains the definitions of the various tags used
+/// in the editor.
+/// </summary>
+public static class Tags {
 
-	public static readonly string Player = "Player";
+	public const string Player = "Player";
 
-	public static readonly string PlayerCamera = "PlayerCamera";
+	public const string PlayerCamera = "PlayerCamera";
 
-	public static readonly string Ball = "Ball";
+	public const string Ball = "Ball";
 
-	public static readonly string SpecialRoom = "SpecialRoom";
+	public const string SpecialRoom = "SpecialRoom";
 
-	public static readonly string Menu = "Menu";
+	public const string Menu = "Menu";
 
-	public static readonly string ButtonManager = "ButtonManager";
+	public const string ButtonManager = "ButtonManager";
 
-	public static readonly string NewGameButton = "NewGameButton";
 
-	public static readonly string ComponentManager = "ComponentManager";
+	/****** Tags for buttons *******/
+
+	public const string NewButton = "NewButton";
+
+	public const string OverwriteButton = "OverwriteButton";
+
+	public const string LoadButton = "LoadButton";
+
+	public const string DeleteButton = "DeleteButton";
+
+	public const string DeleteAllButton = "DeleteAllButton";
+
+	public const string ComponentManager = "ComponentManager";
 }

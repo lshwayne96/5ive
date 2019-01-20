@@ -6,6 +6,6 @@
 public class ResetProgressOnClick : MonoBehaviour {
 
 	public void ResetProgress() {
-		GameDataManager.ResetProgress();
+		Game.ResetProgress();
 	}
 }

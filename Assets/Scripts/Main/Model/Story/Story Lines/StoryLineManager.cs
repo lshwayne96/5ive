@@ -13,7 +13,7 @@ public class StoryLineManager : MessageManager {
     private static bool hasNewMessage;
     private static float startTime;
 
-    public override float visibleDuration {
+    public override float VisibleDuration {
         get { return 5f; }
     }
 
@@ -35,7 +35,7 @@ public class StoryLineManager : MessageManager {
         hasVisibleMessage = true;
         float difference = 0;
 
-        while (difference < visibleDuration) {
+        while (difference < VisibleDuration) {
             difference = Time.time - startTime;
             yield return null;
         }

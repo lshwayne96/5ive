@@ -35,7 +35,7 @@ public class Collectible : MonoBehaviour {
         }
 
         int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-        GameDataManager.UpdateCollectibleLocations(currentSceneBuildIndex);
+        Game.MarkSceneCollectibleAsCollected(currentSceneBuildIndex);
 
         Destroy(gameObject);
     }

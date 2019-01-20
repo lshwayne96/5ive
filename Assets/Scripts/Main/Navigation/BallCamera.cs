@@ -13,7 +13,7 @@ public class BallCamera : MonoBehaviour {
 
 	private Transform playerTf;
 
-	RoomDetector roomDetector
+	private RoomDetector roomDetector;
 
 	private void Start() {
 		playerGO = GameObject.FindGameObjectWithTag(Tags.Player);
@@ -23,7 +23,7 @@ public class BallCamera : MonoBehaviour {
 	private void Update() {
 		playerCamTf = playerCamGO.transform;
 
-		Vector3 offset = playerCamTf.position - CurrentRoomSetter.currentPlayerRoomTf.position;
+		Vector3 offset = playerCamTf.position - RoomDetector.CurrentRoomTf.position;
 
 		BoxCollider2D playerRoomCollider = CurrentRoomSetter.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
 		BoxCollider2D ballRoomCollider = CurrentRoomSetter.currentBallRoomTf.GetComponent<BoxCollider2D>();

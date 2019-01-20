@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This script is attached to the End game object
@@ -22,7 +21,6 @@ public class EndLevel : MonoBehaviour {
 	}
 
 	private void End() {
-		GameDataManager.EndLevel(sceneBuildIndex);
-		SceneManager.LoadScene(sceneBuildIndex);
+		Game.EndLevel(sceneBuildIndex);
 	}
 }

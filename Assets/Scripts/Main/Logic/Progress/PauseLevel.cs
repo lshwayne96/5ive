@@ -9,7 +9,7 @@ using UnityEngine;
 /// /// To prevent further input from the user,
 /// the player movement script, Platformer2DUserControl, is disabled.
 /// </remarks>
-public class PauseGame : MonoBehaviour {
+public class PauseLevel : MonoBehaviour {
 
 	public static bool IsPaused { get; private set; }
 

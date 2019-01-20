@@ -6,7 +6,7 @@
 public class ExitOnClick : MonoBehaviour {
 
 	public void Quit() {
-		SaveBeforeQuit();
+		SaveBeforeExit();
 
 #if UNITY_EDITOR
 		UnityEditor.EditorApplication.isPlaying = false;
@@ -16,8 +16,7 @@ public class ExitOnClick : MonoBehaviour {
 
 	}
 
-	private void SaveBeforeQuit() {
-		string path = StorageUtil.GetDirectoryPath(FileType.Game);
-		GameDataManager.SaveGame(path);
+	private void SaveBeforeExit() {
+		Game.SaveBeforeExit();
 	}
 }

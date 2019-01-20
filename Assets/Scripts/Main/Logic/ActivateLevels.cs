@@ -30,7 +30,7 @@ public class ActivateLevels : MonoBehaviour {
     }
 
     private void UnlockLevelButtons() {
-        for (int i = 0; i < GameDataManager.numLevelsCompleted; i++) {
+        for (int i = 0; i < Game.NumLevelsCompleted; i++) {
             levelButtons[i].interactable = true;
         }
     }
