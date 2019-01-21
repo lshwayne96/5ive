@@ -66,7 +66,7 @@ public class Player : RestorableMonoBehaviour {
 		GetComponent<Rigidbody2D>().gravityScale = playerData.PrevGravityScale;
 
 		// Restore player camera
-		transform = GetComponent<RoomDetector>().GetCurrentRoom();
+		GetComponent<RoomDetector>().UpdateRoom();
 	}
 
 	/// <summary>

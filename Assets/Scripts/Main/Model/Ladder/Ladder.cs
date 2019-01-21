@@ -27,7 +27,7 @@ public class Ladder : MonoBehaviour {
 		OutsideLadder = true;
 
 		TopOfLadder = GetComponentInChildren<TopOfLadder>();
-		playerRb = GameObject.FindWithTag("Player").GetComponent<Rigidbody2D>();
+		playerRb = GameObject.FindWithTag(Tags.Player).GetComponent<Rigidbody2D>();
 
 		if (!hasRestored) {
 			OriginalGravityScale = playerRb.gravityScale;

@@ -27,17 +27,17 @@ public class RoomDetector : MonoBehaviour {
 	}
 
 	private void MoveToRoom() {
-		CurrentRoomTf = GetCurrentRoom();
+		UpdateRoom();
 
 		if (CompareTag(Tags.Player)) {
 			MovePlayerCamera();
 		}
 	}
 
-	public Transform GetCurrentRoom() {
+	public void UpdateRoom() {
 		// Get collider of the current room
 		Collider2D c = Physics2D.OverlapPoint(transform.position, roomLayerMask);
-		return c.transform;
+		CurrentRoomTf = c.transform;
 	}
 
 	private void MovePlayerCamera() {

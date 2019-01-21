@@ -9,35 +9,44 @@ public class BallCamera : MonoBehaviour {
 
 	private GameObject playerCamGO;
 
+	private GameObject ballGO;
+
 	private Transform playerCamTf;
 
 	private Transform playerTf;
 
-	private RoomDetector roomDetector;
+	private RoomDetector playerRoomDetector;
+
+	private RoomDetector ballRoomDetector;
 
 	private void Start() {
 		playerGO = GameObject.FindGameObjectWithTag(Tags.Player);
 		playerCamGO = GameObject.FindGameObjectWithTag(Tags.PlayerCamera);
+
+		ballGO = GameObject.FindGameObjectWithTag(Tags.Ball);
+
+		playerRoomDetector = playerGO.GetComponent<RoomDetector>();
+		ballRoomDetector = ballGO.GetComponent<RoomDetector>();
 	}
 
 	private void Update() {
 		playerCamTf = playerCamGO.transform;
 
-		Vector3 offset = playerCamTf.position - RoomDetector.CurrentRoomTf.position;
+		Vector3 offset = playerCamTf.position - playerRoomDetector.CurrentRoomTf.position;
 
-		BoxCollider2D playerRoomCollider = CurrentRoomSetter.currentPlayerRoomTf.GetComponent<BoxCollider2D>();
-		BoxCollider2D ballRoomCollider = CurrentRoomSetter.currentBallRoomTf.GetComponent<BoxCollider2D>();
+		BoxCollider2D playerRoomBC = playerRoomDetector.CurrentRoomTf.GetComponent<BoxCollider2D>();
+		BoxCollider2D ballRoomBC = ballRoomDetector.CurrentRoomTf.GetComponent<BoxCollider2D>();
 
 		// Difference in scale of 2 rooms
-		float scaleFactor_x = ballRoomCollider.size.x / playerRoomCollider.size.x;
-		float scaleFactor_y = ballRoomCollider.size.y / playerRoomCollider.size.y;
+		float scaleFactorX = ballRoomBC.size.x / playerRoomBC.size.x;
+		float scaleFactorY = ballRoomBC.size.y / playerRoomBC.size.y;
 
-		GetComponent<Camera>().orthographicSize = 5 * Mathf.Min(scaleFactor_x, scaleFactor_y);
+		GetComponent<Camera>().orthographicSize = 5 * Mathf.Min(scaleFactorX, scaleFactorY);
 
-		if (scaleFactor_x > scaleFactor_y) {
+		if (scaleFactorX > scaleFactorY) {
 			playerTf = playerGO.transform;
 			float playerOffset = (playerTf.position - playerCamTf.position).x;
-			float offSetLimit = (scaleFactor_x / scaleFactor_y / 4f + 0.5f) * 4.5f; //not sure if correct
+			float offSetLimit = (scaleFactorX / scaleFactorY / 4f + 0.5f) * 4.5f; //not sure if correct
 			if (Mathf.Abs(playerOffset) > offSetLimit) {
 				playerOffset = Mathf.Sign(playerOffset) * offSetLimit;
 			}
@@ -45,8 +54,8 @@ public class BallCamera : MonoBehaviour {
 		}
 
 		gameObject.transform.position =
-			new Vector3(CurrentRoomSetter.currentBallRoomTf.position.x + offset.x * scaleFactor_x,
-						CurrentRoomSetter.currentBallRoomTf.position.y + offset.y * scaleFactor_y,
+			new Vector3(ballRoomDetector.CurrentRoomTf.position.x + offset.x * scaleFactorX,
+						ballRoomDetector.CurrentRoomTf.position.y + offset.y * scaleFactorY,
 						-10f);
 	}
 }
