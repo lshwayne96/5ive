@@ -29,11 +29,20 @@ public static class Tags {
 
 	public const string DeleteAllButton = "DeleteAllButton";
 
+	/// <summary>
+	/// Refers to the parent game object that contains all the
+	/// buttons corresponding to the different levels in the
+	/// main menu.
+	/// </summary>
+	public const string LevelButtons = "LevelButtons";
+
 	/****** Tags for menus ******/
 
 	public const string SaveMenu = "SaveMenu";
 
 	public const string LoadMenu = "LoadMenu";
+
+	public const string OverviewMenu = "OverviewMenu";
 
 	public const string ComponentManager = "ComponentManager";
 }
