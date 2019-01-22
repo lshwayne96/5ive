@@ -6,7 +6,7 @@
 /// <remarks>
 /// This script is meant to be attached to the delete buttons in the menu.
 /// </remarks>
-public class ButtonDeleter : MonoBehaviour {
+public class DeleteButton : MonoBehaviour {
 
 	private LoadMenu manager;
 

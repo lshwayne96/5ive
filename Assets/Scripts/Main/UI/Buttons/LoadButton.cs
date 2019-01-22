@@ -6,7 +6,7 @@
 /// <remarks>
 /// This script is meant to be attached to the load button in the menu.
 /// </remarks>
-public class LoaderButton : MonoBehaviour {
+public class LoadButton : MonoBehaviour {
 
 	private LoadMenu manager;
 

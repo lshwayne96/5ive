@@ -6,7 +6,7 @@
 /// <remarks>
 /// This script is meant to be attached to the overwrite button in the menu.
 /// </remarks>
-public class OverwriterButton : MonoBehaviour {
+public class OverwriteButton : MonoBehaviour {
 
 	private SaveMenu manager;
 
