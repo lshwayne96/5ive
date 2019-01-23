@@ -121,7 +121,6 @@ public class Game : RestorableMonoBehaviour {
 		SceneBuildIndexOfLastLevelSaved = DefaultSceneBuildIndexOfLastLevelSaved;
 		levelToPathMapping = new Dictionary<int, string>();
 		gamePath = StorageUtil.GetDirectoryPath(FileType.Game) + StorageUtil.GameFilePath;
-		print(gamePath);
 
 		if (FileUtil.DoesFileExist(gamePath)) {
 			InitSubsequentGame();

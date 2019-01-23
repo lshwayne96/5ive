@@ -60,6 +60,10 @@ public abstract class Menu : MonoBehaviour {
 	private DirectoryInfo dirInfo;
 	private string dirPath;
 
+	private void Start() {
+		Init();
+	}
+
 	public virtual void Init() {
 		nameButtonMapping = new Dictionary<string, GameButton>();
 
