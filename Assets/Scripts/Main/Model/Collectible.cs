@@ -1,20 +1,22 @@
-﻿/*
- * This script encapsulates the behaviour of a collectible.
- * When the user interacts with the collectible,
- * the collectible will fade until it is almost invisible
- * before it is destroyed.
- */
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Represents a collectible and its interactions.
+/// </summary>
+/// <remarks>
+/// When a collectible is collected, it will fade until it
+/// is almost invisible before being destroyed.
+/// </remarks>
 public class Collectible : MonoBehaviour {
 
 	private SpriteRenderer[] spriteRenderers;
 
+	private Level level;
+
 	private void Start() {
 		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+		level = GetComponent<Level>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision) {
@@ -34,9 +36,6 @@ public class Collectible : MonoBehaviour {
 			yield return null;
 		}
 
-		int currentSceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-		Game.MarkSceneCollectibleAsCollected(currentSceneBuildIndex);
-
-		Destroy(gameObject);
+		level.CollectCollectible();
 	}
 }

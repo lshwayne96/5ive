@@ -21,6 +21,6 @@ public class EndPoint : MonoBehaviour {
 	}
 
 	private void End() {
-		Game.EndLevel(sceneBuildIndex);
+		Game.instance.EndLevel(sceneBuildIndex);
 	}
 }

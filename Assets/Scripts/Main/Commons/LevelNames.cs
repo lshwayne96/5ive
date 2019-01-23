@@ -4,10 +4,10 @@
 /// to their scene build index.
 /// </summary>
 public enum LevelNames {
-	MainMenu,
-	Denial,
-	Anger,
-	Bargaining,
-	Depression,
-	Acceptance
+	MainMenu = 0,
+	Denial = 1,
+	Anger = 2,
+	Bargaining = 3,
+	Depression = 4,
+	Acceptance = 5
 }

@@ -1,52 +1,86 @@
 ﻿using System;
 using System.IO;
-using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 
 /// <summary>
 /// This script represents the skeleton of the game.
 /// </summary>
-public class Game : MonoBehaviour {
+public class Game : RestorableMonoBehaviour {
 
+	/// <summary>
+	/// The instance of <see cref="this"/>.
+	/// </summary>
 	public static Game instance;
 
-	private static GameData gameData;
+	/// <summary>
+	/// Returns the number of levels completed.
+	/// </summary>
+	/// <value>The number of levels completed.</value>
+	public int NumLevelsCompleted { get; private set; }
 
-	private static LevelData levelData;
+	/// <summary>
+	/// Returns whether the game been saved before.
+	/// </summary>
+	/// <remarks>
+	/// Used to know whether the button that starts the game
+	/// should have the text <see cref="MainMenu.NewButtonText"/>
+	/// or <see cref="MainMenu.NewButtonResumeText"/>.
+	/// </remarks>
+	/// <value><c>true</c> if the game has been saved before; otherwise, <c>false</c>.</value>
+	public bool HasBeenSavedBefore { get; private set; }
 
-	private static Text newButtonText;
+	/// <summary>
+	/// Returns the name of the last file saved.
+	/// </summary>
+	/// <remarks>
+	/// Used to bring the user to the latest saved level when
+	/// the user clicks on the button that starts the game.
+	/// </remarks>
+	/// <value>The name of the last file saved.</value>
+	public string NameOfLastFileSaved { get; private set; }
 
-	private static string gamePath;
+	/// <summary>
+	/// Returns the scene build index of the scene that corresponds
+	/// to the last level unlocked.
+	/// </summary>
+	/// <value>The scene build index of the last level unlocked.</value>
+	public int SceneBuildIndexOfLastLevelUnlocked { get; private set; }
+
+	/// <summary>
+	/// Returns the scene build index of the scene that corresponds
+	/// to the last level saved.
+	/// </summary>
+	/// <remarks>
+	/// Used to decide between loading the last saved level or the newest unlocked level
+	/// when the user clicks on the button that starts the game.
+	/// </remarks>
+	/// <value>The scene build index of last level saved.</value>
+	public int SceneBuildIndexOfLastLevelSaved { get; private set; }
+
+	/// <summary>
+	/// By default, there is only a single level completed.
+	/// The single level completed refers to the main menu level.
+	/// </summary>
+	private const int DefaultNumLevelCompleted = 1;
+
+	/// <summary>
+	/// By default, the game has not been advanced.
+	/// </summary>
+	private const bool DefaultAdvancement = false;
+
+	/// <summary>
+	/// By default, the last unlocked level is the main menu.
+	/// </summary>
+	private const int DefaultLastUnlockedLevel = (int) LevelNames.MainMenu;
+
+	private Dictionary<int, string> levelToPathMapping;
+
+	private Level level;
+
+	private string gamePath;
 
 	private bool hasInitGame;
-
-	private bool hasSavedLevel;
-
-	public static int NumLevelsCompleted {
-		get { return gameData.numLevelsCompleted; }
-		set { gameData.numLevelsCompleted = value; }
-	}
-
-	public static bool HasAdvancedInGame {
-		get { return gameData.hasBeenSavedBefore; }
-		set { gameData.hasBeenSavedBefore = value; }
-	}
-
-	public static string LastSavedFileName {
-		get { return gameData.lastSavedFileName; }
-		set { gameData.lastSavedFileName = value; }
-	}
-
-	public static int LastUnlockedLevel {
-		get { return gameData.lastUnlockedLevel; }
-		set { gameData.lastUnlockedLevel = value; }
-	}
-
-	public static int LastSavedLevel {
-		set { gameData.lastSavedLevel = value; }
-	}
 
 	private void Awake() {
 		if (instance == null) {
@@ -75,10 +109,8 @@ public class Game : MonoBehaviour {
 	/// </remarks>
 	private void InitGame() {
 		gamePath = StorageUtil.GetDirectoryPath(FileType.Game);
-		newButtonText = GameObject.FindGameObjectWithTag(Tags.NewButton)
-						  .GetComponentInChildren<Text>();
 
-		if (File.Exists(gamePath)) {
+		if (FileUtil.DoesFileExist(gamePath)) {
 			InitSubsequentGame();
 		} else {
 			InitFirstGame();
@@ -88,129 +120,73 @@ public class Game : MonoBehaviour {
 	/// <summary>
 	/// Initialise for the first game.
 	/// </summary>
-	private static void InitFirstGame() {
+	private void InitFirstGame() {
 		FileUtil.CreateFile(gamePath);
-		gameData = new GameData();
-		newButtonText.text = "New";
+		HasBeenSavedBefore = false;
 	}
 
 	/// <summary>
 	/// Initialise for the subsequent game.
 	/// </summary>
-	private static void InitSubsequentGame() {
-		gameData = StorageUtil.Deserialise<GameData>(gamePath);
-		if (gameData.hasBeenSavedBefore) {
-			newButtonText.text = "Resume";
-		}
+	private void InitSubsequentGame() {
+		GameData data = StorageUtil.Deserialise<GameData>(gamePath);
+		data.Restore(this);
 	}
 
-	/// <summary>
-	/// When a level loads, check if the level is the main menu.
-	/// If not, check if the collectible in that level has previously been collected.
-	/// If it has, destroy it.
-	/// </summary>
-	/// <param name="scene">Scene.</param>
-	/// <param name="loadSceneMode">Load scene mode.</param>
-	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
-		bool isMainMenu = scene.buildIndex != (int) LevelNames.MainMenu;
-		bool isCollectiblePresent = gameData.sceneCollectibleMapping[scene.buildIndex];
-		bool hasCollectibleBeenCollected = !isMainMenu && isCollectiblePresent;
+	public void StartGame() {
 
-		if (hasCollectibleBeenCollected) {
-			FindAndDestroyCollectible();
-		}
-
-		if (hasSavedLevel) {
-			levelData.Restore();
-			hasSavedLevel = false;
-		}
 	}
 
-	/// <summary>
-	/// Finds and destroys the <code>Collectible</code> game object
-	/// in the current level.
-	/// </summary>
-	private static void FindAndDestroyCollectible() {
-		Collectible c = GameObject.FindGameObjectWithTag(Tags.ComponentManager)
-			.GetComponent<ComponentManager>()
-			.GetScript<Collectible>();
-		Destroy(c.gameObject);
-	}
-
-	/* Game Data is saved when the editor is closed
-     * Does not concern end users
-     * Only for our own convenience
-     */
-	private void OnApplicationQuit() {
-		StorageUtil.Serialise(FileType.Game, gamePath, gameData);
-	}
-
-	private void OnDisable() {
-		SceneManager.sceneLoaded -= OnSceneLoaded;
-	}
-
-	public static void ResetProgress() {
-		ResetGame();
-		newButtonText.text = "New";
-	}
-
-	public static void ResetGame() {
+	public void Reset() {
 		DeleteGameFile();
 		DeleteLevelFiles();
 		InitFirstGame();
 	}
 
-	private static void DeleteGameFile() {
-		File.Delete(gamePath);
+	private void DeleteGameFile() {
+		FileUtil.DeleteFile(gamePath);
 	}
 
-	private static void DeleteLevelFiles() {
+	private void DeleteLevelFiles() {
 		string levelPaths = StorageUtil.GetDirectoryPath(FileType.Level);
 		string[] paths = Directory.GetFiles(levelPaths);
 		foreach (string path in paths) {
 			File.Delete(path);
 		}
-		gameData.hasBeenSavedBefore = false;
 	}
 
-	public static void EndLevel(int sceneBuildIndex) {
-		NumLevelsCompleted += 1;
-		LastUnlockedLevel = sceneBuildIndex;
-		SceneManager.LoadScene(sceneBuildIndex);
-	}
-
-	public static void Save(string fileName, Data[] datas) {
+	public void Save(string fileName) {
 		Scene scene = SceneManager.GetActiveScene();
-		LevelData levelData = new LevelData(scene, datas);
+		Level.LevelData levelData = (Level.LevelData) level.Save();
 
 		string path = StorageUtil.FileNameToPath(fileName, TagAddition.Enable);
 		StorageUtil.Serialise(FileType.Level, path, levelData);
 
-		// Used to know when to change the "New" text in the New Button to "Resume"
-		gameData.hasBeenSavedBefore = true;
-
-		// Used to allow clicking on the Resume button to load the latest saved level
-		LastSavedFileName = fileName;
-
-		// Used to decide between loading the last saved level or the newest unlocked level
-		LastSavedLevel = levelData.SceneBuildIndex;
+		HasBeenSavedBefore = true;
+		NameOfLastFileSaved = fileName;
+		SceneBuildIndexOfLastLevelSaved = levelData.SceneBuildIndex;
 	}
 
-	public static void SaveBeforeExit() {
-		string path = StorageUtil.GetDirectoryPath(FileType.Game);
-		StorageUtil.Serialise(FileType.Game, path, gameData);
-	}
-
-	public static void Load(string fileName) {
+	public void LoadLevel(string fileName) {
 		string path = StorageUtil.FileNameToPath(fileName, TagAddition.Enable);
-		LevelData data = StorageUtil.Deserialise<LevelData>(path);
+		Level.LevelData data = StorageUtil.Deserialise<Level.LevelData>(path);
 		SceneManager.LoadScene(data.SceneBuildIndex);
-		levelData = data;
 	}
 
+	//TODO
+	public void Override(string fileName) {
 
-	public static void MarkSceneCollectibleAsCollected(int sceneBuildIndex) {
-		gameData.sceneCollectibleMapping[sceneBuildIndex] = false;
+	}
+
+	public void EndLevel(int sceneBuildIndex) {
+		NumLevelsCompleted += 1;
+		SceneBuildIndexOfLastLevelUnlocked = sceneBuildIndex;
+		SceneManager.LoadScene(sceneBuildIndex);
+	}
+
+	public void SaveBeforeExit() {
+		string path = StorageUtil.GetDirectoryPath(FileType.Game);
+		StorageUtil.Serialise(FileType.Game, path, Save());
 	}
 
 	/// <summary>
@@ -218,52 +194,67 @@ public class Game : MonoBehaviour {
 	/// </summary>
 	/// <returns><c>true</c>, if the last unlocked level is equal to the
 	/// last saved level, <c>false</c> otherwise.</returns>
-	public static bool HasUnlockedAndSavedLevel() {
-		return gameData.lastUnlockedLevel == gameData.lastSavedLevel;
+	public bool HasUnlockedAndSavedLevel() {
+		return SceneBuildIndexOfLastLevelUnlocked == SceneBuildIndexOfLastLevelSaved;
+	}
+
+	public override Data Save() {
+		return new GameData(this);
+	}
+
+	public override void RestoreWith(Data data) {
+		GameData gameData = (GameData) data;
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
+		bool isMainMenu = scene.buildIndex != (int) LevelNames.MainMenu;
+
+		if (isMainMenu) {
+			return;
+		}
+
+		if (level.HasBeenSaved) {
+			string levelPath = levelToPathMapping[level.SceneBuildIndex];
+			Data data = StorageUtil.Deserialise<Level.LevelData>(levelPath);
+			level.RestoreWith(data);
+		}
+	}
+
+	private void OnApplicationQuit() {
+		StorageUtil.Serialise(FileType.Game, gamePath, Save());
+	}
+
+	private void OnDisable() {
+		SceneManager.sceneLoaded -= OnSceneLoaded;
 	}
 
 	/// <summary>
 	/// This class represents the data of the game.
 	/// </summary>
 	[Serializable]
-	class GameData {
+	class GameData : Data {
+
 		public int numLevelsCompleted;
-		public Dictionary<int, bool> sceneCollectibleMapping;
 
 		public bool hasBeenSavedBefore;
-		public string lastSavedFileName;
-		public int lastSavedLevel;
-		public int lastUnlockedLevel;
 
-		/// <summary>
-		/// By default, there is only a single level completed.
-		/// The single level completed refers to the main menu level.
-		/// </summary>
-		private readonly int DefaultNumLevelCompleted = 1;
+		public string nameOfLastFileSaved;
 
-		/// <summary>
-		/// By default, the game has not been advanced.
-		/// </summary>
-		private readonly bool DefaultAdvancementLevel = false;
+		public int sceneBuildIndexOfLastLevelUnlocked;
 
-		/// <summary>
-		/// By default, the last unlocked level is the main menu.
-		/// </summary>
-		private readonly int DefaultLastUnlockedLevel = (int) LevelNames.MainMenu;
+		public int sceneBuildIndexOfLastLevelSaved;
 
-		/// <summary>
-		/// Initialises a new instance of the <see cref="T:GameDataManager.GameData"/> class.
-		/// </summary>
-		public GameData() {
-			numLevelsCompleted = DefaultNumLevelCompleted;
-			hasBeenSavedBefore = DefaultAdvancementLevel;
-			lastUnlockedLevel = DefaultLastUnlockedLevel;
+		public Dictionary<int, string> levelPathMapping;
 
-			int numLevels = SceneManager.sceneCountInBuildSettings;
-			sceneCollectibleMapping = new Dictionary<int, bool>(numLevels);
-			for (int i = DefaultNumLevelCompleted; i < numLevels; i++) {
-				sceneCollectibleMapping.Add(i, true);
-			}
+		public GameData(Game game) {
+			numLevelsCompleted = game.NumLevelsCompleted;
+			hasBeenSavedBefore = game.HasBeenSavedBefore;
+			sceneBuildIndexOfLastLevelUnlocked = game.SceneBuildIndexOfLastLevelSaved;
+			levelPathMapping = game.levelToPathMapping;
+		}
+
+		public override void Restore(RestorableMonoBehaviour restorable) {
+			throw new NotImplementedException();
 		}
 	}
 }

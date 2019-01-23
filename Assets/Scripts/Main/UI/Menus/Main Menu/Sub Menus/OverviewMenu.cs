@@ -28,7 +28,7 @@ public class OverviewMenu : MonoBehaviour {
 	/// with the exception of the always unlocked main menu level.
 	/// </summary>
 	private void UnlockLevelButtons() {
-		for (int i = 0; i < Game.NumLevelsCompleted; i++) {
+		for (int i = 0; i < Game.instance.NumLevelsCompleted; i++) {
 			levelButtons[i].interactable = true;
 		}
 	}

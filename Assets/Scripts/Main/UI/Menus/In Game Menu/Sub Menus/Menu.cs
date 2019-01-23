@@ -83,7 +83,7 @@ public abstract class Menu : MonoBehaviour {
 	/// </remarks>
 	protected void CreateButtons() {
 		List<FileInfo> fileInfos = GetSavedFileInfos();
-		List<LevelData> levelDatas = GetDatas(fileInfos);
+		List<Level.LevelData> levelDatas = GetDatas(fileInfos);
 
 		for (int i = 0; i < levelDatas.Count; i++) {
 			CreateButton(levelDatas[i], fileInfos[i], fileInfos[i].FullName);
@@ -95,8 +95,8 @@ public abstract class Menu : MonoBehaviour {
 	/// </summary>
 	/// <returns>The datas.</returns>
 	/// <param name="fileInfos">File infos.</param>
-	private List<LevelData> GetDatas(List<FileInfo> fileInfos) {
-		List<LevelData> levelDatas = new List<LevelData>();
+	private List<Level.LevelData> GetDatas(List<FileInfo> fileInfos) {
+		List<Level.LevelData> levelDatas = new List<Level.LevelData>();
 		foreach (FileInfo fileInfo in fileInfos) {
 			levelDatas.Add(GetData(fileInfo));
 		}
@@ -125,11 +125,11 @@ public abstract class Menu : MonoBehaviour {
 	/// Get the level data from the corresponding level file.
 	/// </summary>
 	/// <param name="fileInfo">File info.</param>
-	private LevelData GetData(FileInfo fileInfo) {
+	private Level.LevelData GetData(FileInfo fileInfo) {
 		string path = fileInfo.FullName;
 		string fileName = StorageUtil.PathToFileName(path);
 
-		return StorageUtil.Deserialise<LevelData>(path);
+		return StorageUtil.Deserialise<Level.LevelData>(path);
 	}
 
 	/// <summary>
@@ -138,7 +138,7 @@ public abstract class Menu : MonoBehaviour {
 	/// <param name="levelData">Level data.</param>
 	/// <param name="fileInfo">File information.</param>
 	/// <param name="taggedFileName">Tagged file name.</param>
-	private void CreateButton(LevelData levelData, FileInfo fileInfo, string taggedFileName) {
+	private void CreateButton(Level.LevelData levelData, FileInfo fileInfo, string taggedFileName) {
 		// Get information to be displayed on the SaveLoadMenuButton button
 		int sceneBuildIndex = levelData.SceneBuildIndex;
 		DateTime dateTime = fileInfo.LastWriteTimeUtc;
@@ -225,7 +225,7 @@ public abstract class Menu : MonoBehaviour {
 	/// </summary>
 	/// <returns><c>true</c>, if the level file exists, <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
-	public bool DoesFileExist(string fileName) {
+	public bool DoesFileWithSameNameExist(string fileName) {
 		return nameButtonMapping.ContainsKey(StorageUtil.AddTag(fileName));
 	}
 

@@ -76,8 +76,8 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 
 	public void OverwriteCorrespondingFile() {
 		string path = StorageUtil.FileNameToPath(NameLabel.text, TagAddition.Enable);
-		SaveLevel saveLevel = GetComponent<SaveLevel>();
-		saveLevel.Overwrite(NameLabel.text);
+		//TODO
+		Game.instance.Override(NameLabel.text);
 
 		DateTimeLabel.text = File.GetLastWriteTimeUtc(path).ToLocalTime().ToString("f");
 		transform.SetAsFirstSibling();
@@ -86,7 +86,7 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 	}
 
 	public void LoadLevel() {
-		Game.Load(NameLabel.text);
+		Game.instance.LoadLevel(NameLabel.text);
 	}
 
 	public void AttachToMenu(Transform menu) {

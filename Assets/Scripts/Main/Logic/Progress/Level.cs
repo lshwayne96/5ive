@@ -52,22 +52,28 @@ public class Level : RestorableMonoBehaviour {
 	/// Represents the data corresponding to the <see cref="RestorableMonoBehaviour#restorables"/>.
 	/// </summary>
 	/// <remarks>
-	/// Each restorable will produce one <see cref="Data"/> object,
+	/// Each restorable will produce one <see cref="global::Data"/> object,
 	/// which itself can be 
 	/// </remarks>
 	private Data[] restorableData;
 
 	private void Start() {
+		collectible = GetComponent<Collectible>();
 		restorables = GameObject.FindWithTag(Tags.ComponentManager)
 								.GetComponent<ComponentManager>()
 								.GetScripts<RestorableMonoBehaviour>();
+	}
+
+	public void CollectCollectible() {
+		IsCollectibleCollected = true;
+		Destroy(collectible.gameObject);
 	}
 
 	public override Data Save() {
 		return new LevelData(this);
 	}
 
-	public override void RestoreWith(Data data) {
+	public override void RestoreWith(global::Data data) {
 		LevelData levelData = (LevelData) data;
 
 		HasBeenSaved = levelData.HasBeenSaved;

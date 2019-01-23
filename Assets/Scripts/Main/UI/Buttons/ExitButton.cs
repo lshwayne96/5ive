@@ -22,6 +22,6 @@ public class ExitButton : MonoBehaviour {
 	}
 
 	private void SaveBeforeExit() {
-		Game.SaveBeforeExit();
+		Game.instance.SaveBeforeExit();
 	}
 }

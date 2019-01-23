@@ -4,7 +4,7 @@
 /// This script represents level file deletion functionality via a button.
 /// </summary>
 /// <remarks>
-/// This script is meant to be attached to the delete buttons in the menu.
+/// This script is meant to be attached to the delete button in the load menu.
 /// </remarks>
 public class DeleteButton : MonoBehaviour {
 
@@ -14,11 +14,7 @@ public class DeleteButton : MonoBehaviour {
 		manager = transform.parent.GetComponentInChildren<LoadMenu>();
 	}
 
-	public void DeleteOne() {
+	public void Delete() {
 		manager.DeleteTargetButton();
-	}
-
-	public void DeleteAll() {
-		manager.DeleteAllButtons();
 	}
 }
