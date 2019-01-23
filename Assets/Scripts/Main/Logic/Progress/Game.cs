@@ -60,10 +60,9 @@ public class Game : RestorableMonoBehaviour {
 	public int SceneBuildIndexOfLastLevelSaved { get; private set; }
 
 	/// <summary>
-	/// By default, there is only a single level completed.
-	/// The single level completed refers to the main menu level.
+	/// By default, there are no levels completed.
 	/// </summary>
-	private const int DefaultNumLevelCompleted = 1;
+	private const int DefaultNumLevelCompleted = 0;
 
 	/// <summary>
 	/// By default, the game has not been advanced.
@@ -73,7 +72,9 @@ public class Game : RestorableMonoBehaviour {
 	/// <summary>
 	/// By default, the last unlocked level is the main menu.
 	/// </summary>
-	private const int DefaultSceneBuildIndexOfLastLevelUnlocked = (int) LevelNames.MainMenu;
+	private const int DefaultSceneBuildIndexOfLastLevelUnlocked = (int) LevelNames.Denial;
+
+	private const int DefaultSceneBuildIndexOfLastLevelSaved = DefaultSceneBuildIndexOfLastLevelUnlocked;
 
 	private Dictionary<int, string> levelToPathMapping;
 
@@ -117,7 +118,7 @@ public class Game : RestorableMonoBehaviour {
 		HasBeenSavedBefore = false;
 		NameOfLastFileSaved = string.Empty;
 		SceneBuildIndexOfLastLevelUnlocked = DefaultSceneBuildIndexOfLastLevelUnlocked;
-		SceneBuildIndexOfLastLevelSaved
+		SceneBuildIndexOfLastLevelSaved = DefaultSceneBuildIndexOfLastLevelSaved;
 		levelToPathMapping = new Dictionary<int, string>();
 		gamePath = StorageUtil.GetDirectoryPath(FileType.Game) + StorageUtil.GameFilePath;
 		print(gamePath);
@@ -146,7 +147,11 @@ public class Game : RestorableMonoBehaviour {
 	}
 
 	public void StartGame() {
-
+		if (HasUnlockedAndSavedLevel()) {
+			SceneManager.LoadScene(SceneBuildIndexOfLastLevelUnlocked);
+		} else {
+			SceneManager.LoadScene(SceneBuildIndexOfLastLevelSaved);
+		}
 	}
 
 	public void Reset() {
@@ -197,8 +202,7 @@ public class Game : RestorableMonoBehaviour {
 	}
 
 	public void SaveBeforeExit() {
-		string path = StorageUtil.GetDirectoryPath(FileType.Game);
-		StorageUtil.Serialise(FileType.Game, path, Save());
+		StorageUtil.Serialise(FileType.Game, gamePath, Save());
 	}
 
 	/// <summary>

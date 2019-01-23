@@ -29,9 +29,11 @@ public class MainMenu : MonoBehaviour {
 		NewButtonText = GameObject.FindWithTag(Tags.NewButton).GetComponent<Text>();
 	}
 
-	// Update is called once per frame
-	void Update() {
+	//TODO
+	private void Update() {
+		if (Input.GetKeyDown(KeyCode.Return)) {
 
+		}
 	}
 
 	private void InitButtons() {

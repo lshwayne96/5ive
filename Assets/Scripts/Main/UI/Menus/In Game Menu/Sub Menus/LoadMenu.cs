@@ -30,6 +30,7 @@ public class LoadMenu : Menu {
 		activeButtons = new Button[] { loadButton, deleteButton, deleteAllButton };
 
 		loadButton.interactable = false;
+		deleteButton.interactable = false;
 		if (areSavedFilesPresent()) {
 			deleteAllButton.interactable = true;
 		} else {

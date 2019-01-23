@@ -16,7 +16,6 @@ public class OverviewMenu : MonoBehaviour {
 	private void Start() {
 		if (!hasInit) {
 			levelButtons = GetComponentsInChildren<Button>();
-			GameObject.FindGameObjectWithTag(Tags.OverviewMenu).SetActive(false);
 			hasInit = true;
 		}
 

@@ -64,7 +64,7 @@ public abstract class Menu : MonoBehaviour {
 		nameButtonMapping = new Dictionary<string, GameButton>();
 
 		deletedButtonNames = new HashSet<string>();
-		nameDateTimeMapping = new Dictionary<String, DateTime>();
+		nameDateTimeMapping = new Dictionary<string, DateTime>();
 
 		dirPath = StorageUtil.GetDirectoryPath(FileType.Level);
 		dirInfo = Directory.CreateDirectory(dirPath);
