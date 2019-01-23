@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 /// <summary>
 /// This script represents the skeleton of the game.
@@ -72,7 +73,7 @@ public class Game : RestorableMonoBehaviour {
 	/// <summary>
 	/// By default, the last unlocked level is the main menu.
 	/// </summary>
-	private const int DefaultLastUnlockedLevel = (int) LevelNames.MainMenu;
+	private const int DefaultSceneBuildIndexOfLastLevelUnlocked = (int) LevelNames.MainMenu;
 
 	private Dictionary<int, string> levelToPathMapping;
 
@@ -100,6 +101,10 @@ public class Game : RestorableMonoBehaviour {
 		}
 	}
 
+	private void Start() {
+		level = GetComponentInChildren<Level>();
+	}
+
 	/// <summary>
 	/// Initialises the game.
 	/// </summary>
@@ -108,7 +113,14 @@ public class Game : RestorableMonoBehaviour {
 	/// first starts up.
 	/// </remarks>
 	private void InitGame() {
-		gamePath = StorageUtil.GetDirectoryPath(FileType.Game);
+		NumLevelsCompleted = DefaultNumLevelCompleted;
+		HasBeenSavedBefore = false;
+		NameOfLastFileSaved = string.Empty;
+		SceneBuildIndexOfLastLevelUnlocked = DefaultSceneBuildIndexOfLastLevelUnlocked;
+		SceneBuildIndexOfLastLevelSaved
+		levelToPathMapping = new Dictionary<int, string>();
+		gamePath = StorageUtil.GetDirectoryPath(FileType.Game) + StorageUtil.GameFilePath;
+		print(gamePath);
 
 		if (FileUtil.DoesFileExist(gamePath)) {
 			InitSubsequentGame();
@@ -207,13 +219,7 @@ public class Game : RestorableMonoBehaviour {
 	}
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode) {
-		bool isMainMenu = scene.buildIndex != (int) LevelNames.MainMenu;
-
-		if (isMainMenu) {
-			return;
-		}
-
-		if (level.HasBeenSaved) {
+		if (!LevelUtil.IsMainMenu(scene.buildIndex) && level.HasBeenSaved) {
 			string levelPath = levelToPathMapping[level.SceneBuildIndex];
 			Data data = StorageUtil.Deserialise<Level.LevelData>(levelPath);
 			level.RestoreWith(data);
@@ -249,12 +255,14 @@ public class Game : RestorableMonoBehaviour {
 		public GameData(Game game) {
 			numLevelsCompleted = game.NumLevelsCompleted;
 			hasBeenSavedBefore = game.HasBeenSavedBefore;
+			nameOfLastFileSaved = game.NameOfLastFileSaved;
 			sceneBuildIndexOfLastLevelUnlocked = game.SceneBuildIndexOfLastLevelSaved;
+			sceneBuildIndexOfLastLevelSaved = game.SceneBuildIndexOfLastLevelSaved;
 			levelPathMapping = game.levelToPathMapping;
 		}
 
 		public override void Restore(RestorableMonoBehaviour restorable) {
-			throw new NotImplementedException();
+			restorable.RestoreWith(this);
 		}
 	}
 }

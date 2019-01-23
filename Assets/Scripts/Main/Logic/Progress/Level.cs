@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This script represents a level.
@@ -58,10 +59,13 @@ public class Level : RestorableMonoBehaviour {
 	private Data[] restorableData;
 
 	private void Start() {
-		collectible = GetComponent<Collectible>();
-		restorables = GameObject.FindWithTag(Tags.ComponentManager)
-								.GetComponent<ComponentManager>()
-								.GetScripts<RestorableMonoBehaviour>();
+		SceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
+		if (!LevelUtil.IsMainMenu(SceneBuildIndex)) {
+			collectible = GetComponent<Collectible>();
+			restorables = GameObject.FindWithTag(Tags.ComponentManager)
+									.GetComponent<ComponentManager>()
+									.GetScripts<RestorableMonoBehaviour>();
+		}
 	}
 
 	public void CollectCollectible() {

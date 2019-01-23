@@ -7,8 +7,10 @@ using UnityEngine;
 /// </summary>
 public static class StorageUtil {
 
-	public static readonly string LevelDirectoryPath = Application.persistentDataPath + "/Levels/";
-	public static readonly string GameDirectoryPath = Application.persistentDataPath + "/Games/";
+	public static readonly string LevelDirectoryPath = Application.persistentDataPath + "/Levels";
+	public static readonly string GameDirectoryPath = Application.persistentDataPath + "/Games";
+
+	public const string GameFilePath = "/5ive" + FileExtension;
 
 	private const string FileExtension = ".dat";
 

@@ -45,5 +45,9 @@ public static class LevelUtil {
 
 		return sceneName.ToString();
 	}
+
+	public static bool IsMainMenu(int sceneBuildIndex) {
+		return sceneBuildIndex == (int) LevelNames.MainMenu;
+	}
 }
 
