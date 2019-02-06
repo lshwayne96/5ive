@@ -20,6 +20,8 @@ public class SavingEnabledInputField : MonoBehaviour {
 	private Level level;
 
 	private void Start() {
+		//TODO
+		parentMenu = GetComponent<Menu>();
 		level = GetComponent<Level>();
 	}
 

@@ -6,7 +6,6 @@ using UnityEngine;
 /// </summary>
 public class Ladder : MonoBehaviour {
 
-	// Expose the climbingSpeed variable to the editor
 	public readonly float climbingSpeed = 6;
 
 	// Is the player simply passing through the ladder?
