@@ -6,13 +6,11 @@ public static class Tags {
 
 	public const string Player = "Player";
 
-	public const string PlayerCamera = "PlayerCamera";
+	public const string MainCamera = "MainCamera";
 
 	public const string Ball = "Ball";
 
 	public const string SpecialRoom = "SpecialRoom";
-
-	public const string Menu = "Menu";
 
 	public const string ButtonManager = "ButtonManager";
 
@@ -37,6 +35,8 @@ public static class Tags {
 	public const string LevelButtons = "LevelButtons";
 
 	/****** Tags for menus ******/
+
+	public const string Menu = "Menu";
 
 	public const string SaveMenu = "SaveMenu";
 

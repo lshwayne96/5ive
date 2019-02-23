@@ -21,7 +21,7 @@ public class BallCamera : MonoBehaviour {
 
 	private void Start() {
 		playerGO = GameObject.FindGameObjectWithTag(Tags.Player);
-		playerCamGO = GameObject.FindGameObjectWithTag(Tags.PlayerCamera);
+		playerCamGO = GameObject.FindGameObjectWithTag(Tags.MainCamera);
 
 		ballGO = GameObject.FindGameObjectWithTag(Tags.Ball);
 

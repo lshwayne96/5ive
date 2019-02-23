@@ -10,7 +10,7 @@ public class StoryLine : RestorableMonoBehaviour, IMessage {
 	private void OnTriggerEnter2D(Collider2D collision) {
 		Count++;
 		Preprocess(collision, Count);
-		if (collision.CompareTag("Player") && toSend && !HasBeenSent) {
+		if (collision.CompareTag(Tags.Player) && toSend && !HasBeenSent) {
 			StoryLineManager.Send(this);
 			HasBeenSent = true;
 		}
@@ -27,27 +27,23 @@ public class StoryLine : RestorableMonoBehaviour, IMessage {
 
 	public override void RestoreWith(Data data) {
 		StoryLineData storyLineData = (StoryLineData) data;
-		HasBeenSent = storyLineData.HasBeenSent;
-		Count = storyLineData.Count;
+		HasBeenSent = storyLineData.hasBeenSent;
+		Count = storyLineData.count;
 	}
 
 	[Serializable]
 	public class StoryLineData : Data {
 
-		public bool HasBeenSent { get; private set; }
-		public int Count { get; private set; }
+		public bool hasBeenSent;
+		public int count;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:StoryLineData"/> class.
 		/// </summary>
 		/// <param name="storyLine">Story line.</param>
 		public StoryLineData(StoryLine storyLine) {
-			HasBeenSent = storyLine.HasBeenSent;
-			Count = storyLine.Count;
-		}
-
-		public override void Restore(RestorableMonoBehaviour restorable) {
-			restorable.RestoreWith(this);
+			hasBeenSent = storyLine.HasBeenSent;
+			count = storyLine.Count;
 		}
 	}
 }

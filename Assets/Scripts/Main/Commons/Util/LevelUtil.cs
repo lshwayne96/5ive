@@ -12,30 +12,30 @@ public static class LevelUtil {
 	/// <returns>The level name.</returns>
 	/// <param name="sceneBuildIndex">Scene build index.</param>
 	public static string GetLevelName(int sceneBuildIndex) {
-		LevelNames sceneName;
+		LevelName sceneName;
 		switch (sceneBuildIndex) {
 		case 0:
-			sceneName = LevelNames.MainMenu;
+			sceneName = LevelName.MainMenu;
 			break;
 
 		case 1:
-			sceneName = LevelNames.Denial;
+			sceneName = LevelName.Denial;
 			break;
 
 		case 2:
-			sceneName = LevelNames.Anger;
+			sceneName = LevelName.Anger;
 			break;
 
 		case 3:
-			sceneName = LevelNames.Bargaining;
+			sceneName = LevelName.Bargaining;
 			break;
 
 		case 4:
-			sceneName = LevelNames.Depression;
+			sceneName = LevelName.Depression;
 			break;
 
 		case 5:
-			sceneName = LevelNames.Acceptance;
+			sceneName = LevelName.Acceptance;
 			break;
 
 		default:
@@ -47,7 +47,7 @@ public static class LevelUtil {
 	}
 
 	public static bool IsMainMenu(int sceneBuildIndex) {
-		return sceneBuildIndex == (int) LevelNames.MainMenu;
+		return sceneBuildIndex == (int) LevelName.MainMenu;
 	}
 }
 

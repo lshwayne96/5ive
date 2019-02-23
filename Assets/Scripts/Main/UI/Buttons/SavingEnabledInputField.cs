@@ -19,10 +19,11 @@ public class SavingEnabledInputField : MonoBehaviour {
 
 	private Level level;
 
+	private static Logger logger = Logger.GetLogger();
+
 	private void Start() {
-		//TODO
-		parentMenu = GetComponent<Menu>();
-		level = GetComponent<Level>();
+		parentMenu = GetComponentInParent<Menu>();
+		level = Game.level;
 	}
 
 	/// <summary>
@@ -34,6 +35,7 @@ public class SavingEnabledInputField : MonoBehaviour {
 	/// </remarks>
 	public void SaveLevel() {
 		string fileName = inputField.text;
+		logger.LogLow("User entered " + fileName);
 
 		bool didUserInputSomething = !fileName.Equals(string.Empty);
 		if (!didUserInputSomething) {
@@ -43,8 +45,11 @@ public class SavingEnabledInputField : MonoBehaviour {
 		if (parentMenu.DoesFileWithSameNameExist(fileName)) {
 			NotificationManager.Send(new FileAlreadyExistsMessage());
 		} else {
-			level.Save();
+			Game.instance.SaveLevel(fileName);
+			logger.LogHigh("Level saved");
+
 			parentMenu.UpdateButtons();
+			logger.LogHigh("Buttons updated");
 		}
 		ClearInputField();
 	}

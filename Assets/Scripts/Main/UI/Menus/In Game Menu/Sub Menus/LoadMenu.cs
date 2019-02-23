@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,11 +26,11 @@ public class LoadMenu : Menu {
 		deleteButton = GameObject.FindWithTag(Tags.DeleteButton).GetComponent<Button>();
 		deleteAllButton = GameObject.FindWithTag(Tags.DeleteAllButton).GetComponent<Button>();
 
-		activeButtons = new Button[] { loadButton, deleteButton, deleteAllButton };
+		//activeButtons = new Button[] { loadButton, deleteButton, deleteAllButton };
 
 		loadButton.interactable = false;
 		deleteButton.interactable = false;
-		if (areSavedFilesPresent()) {
+		if (Game.instance.storage.HasLevels()) {
 			deleteAllButton.interactable = true;
 		} else {
 			deleteAllButton.interactable = false;
@@ -39,7 +38,7 @@ public class LoadMenu : Menu {
 	}
 
 	public override void UpdateButtons() {
-		if (areSavedFilesPresent()) {
+		if (Game.instance.storage.HasLevels()) {
 			deleteAllButton.interactable = true;
 			UpdateOverwrittenButtons();
 			CreateButtons();
@@ -79,8 +78,8 @@ public class LoadMenu : Menu {
 	/// Delete the button and it's corresponding level file.
 	/// </summary>
 	public void DeleteTargetButton() {
-		string path = StorageUtil.FileNameToPath(targetButton.Key, TagAddition.Enable);
-		File.Delete(path);
+		string path = targetButton.Key;
+		Game.instance.storage.DeleteLevel(path);
 		Destroy(targetButton.Value.gameObject);
 
 		string buttonName = targetButton.Key;

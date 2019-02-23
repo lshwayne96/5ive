@@ -12,15 +12,14 @@ using UnityEngine.UI;
 /// </remarks>
 public class SaveMenu : Menu {
 
-	private Button overwriteButton;
+	//private Button overwriteButton;
+
+	private static Logger logger = Logger.GetLogger();
 
 	public override void Init() {
 		base.Init();
 
-		overwriteButton = GameObject.FindGameObjectWithTag(Tags.OverwriteButton).GetComponent<Button>();
-		activeButtons = new Button[] { overwriteButton };
-
-		overwriteButton.interactable = false;
+		//activeButtons = new Button[] { overwriteButton };
 	}
 
 	/// <summary>
@@ -42,9 +41,17 @@ public class SaveMenu : Menu {
 	/// </list>
 	/// </remarks>
 	public override void UpdateButtons() {
-		if (areSavedFilesPresent()) {
+		if (Game.instance.storage.HasLevels()) {
+			logger.LogHigh("Saved files are present");
+
+			print("Removing");
 			RemoveDeletedButtons();
+			logger.LogHigh("Removed deleted buttons");
+
+			CreateButtons();
+			logger.LogHigh("Buttons created");
 		} else {
+			logger.LogHigh("No saved files are present");
 			DeleteAllButtons();
 		}
 	}
@@ -61,13 +68,14 @@ public class SaveMenu : Menu {
 			}
 		}
 		deletedButtonNames.Clear();
+		print("Done removing");
 	}
 
 	public override void SetTargetButton(GameButton button) {
 		base.SetTargetButton(button);
 
 		// Allow the selected target button to be overwritten
-		overwriteButton.interactable = true;
+		//overwriteButton.interactable = true;
 	}
 
 	/// <summary>
@@ -86,6 +94,6 @@ public class SaveMenu : Menu {
 			nameDateTimeMapping.Add(buttonName, DateTime.Parse(dateTime));
 		}
 
-		overwriteButton.interactable = false;
+		//overwriteButton.interactable = false;
 	}
 }

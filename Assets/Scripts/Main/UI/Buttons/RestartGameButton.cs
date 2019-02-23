@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class RestartGameButton : MonoBehaviour {
 
 	public void RestartGame() {
-		Game.instance.Reset();
+		Game.instance.ResetGame();
 	}
 }

@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// This script represents a menu. The main function of this script
@@ -18,7 +17,7 @@ public abstract class Menu : MonoBehaviour {
 	/// <summary>
 	/// The button prefab.
 	/// </summary>
-	protected GameObject prefab;
+	public GameObject prefab;
 
 	/// <summary>
 	/// Represents a mapping of all button names
@@ -34,6 +33,7 @@ public abstract class Menu : MonoBehaviour {
 	/// </summary>
 	protected KeyValuePair<string, GameButton> targetButton;
 
+	/*
 	/// <summary>
 	/// An array of all the <code>GameButton</code> scripts that
 	/// are active in the menu.
@@ -44,6 +44,7 @@ public abstract class Menu : MonoBehaviour {
 	/// need to be accessed.
 	/// </remarks>
 	protected Button[] activeButtons;
+	*/
 
 	/// <summary>
 	/// Represents the names of all the buttons that are deleted in the load menu.
@@ -57,9 +58,6 @@ public abstract class Menu : MonoBehaviour {
 	/// </summary>
 	protected static Dictionary<string, DateTime> nameDateTimeMapping;
 
-	private DirectoryInfo dirInfo;
-	private string dirPath;
-
 	private void Start() {
 		Init();
 	}
@@ -69,9 +67,6 @@ public abstract class Menu : MonoBehaviour {
 
 		deletedButtonNames = new HashSet<string>();
 		nameDateTimeMapping = new Dictionary<string, DateTime>();
-
-		dirPath = StorageUtil.GetDirectoryPath(FileType.Level);
-		dirInfo = Directory.CreateDirectory(dirPath);
 
 		CreateButtons();
 	}
@@ -86,76 +81,22 @@ public abstract class Menu : MonoBehaviour {
 	/// gets their information and then creates buttons corresponding to them.
 	/// </remarks>
 	protected void CreateButtons() {
-		List<FileInfo> fileInfos = GetSavedFileInfos();
-		List<Level.LevelData> levelDatas = GetDatas(fileInfos);
+		GameButtonInfo[] gameButtonInfos = Game.instance.storage.FetchGameButtons();
 
-		for (int i = 0; i < levelDatas.Count; i++) {
-			CreateButton(levelDatas[i], fileInfos[i], fileInfos[i].FullName);
+		for (int i = 0; i < gameButtonInfos.Length; i++) {
+			print("Create button");
+			CreateButton(gameButtonInfos[i]);
 		}
 	}
 
-	/// <summary>
-	/// Gets the datas.
-	/// </summary>
-	/// <returns>The datas.</returns>
-	/// <param name="fileInfos">File infos.</param>
-	private List<Level.LevelData> GetDatas(List<FileInfo> fileInfos) {
-		List<Level.LevelData> levelDatas = new List<Level.LevelData>();
-		foreach (FileInfo fileInfo in fileInfos) {
-			levelDatas.Add(GetData(fileInfo));
-		}
-		return levelDatas;
-	}
-
-	/// <summary>
-	/// Gets the file infos from the directory containing the level files,
-	/// removes all non-level files and sorts them based on their creation date (with
-	/// those being created the latest in front).
-	/// </summary>
-	/// <returns>The processed file infos.</returns>
-	private List<FileInfo> GetSavedFileInfos() {
-		List<FileInfo> savedFiles = new List<FileInfo>(dirInfo.GetFiles());
-
-		// Remove all non-level files
-		savedFiles.RemoveAll(f => !StorageUtil.ContainsTag(f.FullName));
-
-		// Sort the files, with the files created last at the front
-		savedFiles.Sort((x, y) => DateTime.Compare(x.LastWriteTime, y.LastWriteTime));
-
-		return savedFiles;
-	}
-
-	/// <summary>
-	/// Get the level data from the corresponding level file.
-	/// </summary>
-	/// <param name="fileInfo">File info.</param>
-	private Level.LevelData GetData(FileInfo fileInfo) {
-		string path = fileInfo.FullName;
-		string fileName = StorageUtil.PathToFileName(path);
-
-		return StorageUtil.Deserialise<Level.LevelData>(path);
-	}
-
-	/// <summary>
-	/// Initialises a <code>GameButton</code> instance.
-	/// </summary>
-	/// <param name="levelData">Level data.</param>
-	/// <param name="fileInfo">File information.</param>
-	/// <param name="taggedFileName">Tagged file name.</param>
-	private void CreateButton(Level.LevelData levelData, FileInfo fileInfo, string taggedFileName) {
-		// Get information to be displayed on the SaveLoadMenuButton button
-		int sceneBuildIndex = levelData.SceneBuildIndex;
-		DateTime dateTime = fileInfo.LastWriteTimeUtc;
-
+	private void CreateButton(GameButtonInfo gameButtonInfo) {
 		GameButton button = Instantiate(prefab).GetComponent<GameButton>();
 		AttachButtonToMenu(button);
 
 		// Cache the buttons for easy deletion
-		nameButtonMapping.Add(taggedFileName, button);
+		nameButtonMapping.Add(gameButtonInfo.FileName, button);
 
-		GameButton fileButton = button.GetComponent<GameButton>();
-		string fileName = StorageUtil.ExtractTag(StorageUtil.PathToFileName(fileInfo.FullName));
-		fileButton.SetUp(fileName, sceneBuildIndex, dateTime);
+		button.SetUp(gameButtonInfo);
 	}
 
 	/// <summary>
@@ -163,8 +104,9 @@ public abstract class Menu : MonoBehaviour {
 	/// </summary>
 	/// <param name="button">Button.</param>
 	private void AttachButtonToMenu(GameButton button) {
-		button.AttachToMenu(transform);
+		button.AttachTo(transform);
 		button.MoveToTopOfMenu();
+		print("Attached");
 	}
 
 	/// <summary>
@@ -203,19 +145,6 @@ public abstract class Menu : MonoBehaviour {
 		nameButtonMapping.Clear();
 	}
 
-	// Checks to see if there are still saved game files on the local machine
-	protected bool areSavedFilesPresent() {
-		FileInfo[] fileInfos = dirInfo.GetFiles();
-		foreach (FileInfo fileInfo in fileInfos) {
-			string fileName = fileInfo.Name;
-			if (StorageUtil.ContainsTag(fileName)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/// <summary>
 	/// Checks if there are still level files.
 	/// </summary>
@@ -230,12 +159,14 @@ public abstract class Menu : MonoBehaviour {
 	/// <returns><c>true</c>, if the level file exists, <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
 	public bool DoesFileWithSameNameExist(string fileName) {
-		return nameButtonMapping.ContainsKey(StorageUtil.AddTag(fileName));
+		return nameButtonMapping.ContainsKey(fileName);
 	}
 
+	/*
 	protected void OnDisable() {
 		for (int i = 0; i < activeButtons.Length; i++) {
 			activeButtons[i].interactable = false;
 		}
 	}
+	*/
 }

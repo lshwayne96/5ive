@@ -1,9 +1,11 @@
-﻿using System.IO;
+using System.IO;
 
 public static class FileUtil {
 
 	public static void CreateFile(string path) {
-		File.Create(path).Close();
+		if (!File.Exists(path)) {
+			File.Create(path).Close();
+		}
 	}
 
 	public static void DeleteFile(string path) {

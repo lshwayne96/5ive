@@ -24,7 +24,7 @@ public class PlayerCamera : MonoBehaviour {
 		prevPlayerPos = playerTf.position;
 		transform.parent = null;
 
-		roomDetector = GetComponent<RoomDetector>();
+		roomDetector = GameObject.FindWithTag(Tags.Player).GetComponent<RoomDetector>();
 	}
 
 	private void Update() {

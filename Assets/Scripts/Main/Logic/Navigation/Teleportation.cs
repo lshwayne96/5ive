@@ -30,7 +30,7 @@ public class Teleportation : MonoBehaviour {
 	private bool doesLocationAllowTeleportation;
 
 	void Start() {
-		playerCam = GameObject.FindWithTag(Tags.PlayerCamera);
+		playerCam = GameObject.FindWithTag(Tags.MainCamera);
 		preview = playerCam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
 		ballGO = GameObject.FindGameObjectWithTag(Tags.Ball).GetComponent<Ball>();
 
@@ -100,14 +100,16 @@ public class Teleportation : MonoBehaviour {
 
 	private bool CheckPermission() {
 		int sceneBuildIndex = SceneManager.GetActiveScene().buildIndex;
-		return !(sceneBuildIndex == (int) LevelNames.Denial ||
-		sceneBuildIndex == (int) LevelNames.Anger);
+		return !(sceneBuildIndex == (int) LevelName.Denial ||
+		sceneBuildIndex == (int) LevelName.Anger);
 	}
 
 	private bool CanTeleport() {
-		if (PauseLevel.IsPaused) {
+		/*
+		if (PauseBehaviour.IsPaused) {
 			return false;
 		}
+		*/
 		return doesSceneAllowTeleportation || doesLocationAllowTeleportation;
 	}
 }

@@ -7,14 +7,14 @@
 public abstract class RestorableMonoBehaviour : MonoBehaviour {
 
 	/// <summary>
-	/// Restores this instance with the specified data.
-	/// </summary>
-	/// <param name="data">Data.</param>
-	public abstract void RestoreWith(Data data);
-
-	/// <summary>
 	/// Saves this instance and returns the resulting data.
 	/// </summary>
 	/// <returns>The data.</returns>
 	public abstract Data Save();
+
+	/// <summary>
+	/// Restores this instance with the specified data.
+	/// </summary>
+	/// <param name="data">Data.</param>
+	public abstract void RestoreWith(Data data);
 }

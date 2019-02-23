@@ -4,7 +4,6 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - TeleportationBall
   - SaveMenu
   - LoadMenu
   - DeleteButton
@@ -26,9 +25,10 @@ TagManager:
   - PauseMenu
   - PauseLevel
   - Pause
-  - PauseControl
   - OverwriteButton
   - LoadButton
+  - Ball
+  - Menu
   layers:
   - Default
   - TransparentFX

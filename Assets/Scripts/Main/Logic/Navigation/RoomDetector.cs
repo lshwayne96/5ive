@@ -21,7 +21,7 @@ public class RoomDetector : MonoBehaviour {
 
 	private void InitCurrentRoomLocation() {
 		if (playerCamTf == null) {
-			playerCamTf = GameObject.FindGameObjectWithTag(Tags.PlayerCamera).transform;
+			playerCamTf = GameObject.FindGameObjectWithTag(Tags.MainCamera).transform;
 		}
 		MoveToRoom();
 	}
