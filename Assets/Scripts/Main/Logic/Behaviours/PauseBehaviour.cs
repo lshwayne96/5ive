@@ -1,6 +1,5 @@
-﻿using UnityStandardAssets._2D;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using System;
 
 /// <summary>
 /// This script pauses the game by bringing up the game menu
@@ -12,33 +11,27 @@ using System;
 /// </remarks>
 public class PauseBehaviour {
 
-	public bool IsActive { get; private set; }
+	private bool isActive;
 
 	private GameObject menu;
 
-	private GameObject playerGO;
-	private Rigidbody2D playerRb;
-	private Platformer2DUserControl playerMovement;
-	private Animator playerAnimator;
-
-	private Rigidbody2D ballRb;
-
-	// The velocity of the player before it's rigidbody is disabled
-	private Vector2 prevPlayerVelo;
-
-	// The velocity of the ball before it's rigidbody is disabled
-	private Vector2 prevBallVelo;
+	private List<IPausable> pausables;
 
 	public PauseBehaviour() {
 		menu = GameObject.FindWithTag(Tags.Menu);
 		menu.SetActive(false);
 
-		playerGO = GameObject.FindWithTag(Tags.Player);
-		playerRb = playerGO.GetComponent<Rigidbody2D>();
-		playerMovement = playerGO.GetComponent<Platformer2DUserControl>();
-		playerAnimator = playerGO.GetComponent<Animator>();
+		pausables = new List<IPausable>();
+		pausables.Add(GameObject.FindWithTag(Tags.Player).GetComponent<Player>());
+		pausables.Add(GameObject.FindWithTag(Tags.Ball).GetComponent<Ball>());
+	}
 
-		ballRb = GameObject.FindWithTag(Tags.Ball).GetComponent<Rigidbody2D>();
+	public void Run() {
+		if (isActive) {
+			Unpause();
+		} else {
+			Pause();
+		}
 	}
 
 	/// <summary>
@@ -47,19 +40,10 @@ public class PauseBehaviour {
 	/// <remarks>
 	/// Time is not affected.
 	/// </remarks>
-	public void Enable() {
-		prevPlayerVelo = playerRb.velocity;
-		playerRb.Sleep();
-
-		prevBallVelo = ballRb.velocity;
-		ballRb.Sleep();
-
+	public void Pause() {
 		menu.SetActive(true);
-
-		playerMovement.enabled = false;
-		playerAnimator.enabled = false;
-
-		IsActive = true;
+		pausables.ForEach(p => p.Pause());
+		isActive = true;
 	}
 
 	/// <summary>
@@ -68,18 +52,9 @@ public class PauseBehaviour {
 	/// <remarks>
 	/// Time is not affected.
 	/// </remarks>
-	public void Disable() {
-		playerRb.velocity = prevPlayerVelo;
-		playerRb.WakeUp();
-
-		ballRb.velocity = prevBallVelo;
-		ballRb.WakeUp();
-
+	public void Unpause() {
 		menu.SetActive(false);
-
-		playerMovement.enabled = true;
-		playerAnimator.enabled = true;
-
-		IsActive = false;
+		pausables.ForEach(p => p.Unpause());
+		isActive = false;
 	}
 }

@@ -1,14 +1,32 @@
 ﻿using System;
 using UnityEngine;
+using UnityStandardAssets._2D;
 
 /// <summary>
 /// This script represents a player and its interactions.
 /// </summary>
-public class Player : RestorableMonoBehaviour {
+public class Player : RestorableMonoBehaviour, IPausable {
 
 	private const float MovementSpeed = 10f;
 
 	private const float JumpForce = 500f;
+
+	private Rigidbody2D rigidBody;
+
+	private Platformer2DUserControl movement;
+
+	private Animator animator;
+
+	/// <summary>
+	/// The velocity before the rigidbody is disabled.
+	/// </summary>
+	private Vector3 previousVelocity;
+
+	private void Start() {
+		rigidBody = GetComponent<Rigidbody2D>();
+		movement = GetComponent<Platformer2DUserControl>();
+		animator = GetComponent<Animator>();
+	}
 
 	private void Update() {
 		if (Input.GetKey(KeyCode.UpArrow)) {
@@ -69,6 +87,20 @@ public class Player : RestorableMonoBehaviour {
 
 		// Restore player camera
 		GetComponent<RoomDetector>().UpdateRoom();
+	}
+
+	public void Pause() {
+		previousVelocity = rigidBody.velocity;
+		rigidBody.Sleep();
+		movement.enabled = false;
+		animator.enabled = false;
+	}
+
+	public void Unpause() {
+		rigidBody.velocity = previousVelocity;
+		rigidBody.WakeUp();
+		movement.enabled = true;
+		animator.enabled = true;
 	}
 
 	/// <summary>

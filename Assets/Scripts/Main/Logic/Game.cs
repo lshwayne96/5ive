@@ -14,7 +14,7 @@ public class Game : MonoBehaviour {
 	/// </summary>
 	public static Game instance;
 
-	public Level level;
+	public IStorage storage;
 
 	/// <summary>
 	/// Returns the number of levels completed.
@@ -80,9 +80,7 @@ public class Game : MonoBehaviour {
 
 	private Dictionary<int, string> levelToNameDictionary;
 
-	private PauseBehaviour pauseBehaviour;
-
-	public IStorage storage;
+	private Level level;
 
 	private bool hasInitGame;
 
@@ -90,7 +88,9 @@ public class Game : MonoBehaviour {
 
 	private void Awake() {
 		if (instance == null) {
-			DontDestroyOnLoad(gameObject);
+			if (SceneManager.GetActiveScene().buildIndex != (int) LevelName.MainMenu) {
+				DontDestroyOnLoad(gameObject);
+			}
 			instance = this;
 		}
 
@@ -147,21 +147,6 @@ public class Game : MonoBehaviour {
 	private void InitSubsequentGame() {
 		Data data = storage.FetchGame();
 		RestoreWith(data);
-	}
-
-	private void Update() {
-		if (SceneManager.GetActiveScene().buildIndex != 0) {
-			if (Input.GetKeyDown(KeyCode.Escape)) {
-				pauseBehaviour = new PauseBehaviour();
-				if (pauseBehaviour != null) {
-					if (pauseBehaviour.IsActive) {
-						pauseBehaviour.Disable();
-					} else {
-						pauseBehaviour.Enable();
-					}
-				}
-			}
-		}
 	}
 
 	public void StartGame() {

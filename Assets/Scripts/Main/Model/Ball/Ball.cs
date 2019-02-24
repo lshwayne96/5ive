@@ -4,18 +4,27 @@ using UnityEngine;
 /// <summary>
 /// This script represents a ball and its interactions.
 /// </summary>
-public class Ball : RestorableMonoBehaviour {
+public class Ball : RestorableMonoBehaviour, IPausable {
 
 	// Expose the speed variable to the editor
 	public float speed = 10f;
 
 	private Transform playerTf;
 
+	private Rigidbody2D rigidBody;
+
+	/// <summary>
+	/// The velocity before the rigidbody is disabled.
+	/// </summary>
+	private Vector3 previousVelocity;
+
 	public bool PlayerHasBall { get; private set; }
+
 	public bool IsPlayerWithinRange { get; private set; }
 
 	void Start() {
 		playerTf = GameObject.FindWithTag(Tags.Player).transform;
+		rigidBody = GetComponent<Rigidbody2D>();
 	}
 
 	void Update() {
@@ -79,6 +88,16 @@ public class Ball : RestorableMonoBehaviour {
 		GetComponent<RoomDetector>().UpdateRoom();
 		PlayerHasBall = ballData.playerHasBall;
 		IsPlayerWithinRange = ballData.isPlayerWithinRange;
+	}
+
+	public void Pause() {
+		previousVelocity = rigidBody.velocity;
+		rigidBody.Sleep();
+	}
+
+	public void Unpause() {
+		rigidBody.velocity = previousVelocity;
+		rigidBody.WakeUp();
 	}
 
 	/// <summary>
