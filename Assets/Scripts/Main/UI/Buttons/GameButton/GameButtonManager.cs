@@ -6,13 +6,19 @@ public class GameButtonManager : MonoBehaviour {
 
 	public static GameButtonManager instance;
 
+#pragma warning disable CS0649
 	/// <summary>
 	/// The button prefab.
 	/// </summary>
 	[SerializeField]
 	private GameObject prefab;
+#pragma warning restore CS0649
 
 	private List<GameButton> gameButtons;
+
+	private void Awake() {
+		instance = this;
+	}
 
 	// Sort the pairs, with the pairs that have the oldest date time placed at the front
 	private readonly Comparison<GameButton> comparison = (b1, b2) => DateTime.Compare(b1.GetDateTime(), b2.GetDateTime());

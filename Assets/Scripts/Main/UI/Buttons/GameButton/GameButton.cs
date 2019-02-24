@@ -9,6 +9,7 @@ using UnityEngine.UI;
 /// </summary>
 public class GameButton : MonoBehaviour, IPointerClickHandler {
 
+#pragma warning disable CS0649
 	[SerializeField]
 	private Text nameLabel;
 
@@ -17,6 +18,7 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 
 	[SerializeField]
 	private Text dateTimeLabel;
+#pragma warning restore CS0649
 
 	private Menu parentMenu;
 
@@ -105,7 +107,7 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 	}
 
 	public override bool Equals(object other) {
-		if (this == other) {
+		if (this == (GameButton) other) {
 			return true;
 		}
 		if (!(other is GameButton)) {

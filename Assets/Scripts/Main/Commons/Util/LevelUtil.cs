@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 /// <summary>
 /// This is a utility class that contains a utility method
 /// pertaining to level mapping.

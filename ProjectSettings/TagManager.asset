@@ -16,7 +16,6 @@ TagManager:
   - StandButton
   - ComponentManager
   - Notifications
-  - StartGame
   - NewButton
   - OptionsMenu
   - OverviewMenu
