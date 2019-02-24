@@ -8,13 +8,13 @@
 /// </remarks>
 public class DeleteButton : MonoBehaviour {
 
-	private LoadMenu manager;
+	private LoadMenu loadMenu;
 
 	private void Start() {
-		manager = transform.parent.GetComponentInChildren<LoadMenu>();
+		loadMenu = transform.parent.GetComponentInChildren<LoadMenu>();
 	}
 
 	public void Delete() {
-		manager.DeleteTargetButton();
+		loadMenu.DeleteButton();
 	}
 }

@@ -1,23 +1,22 @@
-﻿/*
- * This script describes a button in the save and load menus.
- * The buttons in both menus are highly similar
- * and hence grouped under the same script.
- * The public variables nameLabel, levelLabel and dataTimeLabel
- * have been referenced in the prefab.
- */
-
-using System;
-using System.IO;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
+using UnityEngine.UI;
 
+/// <summary>
+/// This script describes a button to be used in both the save and load menus.
+/// </summary>
 public class GameButton : MonoBehaviour, IPointerClickHandler {
 
-	public Text NameLabel { get; private set; }
-	public Text LevelLabel { get; private set; }
-	public Text DateTimeLabel { get; private set; }
+	[SerializeField]
+	private Text nameLabel;
+
+	[SerializeField]
+	private Text levelLabel;
+
+	[SerializeField]
+	private Text dateTimeLabel;
 
 	private Menu parentMenu;
 
@@ -27,12 +26,11 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 	private const string DateTimePattern = "f";
 
 	public void SetUp(GameButtonInfo info) {
-		NameLabel.text = info.FileName;
-		LevelLabel.text = info.LevelName;
-		DateTimeLabel.text = info.DateTime.ToLocalTime().ToString(DateTimePattern);
+		nameLabel.text = info.FileName;
+		levelLabel.text = info.LevelName;
+		dateTimeLabel.text = info.DateTime.ToLocalTime().ToString(DateTimePattern);
 
-		parentMenu = MenuUtil.GetSuitableMenu();
-		parentMenu = transform.parent.GetComponent<Menu>();
+		parentMenu = GetComponentInParent<Menu>();
 
 		transform.localScale = Vector3.one;
 	}
@@ -67,34 +65,66 @@ public class GameButton : MonoBehaviour, IPointerClickHandler {
 							   pointerEventData.clickCount == 2;
 	}
 
-	public void DeleteCorrespondingFile() {
-		string levelName = NameLabel.text;
+	public void DeleteLinkedFile() {
+		string levelName = nameLabel.text;
 		Game.instance.DeleteLevel(levelName);
 	}
 
-	public void OverwriteCorrespondingFile() {
-		string levelName = NameLabel.text;
+	public void OverwriteLinkedFile() {
+		string levelName = nameLabel.text;
 		GameButtonInfo gameButtonInfo = Game.instance.OverrideLevel(levelName);
 
-		DateTimeLabel.text = gameButtonInfo.DateTime.ToLocalTime().ToString(DateTimePattern);
+		dateTimeLabel.text = gameButtonInfo.DateTime.ToLocalTime().ToString(DateTimePattern);
 		transform.SetAsFirstSibling();
 
 		NotificationManager.Send(new OverwriteSuccessfulMessage());
 	}
 
 	public void LoadLevel() {
-		Game.instance.LoadLevel(NameLabel.text);
+		Game.instance.LoadLevel(nameLabel.text);
 	}
 
-	public void AttachTo(Transform menu) {
-		transform.SetParent(menu);
+	public void AttachTo(Transform content) {
+		transform.SetParent(content);
 	}
 
-	public void MoveToTopOfMenu() {
+	public void MoveToTop() {
 		transform.SetAsFirstSibling();
 	}
 
 	public void SetDateTime(DateTime dateTime) {
-		DateTimeLabel.text = dateTime.ToUniversalTime().ToLocalTime().ToString(DateTimePattern);
+		dateTimeLabel.text = dateTime.ToUniversalTime().ToLocalTime().ToString(DateTimePattern);
+	}
+
+	public string GetName() {
+		return nameLabel.text;
+	}
+
+	public DateTime GetDateTime() {
+		return DateTime.Parse(dateTimeLabel.text);
+	}
+
+	public override bool Equals(object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other is GameButton)) {
+			return false;
+		}
+
+		GameButton gameButton = (GameButton) other;
+		return nameLabel.Equals(gameButton.nameLabel)
+			&& levelLabel.Equals(gameButton.levelLabel)
+			&& dateTimeLabel.Equals(gameButton.dateTimeLabel);
+	}
+
+	public override int GetHashCode() {
+		var hashCode = 2061284631;
+		hashCode = hashCode * -1521134295 + base.GetHashCode();
+		hashCode = hashCode * -1521134295 + EqualityComparer<Text>.Default.GetHashCode(nameLabel);
+		hashCode = hashCode * -1521134295 + EqualityComparer<Text>.Default.GetHashCode(levelLabel);
+		hashCode = hashCode * -1521134295 + EqualityComparer<Text>.Default.GetHashCode(dateTimeLabel);
+		hashCode = hashCode * -1521134295 + EqualityComparer<Menu>.Default.GetHashCode(parentMenu);
+		return hashCode;
 	}
 }

@@ -14,7 +14,7 @@ public class Game : MonoBehaviour {
 	/// </summary>
 	public static Game instance;
 
-	public static Level level;
+	public Level level;
 
 	/// <summary>
 	/// Returns the number of levels completed.

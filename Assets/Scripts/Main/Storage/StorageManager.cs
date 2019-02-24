@@ -10,7 +10,7 @@ public class StorageManager : IStorage {
 	private static readonly string LevelDirectoryPath = Application.persistentDataPath + "/Levels";
 	private static readonly string GameDirectoryPath = Application.persistentDataPath + "/Games";
 
-	private const string FileExtension = ".dat";
+	private const string FileExtension = ".5ive";
 	private const string GameFileName = "/" + "5ive" + FileExtension;
 
 	private static readonly string GameFilePath = GameDirectoryPath + GameFileName;
@@ -29,12 +29,12 @@ public class StorageManager : IStorage {
 	}
 
 	public void StoreLevel(Data data, string name) {
-		string path = NameToPath(name, TagAddition.Enable);
+		string path = NameToPath(name);
 		Serialise(FileType.Level, data, path);
 	}
 
 	public Data FetchLevel(string name) {
-		string path = NameToPath(name, TagAddition.Enable);
+		string path = NameToPath(name);
 		return Deserialise<Data>(path);
 	}
 
@@ -43,7 +43,8 @@ public class StorageManager : IStorage {
 		Level.LevelData levelData = (Level.LevelData) data;
 
 		string levelName = LevelUtil.GetLevelName(levelData.sceneBuildIndex);
-		DateTime lastWriteTime = File.GetLastWriteTimeUtc(NameToPath(name, TagAddition.Enable));
+		string path = NameToPath(name);
+		DateTime lastWriteTime = File.GetLastWriteTimeUtc(path);
 		return new GameButtonInfo(name, levelName, lastWriteTime);
 	}
 
@@ -93,10 +94,8 @@ public class StorageManager : IStorage {
 	/// </summary>
 	/// <param name="fileInfo">File info.</param>
 	private Data GetDataFrom(FileInfo fileInfo) {
-		string path = fileInfo.FullName;
-		string fileName = PathToName(path);
-
-		return FetchLevel(path);
+		string fileName = fileInfo.Name;
+		return FetchLevel(fileName);
 	}
 
 	private GameButtonInfo[] BuildGameButtonInfos(FileInfo[] fileInfos, Data[] datas) {
@@ -129,7 +128,7 @@ public class StorageManager : IStorage {
 	}
 
 	public void DeleteLevel(string name) {
-		string path = NameToPath(name, TagAddition.Enable);
+		string path = NameToPath(name);
 		File.Delete(path);
 	}
 
@@ -154,13 +153,11 @@ public class StorageManager : IStorage {
 	/// </summary>
 	/// <returns>The path.</returns>
 	/// <param name="name">Name.</param>
-	/// <param name="addition">If addition is TagAddition.Enable, a tag will be added.
-	/// If addition is TagAddition.Disable, no tag will be added.</param>
-	private string NameToPath(string name, TagAddition addition) {
-		if (addition == TagAddition.Enable) {
-			return LevelDirectoryPath + "/" + string.Concat(Tag, name) + FileExtension;
+	private string NameToPath(string name) {
+		if (name.Contains(Tag)) {
+			return LevelDirectoryPath + "/" + name;
 		}
-		return LevelDirectoryPath + "/" + name + FileExtension;
+		return LevelDirectoryPath + "/" + string.Concat(Tag, name) + FileExtension;
 	}
 
 	/// <summary>
@@ -190,7 +187,7 @@ public class StorageManager : IStorage {
 	/// </remarks>
 	/// <returns>The tag.</returns>
 	/// <param name="fileName">File name.</param>
-	public static string ExtractTag(string fileName) {
+	public string ExtractTag(string fileName) {
 		if (!ContainsTag(fileName)) {
 			return string.Empty;
 		}
@@ -204,9 +201,8 @@ public class StorageManager : IStorage {
 	/// <c>true</c>, if a tag is present,
 	/// <c>false</c> otherwise.</returns>
 	/// <param name="fileName">File name.</param>
-	public static bool ContainsTag(string fileName) {
-		string potentialTag = fileName.Substring(0, Tag.Length);
-		return potentialTag.Equals(Tag);
+	public bool ContainsTag(string fileName) {
+		return fileName.Contains(Tag);
 	}
 
 	/// <summary>
@@ -214,7 +210,7 @@ public class StorageManager : IStorage {
 	/// </summary>
 	/// <returns>The directory path.</returns>
 	/// <param name="type">Type.</param>
-	public static string GetDirectoryPath(FileType type) {
+	public string GetDirectoryPath(FileType type) {
 		switch (type) {
 		case FileType.Game:
 			return GameDirectoryPath;
@@ -232,7 +228,7 @@ public class StorageManager : IStorage {
 	/// <param name="type">Type.</param>
 	/// <param name="data">Data.</param>
 	/// <param name="path">Path.</param>
-	public static void Serialise(FileType type, object data, string path) {
+	public void Serialise(FileType type, object data, string path) {
 		string directoryPath = GetDirectoryPath(type);
 		Directory.CreateDirectory(directoryPath);
 
@@ -242,7 +238,7 @@ public class StorageManager : IStorage {
 		fileStream.Close();
 	}
 
-	public static T Deserialise<T>(string path) {
+	public T Deserialise<T>(string path) {
 		FileUtil.CreateFile(path);
 
 		FileStream fileStream = File.Open(path, FileMode.Open);

@@ -9,7 +9,7 @@ public class Logger {
 
 	private static FileStream fileStream;
 
-	private const string fileName = "5ive_log.text";
+	private const string fileName = "5ive.log";
 
 	private Logger() {
 

@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -15,15 +14,12 @@ public class SavingEnabledInputField : MonoBehaviour {
 
 	private InputField inputField;
 
-	private Menu parentMenu;
-
-	private Level level;
+	private SaveMenu saveMenu;
 
 	private static Logger logger = Logger.GetLogger();
 
 	private void Start() {
-		parentMenu = GetComponentInParent<Menu>();
-		level = Game.level;
+		saveMenu = GetComponentInParent<SaveMenu>();
 	}
 
 	/// <summary>
@@ -42,15 +38,16 @@ public class SavingEnabledInputField : MonoBehaviour {
 			return;
 		}
 
-		if (parentMenu.DoesFileWithSameNameExist(fileName)) {
+		if (saveMenu.DoesFileWithSameNameExist(fileName)) {
 			NotificationManager.Send(new FileAlreadyExistsMessage());
-		} else {
-			Game.instance.SaveLevel(fileName);
-			logger.LogHigh("Level saved");
-
-			parentMenu.UpdateButtons();
-			logger.LogHigh("Buttons updated");
+			return;
 		}
+
+		Game.instance.SaveLevel(fileName);
+		logger.LogHigh("Level saved");
+
+		saveMenu.AddButton();
+		logger.LogHigh("Buttons updated");
 		ClearInputField();
 	}
 
