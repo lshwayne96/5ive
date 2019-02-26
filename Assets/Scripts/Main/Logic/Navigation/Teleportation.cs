@@ -32,7 +32,7 @@ public class Teleportation : MonoBehaviour {
 	void Start() {
 		playerCam = GameObject.FindWithTag(Tags.MainCamera);
 		preview = playerCam.transform.GetChild(0).gameObject.GetComponent<MeshRenderer>();
-		ballGO = GameObject.FindGameObjectWithTag(Tags.Ball).GetComponent<Ball>();
+		ballGO = GameObject.FindWithTag(Tags.Ball).GetComponent<Ball>();
 
 		playerRoomDetector = GetComponent<RoomDetector>();
 		ballRoomDetector = ballGO.GetComponent<RoomDetector>();

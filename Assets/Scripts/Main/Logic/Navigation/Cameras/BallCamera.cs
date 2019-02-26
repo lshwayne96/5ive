@@ -20,10 +20,10 @@ public class BallCamera : MonoBehaviour {
 	private RoomDetector ballRoomDetector;
 
 	private void Start() {
-		playerGO = GameObject.FindGameObjectWithTag(Tags.Player);
-		playerCamGO = GameObject.FindGameObjectWithTag(Tags.MainCamera);
+		playerGO = GameObject.FindWithTag(Tags.Player);
+		playerCamGO = GameObject.FindWithTag(Tags.MainCamera);
 
-		ballGO = GameObject.FindGameObjectWithTag(Tags.Ball);
+		ballGO = GameObject.FindWithTag(Tags.Ball);
 
 		playerRoomDetector = playerGO.GetComponent<RoomDetector>();
 		ballRoomDetector = ballGO.GetComponent<RoomDetector>();

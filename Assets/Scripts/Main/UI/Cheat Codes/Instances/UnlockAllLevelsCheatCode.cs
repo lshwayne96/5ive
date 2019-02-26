@@ -6,7 +6,7 @@ public class UnlockAllLevelsCheatCode : CheatCode {
 	public const string Code = "power overwhelming";
 
 	public override void Run(InputField inputField) {
-		Button[] buttons = GameObject.FindGameObjectWithTag(Tags.LevelButtons)
+		Button[] buttons = GameObject.FindWithTag(Tags.LevelButtons)
 						 .GetComponentsInChildren<Button>();
 		UnlockAllLevels(buttons);
 		ClearAndHideInputField(inputField);

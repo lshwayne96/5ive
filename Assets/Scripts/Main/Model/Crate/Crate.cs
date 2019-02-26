@@ -11,7 +11,7 @@ public class Crate : MonoBehaviour {
 	private bool isMovingCrate;
 
 	void Start() {
-		player = GameObject.FindGameObjectWithTag(Tags.Player).GetComponent<Player>();
+		player = GameObject.FindWithTag(Tags.Player).GetComponent<Player>();
 		playerMovement = player.GetComponent<PlatformerCharacter2D>();
 		crateRb = GetComponent<Rigidbody2D>();
 	}
