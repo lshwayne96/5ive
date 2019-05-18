@@ -1,156 +1,164 @@
 using System;
+using Main.Commons;
+using Main.Logic.Navigation;
 using UnityEngine;
 
-/// <summary>
-/// This script represents a ball and its interactions.
-/// </summary>
-public class Ball : RestorableMonoBehaviour, IPausable {
+namespace Main.Model.Ball {
+    
+    /// <summary>
+    /// /// This script represents a ball and its interactions.
+    /// </summary>
+    public class Ball : RestorableMonoBehaviour, IPausable {
+        
+        // Expose the speed variable to the editor
+        public float speed = 10f;
 
-	// Expose the speed variable to the editor
-	public float speed = 10f;
+        private Transform playerTf;
 
-	private Transform playerTf;
+        private Rigidbody2D rigidBody;
 
-	private Rigidbody2D rigidBody;
+        /// <summary>
+        /// The velocity before the rigid body is disabled.
+        /// </summary>
+        private Vector3 previousVelocity;
 
-	/// <summary>
-	/// The velocity before the rigidbody is disabled.
-	/// </summary>
-	private Vector3 previousVelocity;
+        public bool PlayerHasBall { get; private set; }
 
-	public bool PlayerHasBall { get; private set; }
+        public bool IsPlayerWithinRange { get; private set; }
 
-	public bool IsPlayerWithinRange { get; private set; }
+        private void Start() {
+            playerTf = GameObject.FindWithTag(Tags.Player).transform;
+            rigidBody = GetComponent<Rigidbody2D>();
+        }
 
-	void Start() {
-		playerTf = GameObject.FindWithTag(Tags.Player).transform;
-		rigidBody = GetComponent<Rigidbody2D>();
-	}
+        private void Update() {
+            // Enable the ball to follow slightly behind the player when picked up
+            if (PlayerHasBall) {
+                // Stop the rotation of the ball
+                transform.rotation = Quaternion.Euler(Vector3.zero);
+                Vector3 targetPosition = playerTf.position;
+                GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
+            }
 
-	void Update() {
-		// Enable the ball to follow slightly behind the player when picked up
-		if (PlayerHasBall) {
-			// Stop the rotation of the ball
-			transform.rotation = Quaternion.Euler(Vector3.zero);
-			Vector3 targetPosition = playerTf.position;
-			GetComponent<Rigidbody2D>().velocity = speed * (targetPosition - transform.position);
-		}
+            if (CanPickUpBall()) {
+                PickUpBall();
+            } else if (CanDropBall()) {
+                DropBall();
+            }
+        }
 
-		if (CanPickUpBall()) {
-			PickUpBall();
-		} else if (CanDropBall()) {
-			DropBall();
-		}
-	}
+        private void OnTriggerEnter2D(Collider2D collision) {
+            if (collision.gameObject.CompareTag(Tags.Player)) {
+                IsPlayerWithinRange = true;
+            }
+        }
 
-	private void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag(Tags.Player)) {
-			IsPlayerWithinRange = true;
-		}
-	}
+        private void OnTriggerExit2D(Collider2D collision) {
+            if (collision.gameObject.CompareTag(Tags.Player)) {
+                IsPlayerWithinRange = false;
+            }
+        }
 
-	private void OnTriggerExit2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag(Tags.Player)) {
-			IsPlayerWithinRange = false;
-		}
-	}
+        private bool CanPickUpBall() {
+            return IsPlayerWithinRange && Input.GetKeyDown(KeyCode.E) && !PlayerHasBall;
+        }
 
-	private bool CanPickUpBall() {
-		return IsPlayerWithinRange && Input.GetKeyDown(KeyCode.E) && !PlayerHasBall;
-	}
+        private bool CanDropBall() {
+            return Input.GetKeyDown(KeyCode.E) && PlayerHasBall;
+        }
 
-	private bool CanDropBall() {
-		return Input.GetKeyDown(KeyCode.E) && PlayerHasBall;
-	}
+        private void PickUpBall() {
+            transform.position = playerTf.position;
+            GetComponent<Rigidbody2D>().gravityScale = 0f;
+            PlayerHasBall = true;
+        }
 
-	private void PickUpBall() {
-		transform.position = playerTf.position;
-		GetComponent<Rigidbody2D>().gravityScale = 0f;
-		PlayerHasBall = true;
-	}
+        private void DropBall() {
+            GetComponent<Rigidbody2D>().gravityScale = 1f;
+            PlayerHasBall = false;
+        }
 
-	private void DropBall() {
-		GetComponent<Rigidbody2D>().gravityScale = 1f;
-		PlayerHasBall = false;
-	}
+        public override Data Save() {
+            return new BallData(this);
+        }
 
-	public override Data Save() {
-		return new BallData(this);
-	}
+        public override void RestoreWith(Data data) {
+            BallData ballData = (BallData) data;
+            ballData.RebuildCompoundTypes();
 
-	public override void RestoreWith(Data data) {
-		BallData ballData = (BallData) data;
-		ballData.RebuildCompoundTypes();
+            GetComponent<Rigidbody2D>().velocity = ballData.prevVelocity;
+            transform.position = ballData.prevPosition;
 
-		GetComponent<Rigidbody2D>().velocity = ballData.prevVelocity;
-		transform.position = ballData.prevPosition;
-		// Restore ball camera
-		GetComponent<RoomDetector>().UpdateRoom();
-		PlayerHasBall = ballData.playerHasBall;
-		IsPlayerWithinRange = ballData.isPlayerWithinRange;
-	}
+            // Restore ball camera
+            GetComponent<RoomDetector>().UpdateRoom();
+            PlayerHasBall = ballData.playerHasBall;
+            IsPlayerWithinRange = ballData.isPlayerWithinRange;
+        }
 
-	public void Pause() {
-		previousVelocity = rigidBody.velocity;
-		rigidBody.Sleep();
-	}
+        public void Pause() {
+            previousVelocity = rigidBody.velocity;
+            rigidBody.Sleep();
+        }
 
-	public void Unpause() {
-		rigidBody.velocity = previousVelocity;
-		rigidBody.WakeUp();
-	}
+        public void Unpause() {
+            rigidBody.velocity = previousVelocity;
+            rigidBody.WakeUp();
+        }
 
-	/// <summary>
-	/// This class represents the data of a ball.
-	/// </summary>
-	/// <remarks>
-	/// It is used to restore the ball to its previous state.
-	/// </remarks>
-	/// The data includes:
-	/// <list type="number">
-	/// <item>The last position</item>
-	/// <item>The last velocity</item>
-	/// </list>
-	[Serializable]
-	public class BallData : Data {
+        /// <summary>
+        /// This class represents the data of a ball.
+        /// </summary>
+        /// <remarks>
+        /// It is used to restore the ball to its previous state.
+        /// </remarks>
+        /// The data includes:
+        /// <list type="number">
+        /// <item>The last position</item>
+        /// <item>The last velocity</item>
+        /// </list>
+        [Serializable]
+        public class BallData : Data {
+            [NonSerialized] public Vector2 prevVelocity;
 
-		[NonSerialized]
-		public Vector2 prevVelocity;
-		private readonly float vX;
-		private readonly float vY;
+            private readonly float vX;
 
-		[NonSerialized]
-		public Vector3 prevPosition;
-		private readonly float pX;
-		private readonly float pY;
-		private readonly float pZ;
+            private readonly float vY;
 
-		public bool playerHasBall;
+            [NonSerialized] public Vector3 prevPosition;
 
-		public bool isPlayerWithinRange;
+            private readonly float pX;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="T:BallData"/> class.
-		/// </summary>
-		/// <param name="ball">Ball.</param>
-		public BallData(Ball ball) {
-			prevVelocity = ball.GetComponent<Rigidbody2D>().velocity;
-			vX = prevVelocity.x;
-			vY = prevVelocity.y;
+            private readonly float pY;
 
-			prevPosition = ball.transform.position;
-			pX = prevPosition.x;
-			pY = prevPosition.y;
-			pZ = prevPosition.z;
+            private readonly float pZ;
 
-			playerHasBall = ball.PlayerHasBall;
-			isPlayerWithinRange = ball.IsPlayerWithinRange;
-		}
+            public bool playerHasBall;
 
-		public void RebuildCompoundTypes() {
-			prevVelocity = new Vector2(vX, vY);
-			prevPosition = new Vector3(pX, pY, pZ);
-		}
-	}
+            public bool isPlayerWithinRange;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="T:BallData"/> class.
+            /// </summary>
+            /// <param name="ball">Ball.</param>
+            public BallData(Ball ball) {
+                prevVelocity = ball.GetComponent<Rigidbody2D>().velocity;
+                vX = prevVelocity.x;
+                vY = prevVelocity.y;
+
+                prevPosition = ball.transform.position;
+                pX = prevPosition.x;
+                pY = prevPosition.y;
+                pZ = prevPosition.z;
+
+                playerHasBall = ball.PlayerHasBall;
+                isPlayerWithinRange = ball.IsPlayerWithinRange;
+            }
+
+            public void RebuildCompoundTypes() {
+                prevVelocity = new Vector2(vX, vY);
+                prevPosition = new Vector3(pX, pY, pZ);
+            }
+        }
+    }
+
 }
-

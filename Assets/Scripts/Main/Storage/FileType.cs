@@ -1,3 +1,8 @@
-﻿public enum FileType {
-    Game, Level
+﻿namespace Main.Storage {
+
+    public enum FileType {
+        Game,
+        Level
+    }
+
 }

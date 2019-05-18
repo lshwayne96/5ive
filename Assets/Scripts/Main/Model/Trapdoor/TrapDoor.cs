@@ -1,13 +1,18 @@
-﻿using UnityEngine;
+﻿using Main.Commons;
+using UnityEngine;
 
-public class TrapDoor : MonoBehaviour {
+namespace Main.Model.TrapDoor {
 
-	public GameObject trapDoorGO;
+	public class TrapDoor : MonoBehaviour {
 
-	private void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.CompareTag(Tags.Player)) {
-			trapDoorGO.SetActive(true);
-			Destroy(this);
+		public GameObject trapDoorGO;
+
+		private void OnTriggerEnter2D(Collider2D collision) {
+			if (collision.CompareTag(Tags.Player)) {
+				trapDoorGO.SetActive(true);
+				Destroy(this);
+			}
 		}
 	}
+
 }

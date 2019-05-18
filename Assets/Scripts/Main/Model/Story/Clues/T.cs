@@ -1,22 +1,27 @@
-﻿using UnityEngine;
+﻿using Main.Commons;
+using UnityEngine;
 
-public class T : MonoBehaviour {
+namespace Main.Model.Story.Clues {
 
-    private SpriteRenderer spriteRenderer;
+    public class T : MonoBehaviour {
 
-    void Start() {
-        spriteRenderer = transform.parent.GetComponent<SpriteRenderer>();
-    }
+        private SpriteRenderer spriteRenderer;
 
-    private void OnTriggerEnter2D(Collider2D collision) {
-        if (collision.CompareTag("TeleportationBall")) {
-            spriteRenderer.enabled = true;
+        void Start() {
+            spriteRenderer = transform.parent.GetComponent<SpriteRenderer>();
+        }
+
+        private void OnTriggerEnter2D(Collider2D collision) {
+            if (collision.CompareTag(Tags.Ball)) {
+                spriteRenderer.enabled = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D collision) {
+            if (collision.CompareTag(Tags.Ball)) {
+                spriteRenderer.enabled = false;
+            }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.CompareTag("TeleportationBall")) {
-            spriteRenderer.enabled = false;
-        }
-    }
 }

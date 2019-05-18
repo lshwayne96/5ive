@@ -1,27 +1,32 @@
 ﻿using UnityEngine;
 
-public class ActionableLadder : MonoBehaviour, IActionable {
-    private SpriteRenderer[] spriteRenderers;
-    private Ladder ladder;
+namespace Main.Model.Ladder {
 
-    private void Start() {
-        spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-        ladder = GetComponent<Ladder>();
-    }
+    public class ActionableLadder : MonoBehaviour, IActionable {
+        private SpriteRenderer[] spriteRenderers;
 
-    public void StartAction() {
-        for (int i = 0; i < spriteRenderers.Length; i++) {
-            spriteRenderers[i].enabled = true;
+        private Ladder ladder;
+
+        private void Start() {
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+            ladder = GetComponent<Ladder>();
         }
 
-        ladder.enabled = true;
-    }
+        public void StartAction() {
+            for (int i = 0; i < spriteRenderers.Length; i++) {
+                spriteRenderers[i].enabled = true;
+            }
 
-    public void EndAction() {
-        for (int i = 0; i < spriteRenderers.Length; i++) {
-            spriteRenderers[i].enabled = false;
+            ladder.enabled = true;
         }
 
-        ladder.enabled = false;
+        public void EndAction() {
+            for (int i = 0; i < spriteRenderers.Length; i++) {
+                spriteRenderers[i].enabled = false;
+            }
+
+            ladder.enabled = false;
+        }
     }
+
 }

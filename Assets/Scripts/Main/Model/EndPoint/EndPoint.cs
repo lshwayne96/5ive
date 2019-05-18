@@ -1,26 +1,32 @@
-﻿using UnityEngine;
+﻿using Main.Commons;
+using Main.Logic;
+using UnityEngine;
 
-/// <summary>
-/// This script is attached to the end point game object
-/// to allow the plater to get to the next level.
-/// </summary>
-public class EndPoint : MonoBehaviour {
+namespace Main.Model.EndPoint {
 
-	public int sceneBuildIndex;
+	/// <summary>
+	/// This script is attached to the end point game object
+	/// to allow the plater to get to the next level.
+	/// </summary>
+	public class EndPoint : MonoBehaviour {
 
-	private SpriteRenderer spriteRenderer;
+		public int sceneBuildIndex;
 
-	private void Start() {
-		spriteRenderer = GetComponent<SpriteRenderer>();
-	}
+		private SpriteRenderer spriteRenderer;
 
-	private void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag(Tags.Player)) {
-			End();
+		private void Start() {
+			spriteRenderer = GetComponent<SpriteRenderer>();
+		}
+
+		private void OnTriggerEnter2D(Collider2D collision) {
+			if (collision.gameObject.CompareTag(Tags.Player)) {
+				End();
+			}
+		}
+
+		private void End() {
+			Game.instance.EndLevel(sceneBuildIndex);
 		}
 	}
 
-	private void End() {
-		Game.instance.EndLevel(sceneBuildIndex);
-	}
 }

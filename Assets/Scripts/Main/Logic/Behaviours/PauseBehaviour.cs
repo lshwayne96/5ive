@@ -1,60 +1,69 @@
-﻿using System.Collections.Generic;
+﻿using Main.Model;
+using Main.Model.Ball;
+using System.Collections.Generic;
+using Main.Commons;
+using Main.Model.Player;
 using UnityEngine;
 
-/// <summary>
-/// This script pauses the game by bringing up the game menu
-/// and makes all objects in the game freeze.
-/// </summary>
-/// <remarks>
-/// /// To prevent further input from the user,
-/// the player movement script, Platformer2DUserControl, is disabled.
-/// </remarks>
-public class PauseBehaviour {
+namespace Main.Logic.Behaviours {
 
-	private bool isActive;
+	/// <summary>
+	/// This script pauses the game by bringing up the game menu
+	/// and makes all objects in the game freeze.
+	/// </summary>
+	/// <remarks>
+	/// /// To prevent further input from the user,
+	/// the player movement script, Platformer2DUserControl, is disabled.
+	/// </remarks>
+	public class PauseBehaviour {
 
-	private GameObject menu;
+		private bool isActive;
 
-	private List<IPausable> pausables;
+		private GameObject menu;
 
-	public PauseBehaviour() {
-		menu = GameObject.FindWithTag(Tags.Menu);
-		menu.SetActive(false);
+		private List<IPausable> pausables;
 
-		pausables = new List<IPausable>();
-		pausables.Add(GameObject.FindWithTag(Tags.Player).GetComponent<Player>());
-		pausables.Add(GameObject.FindWithTag(Tags.Ball).GetComponent<Ball>());
-	}
+		public PauseBehaviour() {
+			menu = GameObject.FindWithTag(Tags.Menu);
+			menu.SetActive(false);
 
-	public void Run() {
-		if (isActive) {
-			Unpause();
-		} else {
-			Pause();
+			pausables = new List<IPausable> {
+				GameObject.FindWithTag(Tags.Player).GetComponent<Player>(),
+				GameObject.FindWithTag(Tags.Ball).GetComponent<Ball>()
+			};
+		}
+
+		public void Run() {
+			if (isActive) {
+				Unpause();
+			} else {
+				Pause();
+			}
+		}
+
+		/// <summary>
+		/// Pauses the game.
+		/// </summary>
+		/// <remarks>
+		/// Time is not affected.
+		/// </remarks>
+		public void Pause() {
+			menu.SetActive(true);
+			pausables.ForEach(p => p.Pause());
+			isActive = true;
+		}
+
+		/// <summary>
+		/// Unpauses the game.
+		/// </summary>
+		/// <remarks>
+		/// Time is not affected.
+		/// </remarks>
+		public void Unpause() {
+			menu.SetActive(false);
+			pausables.ForEach(p => p.Unpause());
+			isActive = false;
 		}
 	}
 
-	/// <summary>
-	/// Pauses the game.
-	/// </summary>
-	/// <remarks>
-	/// Time is not affected.
-	/// </remarks>
-	public void Pause() {
-		menu.SetActive(true);
-		pausables.ForEach(p => p.Pause());
-		isActive = true;
-	}
-
-	/// <summary>
-	/// Unpauses the game.
-	/// </summary>
-	/// <remarks>
-	/// Time is not affected.
-	/// </remarks>
-	public void Unpause() {
-		menu.SetActive(false);
-		pausables.ForEach(p => p.Unpause());
-		isActive = false;
-	}
 }

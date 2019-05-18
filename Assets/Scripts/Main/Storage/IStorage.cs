@@ -1,24 +1,31 @@
-using System.IO;
-public interface IStorage {
 
-	void StoreGame(Data data);
 
-	Data FetchGame();
+using Main.Model;
 
-	void StoreLevel(Data data, string name);
+namespace Main.Storage {
 
-	Data FetchLevel(string name);
+	public interface IStorage {
 
-	GameButtonInfo FetchGameButton(string name);
+		void StoreGame(Data data);
 
-	GameButtonInfo[] FetchGameButtons();
+		Data FetchGame();
 
-	bool HasGame();
+		void StoreLevel(Data data, string name);
 
-	// Checks to see if there are still saved game files on the local machine
-	bool HasLevels();
+		Data FetchLevel(string name);
 
-	void DeleteLevel(string name);
+		GameButtonInfo FetchGameButton(string name);
 
-	void DeleteAllFiles();
+		GameButtonInfo[] FetchGameButtons();
+
+		bool HasGame();
+
+		// Checks to see if there are still saved game files on the local machine
+		bool HasLevels();
+
+		void DeleteLevel(string name);
+
+		void DeleteAllFiles();
+	}
+
 }

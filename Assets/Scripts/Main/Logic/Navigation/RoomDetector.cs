@@ -1,68 +1,75 @@
-﻿using UnityEngine;
+﻿using Main.Commons;
+using UnityEngine;
 
-/// <summary>
-/// This script detects the room it is in.
-/// </summary>
-/// <remarks>
-/// This script is made ot be attached to both the player
-/// and ball game objects.
-/// </remarks>
-public class RoomDetector : MonoBehaviour {
+namespace Main.Logic.Navigation {
 
-	public Transform CurrentRoomTf { get; private set; }
+	/// <summary>
+	/// This script detects the room it is in.
+	/// </summary>
+	/// <remarks>
+	/// This script is made ot be attached to both the player
+	/// and ball game objects.
+	/// </remarks>
+	public class RoomDetector : MonoBehaviour {
 
-	public LayerMask roomLayerMask;
+		public Transform CurrentRoomTf { get; private set; }
 
-	private Transform playerCamTf;
+		public LayerMask roomLayerMask;
 
-	private void Awake() {
-		InitCurrentRoomLocation();
-	}
+		private Transform playerCamTf;
 
-	private void InitCurrentRoomLocation() {
-		if (playerCamTf == null) {
-			playerCamTf = GameObject.FindWithTag(Tags.MainCamera).transform;
+		private void Awake() {
+			InitCurrentRoomLocation();
 		}
-		MoveToRoom();
-	}
 
-	private void MoveToRoom() {
-		UpdateRoom();
+		private void InitCurrentRoomLocation() {
+			if (playerCamTf == null) {
+				playerCamTf = GameObject.FindWithTag(Tags.MainCamera).transform;
+			}
 
-		if (CompareTag(Tags.Player)) {
-			MovePlayerCamera();
+			MoveToRoom();
+		}
+
+		private void MoveToRoom() {
+			UpdateRoom();
+
+			if (CompareTag(Tags.Player)) {
+				MovePlayerCamera();
+			}
+		}
+
+		public void UpdateRoom() {
+			// Get collider of the current room
+			Collider2D c = Physics2D.OverlapPoint(transform.position, roomLayerMask);
+			CurrentRoomTf = c.transform;
+		}
+
+		private void MovePlayerCamera() {
+			Bounds b = GetCurrentRoomBounds();
+			playerCamTf.position = b.ClosestPoint(playerCamTf.position);
+		}
+
+		private Bounds GetCurrentRoomBounds() {
+			BoxCollider2D bc = CurrentRoomTf.GetComponent<BoxCollider2D>();
+
+			Vector3 currentRoomCenter = GetRoomCenter();
+			Vector3 currentRoomSize = GetRoomSizeSubset(bc);
+
+			return new Bounds(currentRoomCenter, currentRoomSize);
+		}
+
+		private Vector3 GetRoomCenter() {
+			return new Vector3(CurrentRoomTf.position.x, CurrentRoomTf.position.y, CameraDimension.CameraDepth);
+		}
+
+		private Vector3 GetRoomSizeSubset(BoxCollider2D roomBoxCollider) {
+			return new Vector3(roomBoxCollider.size.x - CameraDimension.CameraLength,
+				roomBoxCollider.size.y - CameraDimension.CameraHeight, 0f);
+		}
+
+		void OnTriggerExit2D(Collider2D collision) {
+			MoveToRoom();
 		}
 	}
 
-	public void UpdateRoom() {
-		// Get collider of the current room
-		Collider2D c = Physics2D.OverlapPoint(transform.position, roomLayerMask);
-		CurrentRoomTf = c.transform;
-	}
-
-	private void MovePlayerCamera() {
-		Bounds b = GetCurrentRoomBounds();
-		playerCamTf.position = b.ClosestPoint(playerCamTf.position);
-	}
-
-	private Bounds GetCurrentRoomBounds() {
-		BoxCollider2D bc = CurrentRoomTf.GetComponent<BoxCollider2D>();
-
-		Vector3 currentRoomCenter = GetRoomCenter();
-		Vector3 currentRoomSize = GetRoomSizeSubset(bc);
-
-		return new Bounds(currentRoomCenter, currentRoomSize);
-	}
-
-	private Vector3 GetRoomCenter() {
-		return new Vector3(CurrentRoomTf.position.x, CurrentRoomTf.position.y, CameraDimensions.CameraDepth);
-	}
-
-	private Vector3 GetRoomSizeSubset(BoxCollider2D roomBoxCollider) {
-		return new Vector3(roomBoxCollider.size.x - CameraDimensions.CameraLength, roomBoxCollider.size.y - CameraDimensions.CameraHeight, 0f);
-	}
-
-	void OnTriggerExit2D(Collider2D collision) {
-		MoveToRoom();
-	}
 }

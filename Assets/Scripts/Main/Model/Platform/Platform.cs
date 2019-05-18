@@ -1,20 +1,24 @@
 ﻿using UnityEngine;
 
-public class Platform : MonoBehaviour {
+namespace Main.Model.Platform {
 
-    public LayerMask excludePlayer;
+    public class Platform : MonoBehaviour {
 
-    private PlatformEffector2D platformEffector2D;
+        public LayerMask excludePlayer;
 
-    void Start() {
-        platformEffector2D = GetComponent<PlatformEffector2D>();
-    }
+        private PlatformEffector2D platformEffector2D;
 
-    void Update() {
-        if (Input.GetKey(KeyCode.DownArrow)) {
-            platformEffector2D.colliderMask = excludePlayer;
-        } else {
-            platformEffector2D.colliderMask = -1;
+        void Start() {
+            platformEffector2D = GetComponent<PlatformEffector2D>();
+        }
+
+        void Update() {
+            if (Input.GetKey(KeyCode.DownArrow)) {
+                platformEffector2D.colliderMask = excludePlayer;
+            } else {
+                platformEffector2D.colliderMask = -1;
+            }
         }
     }
+
 }

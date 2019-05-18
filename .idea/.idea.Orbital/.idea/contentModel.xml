@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$/../Library/Caches/Rider2019.1/extResources" t="IncludeRecursive" />
+    <e p="$PROJECT_DIR$/../Library/Caches/Rider2019.1/resharper-host/local/Transient/ReSharperHost/v191/SolutionCaches/_Orbital.87524011.00" t="ExcludeRecursive" />
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="Main" t="Include">
+            <e p="Commons" t="Include">
+              <e p="CameraDimension.cs" t="Include" />
+              <e p="Direction.cs" t="Include" />
+              <e p="LevelName.cs" t="Include" />
+              <e p="Logger.cs" t="Include" />
+              <e p="Tags.cs" t="Include" />
+              <e p="Util" t="Include">
+                <e p="FileUtil.cs" t="Include" />
+                <e p="LevelUtil.cs" t="Include" />
+                <e p="MenuUtil.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Logic" t="Include">
+              <e p="Behaviours" t="Include">
+                <e p="BehaviourManager.cs" t="Include" />
+                <e p="PauseBehaviour.cs" t="Include" />
+              </e>
+              <e p="Game.cs" t="Include" />
+              <e p="Level.cs" t="Include" />
+              <e p="Navigation" t="Include">
+                <e p="Cameras" t="Include">
+                  <e p="BallCamera.cs" t="Include" />
+                  <e p="PlayerCamera.cs" t="Include" />
+                </e>
+                <e p="RoomDetector.cs" t="Include" />
+                <e p="Teleportation.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Model" t="Include">
+              <e p="Ball" t="Include">
+                <e p="Ball.cs" t="Include" />
+              </e>
+              <e p="Behaviour" t="Include">
+                <e p="Booster.cs" t="Include" />
+                <e p="GravityEnabler.cs" t="Include" />
+              </e>
+              <e p="Collectible" t="Include">
+                <e p="Collectible.cs" t="Include" />
+              </e>
+              <e p="Crate" t="Include">
+                <e p="Crate.cs" t="Include" />
+              </e>
+              <e p="Data.cs" t="Include" />
+              <e p="EndPoint" t="Include">
+                <e p="EndPoint.cs" t="Include" />
+              </e>
+              <e p="Enemy" t="Include">
+                <e p="Enemy.cs" t="Include" />
+              </e>
+              <e p="FloorButton" t="Include">
+                <e p="FloorButton.cs" t="Include" />
+              </e>
+              <e p="IActionable.cs" t="Include" />
+              <e p="IModel.cs" t="Include" />
+              <e p="IPausable.cs" t="Include" />
+              <e p="Ladder" t="Include">
+                <e p="ActionableLadder.cs" t="Include" />
+                <e p="Ladder.cs" t="Include" />
+                <e p="TopOfLadder.cs" t="Include" />
+              </e>
+              <e p="Lever" t="Include">
+                <e p="Lever.cs" t="Include" />
+                <e p="LeverManager.cs" t="Include" />
+              </e>
+              <e p="ModelManager.cs" t="Include" />
+              <e p="Platform" t="Include">
+                <e p="Platform.cs" t="Include" />
+              </e>
+              <e p="Player" t="Include">
+                <e p="Player.cs" t="Include" />
+              </e>
+              <e p="RestorableMonoBehaviour.cs" t="Include" />
+              <e p="Spring" t="Include">
+                <e p="Spring.cs" t="Include" />
+              </e>
+              <e p="Story" t="Include">
+                <e p="Clues" t="Include">
+                  <e p="AngerGameClue.cs" t="Include" />
+                  <e p="T.cs" t="Include" />
+                </e>
+                <e p="Messages" t="Include">
+                  <e p="FileAlreadyExistsMessage.cs" t="Include" />
+                  <e p="IMessage.cs" t="Include" />
+                  <e p="MessageManager.cs" t="Include" />
+                  <e p="OverwriteSuccessfulMessage.cs" t="Include" />
+                </e>
+                <e p="StoryLines" t="Include">
+                  <e p="Anger" t="Include">
+                    <e p="Seriously.cs" t="Include" />
+                    <e p="WhenEverythingCrashes.cs" t="Include" />
+                  </e>
+                  <e p="Denial" t="Include">
+                    <e p="DontLeaveMe.cs" t="Include" />
+                    <e p="IsThereAWayOut.cs" t="Include" />
+                    <e p="TheFall.cs" t="Include" />
+                  </e>
+                  <e p="StoryLine.cs" t="Include" />
+                  <e p="StoryLineManager.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Teleporter" t="Include">
+                <e p="Teleporter.cs" t="Include" />
+              </e>
+              <e p="Trapdoor" t="Include">
+                <e p="TrapDoor.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Storage" t="Include">
+              <e p="FileType.cs" t="Include" />
+              <e p="IStorage.cs" t="Include" />
+              <e p="StorageManager.cs" t="Include" />
+            </e>
+            <e p="UI" t="Include">
+              <e p="CheatCodes" t="Include">
+                <e p="CheatCode.cs" t="Include" />
+                <e p="UnlockAllLevelsCheatCode.cs" t="Include" />
+              </e>
+              <e p="Commons" t="Include">
+                <e p="GameButton" t="Include">
+                  <e p="GameButton.cs" t="Include" />
+                  <e p="GameButtonInfo.cs" t="Include" />
+                  <e p="GameButtonManager.cs" t="Include" />
+                </e>
+                <e p="InputField.cs" t="Include" />
+              </e>
+              <e p="InGame" t="Include">
+                <e p="Menus" t="Include">
+                  <e p="InGameMenu.cs" t="Include" />
+                  <e p="Load" t="Include">
+                    <e p="Buttons" t="Include">
+                      <e p="DeleteAllButton.cs" t="Include" />
+                      <e p="DeleteButton.cs" t="Include" />
+                      <e p="LoadButton.cs" t="Include" />
+                    </e>
+                    <e p="LoadInGameMenu.cs" t="Include" />
+                  </e>
+                  <e p="Main" t="Include">
+                    <e p="Buttons" t="Include">
+                      <e p="MainMenuButton.cs" t="Include" />
+                      <e p="RestartButton.cs" t="Include" />
+                    </e>
+                  </e>
+                  <e p="Save" t="Include">
+                    <e p="Buttons" t="Include">
+                      <e p="OverwriteButton.cs" t="Include" />
+                    </e>
+                    <e p="SaveInGameMenu.cs" t="Include" />
+                    <e p="SavingEnabledInputField.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+              <e p="Notification" t="Include">
+                <e p="NotificationManager.cs" t="Include" />
+              </e>
+              <e p="StartGame" t="Include">
+                <e p="Menus" t="Include">
+                  <e p="Main" t="Include">
+                    <e p="Buttons" t="Include">
+                      <e p="ExitButton.cs" t="Include" />
+                      <e p="StartButton.cs" t="Include" />
+                    </e>
+                    <e p="MainMenu.cs" t="Include" />
+                  </e>
+                  <e p="Overview" t="Include">
+                    <e p="Buttons" t="Include">
+                      <e p="LevelButton.cs" t="Include" />
+                    </e>
+                    <e p="OverviewMenu.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+          </e>
+          <e p="Tests" t="Include">
+            <e p="Commons" t="Include">
+              <e p="Util" t="Include">
+                <e p="LevelUtilTest.cs" t="Include" />
+                <e p="MenuUtilTest.cs" t="Include" />
+              </e>
+            </e>
+          </e>
+        </e>
+        <e p="Standard Assets" t="Include">
+          <e p="2D" t="Include">
+            <e p="Scripts" t="Include">
+              <e p="Camera2DFollow.cs" t="Include" />
+              <e p="CameraFollow.cs" t="Include" />
+              <e p="Platformer2DUserControl.cs" t="Include" />
+              <e p="PlatformerCharacter2D.cs" t="Include" />
+              <e p="Restarter.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Cameras" t="Include">
+            <e p="CameraGuidelines.txt" t="Include" />
+            <e p="Scripts" t="Include">
+              <e p="AbstractTargetFollower.cs" t="Include" />
+              <e p="AutoCam.cs" t="Include" />
+              <e p="FreeLookCam.cs" t="Include" />
+              <e p="HandHeldCam.cs" t="Include" />
+              <e p="LookatTarget.cs" t="Include" />
+              <e p="PivotBasedCameraRig.cs" t="Include" />
+              <e p="ProtectCameraFromWallClip.cs" t="Include" />
+              <e p="TargetFieldOfView.cs" t="Include" />
+            </e>
+          </e>
+          <e p="CrossPlatformInput" t="Include">
+            <e p="CrossPlatformInputGuidelines.txt" t="Include" />
+            <e p="Scripts" t="Include">
+              <e p="AxisTouchButton.cs" t="Include" />
+              <e p="ButtonHandler.cs" t="Include" />
+              <e p="CrossPlatformInputManager.cs" t="Include" />
+              <e p="InputAxisScrollbar.cs" t="Include" />
+              <e p="Joystick.cs" t="Include" />
+              <e p="MobileControlRig.cs" t="Include" />
+              <e p="PlatformSpecific" t="Include">
+                <e p="MobileInput.cs" t="Include" />
+                <e p="StandaloneInput.cs" t="Include" />
+              </e>
+              <e p="TiltInput.cs" t="Include" />
+              <e p="TouchPad.cs" t="Include" />
+              <e p="VirtualInput.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Utility" t="Include">
+            <e p="ActivateTrigger.cs" t="Include" />
+            <e p="AlphaButtonClickMask.cs" t="Include" />
+            <e p="AutoMobileShaderSwitch.cs" t="Include" />
+            <e p="AutoMoveAndRotate.cs" t="Include" />
+            <e p="CameraRefocus.cs" t="Include" />
+            <e p="CurveControlledBob.cs" t="Include" />
+            <e p="DragRigidbody.cs" t="Include" />
+            <e p="DynamicShadowSettings.cs" t="Include" />
+            <e p="EventSystemChecker.cs" t="Include" />
+            <e p="FollowTarget.cs" t="Include" />
+            <e p="ForcedReset.cs" t="Include" />
+            <e p="FOVKick.cs" t="Include" />
+            <e p="FPSCounter.cs" t="Include" />
+            <e p="LerpControlledBob.cs" t="Include" />
+            <e p="ObjectResetter.cs" t="Include" />
+            <e p="ParticleSystemDestroyer.cs" t="Include" />
+            <e p="PlatformSpecificContent.cs" t="Include" />
+            <e p="SimpleActivatorMenu.cs" t="Include" />
+            <e p="SimpleMouseRotator.cs" t="Include" />
+            <e p="SmoothFollow.cs" t="Include" />
+            <e p="TimedObjectActivator.cs" t="Include" />
+            <e p="TimedObjectDestructor.cs" t="Include" />
+            <e p="WaypointCircuit.cs" t="Include" />
+            <e p="WaypointProgressTracker.cs" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Orbital.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp/bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

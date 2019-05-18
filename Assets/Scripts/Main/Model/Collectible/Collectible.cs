@@ -1,41 +1,47 @@
 ﻿using System.Collections;
+using Main.Commons;
+using Main.Logic;
 using UnityEngine;
 
-/// <summary>
-/// Represents a collectible and its interactions.
-/// </summary>
-/// <remarks>
-/// When a collectible is collected, it will fade until it
-/// is almost invisible before being destroyed.
-/// </remarks>
-public class Collectible : MonoBehaviour {
+namespace Main.Model.Collectible {
 
-	private SpriteRenderer[] spriteRenderers;
+	/// <summary>
+	/// Represents a collectible and its interactions.
+	/// </summary>
+	/// <remarks>
+	/// When a collectible is collected, it will fade until it
+	/// is almost invisible before being destroyed.
+	/// </remarks>
+	public class Collectible : MonoBehaviour {
 
-	private Level level;
+		private SpriteRenderer[] spriteRenderers;
 
-	private void Start() {
-		spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-		level = GetComponent<Level>();
-	}
+		private Level level;
 
-	private void OnTriggerEnter2D(Collider2D collision) {
-		if (collision.gameObject.CompareTag(Tags.Player)) {
-			StartCoroutine(Collected());
+		private void Start() {
+			spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+			level = GetComponent<Level>();
 		}
-	}
 
-	// Collect this collectible and destroy it
-	private IEnumerator Collected() {
-		for (float f = 1f; f >= 0; f -= 0.1f) {
-			foreach (SpriteRenderer spriteRenderer in spriteRenderers) {
-				Color c = spriteRenderer.material.color;
-				c.a = f;
-				spriteRenderer.material.color = c;
+		private void OnTriggerEnter2D(Collider2D collision) {
+			if (collision.gameObject.CompareTag(Tags.Player)) {
+				StartCoroutine(Collect());
 			}
-			yield return null;
 		}
 
-		level.CollectCollectible();
+		private IEnumerator Collect() {
+			for (float f = 1f; f >= 0; f -= 0.1f) {
+				foreach (SpriteRenderer spriteRenderer in spriteRenderers) {
+					Color c = spriteRenderer.material.color;
+					c.a = f;
+					spriteRenderer.material.color = c;
+				}
+
+				yield return null;
+			}
+
+			level.CollectCollectible();
+		}
 	}
+
 }

@@ -1,9 +1,11 @@
-﻿using System;
+﻿namespace Main.Model {
 
-public interface IModel {
+	public interface IModel {
 
-	RestorableMonoBehaviour[] GetRestorableMonoBehaviours();
+		RestorableMonoBehaviour[] GetRestorableMonoBehaviours();
 
-	void RestoreRestorableMonoBehaviours();
+		void RestoreRestorableMonoBehaviours();
+
+	}
 
 }

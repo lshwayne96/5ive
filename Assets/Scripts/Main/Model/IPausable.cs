@@ -1,5 +1,9 @@
-﻿public interface IPausable {
-	void Pause();
+﻿namespace Main.Model {
 
-	void Unpause();
+	public interface IPausable {
+		void Pause();
+
+		void Unpause();
+	}
+
 }

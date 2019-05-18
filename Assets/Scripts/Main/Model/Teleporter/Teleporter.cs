@@ -1,22 +1,28 @@
 ﻿using UnityEngine;
 
-public class Teleporter : MonoBehaviour {
+namespace Main.Model.Teleporter {
 
-    public bool isUsingCoordinates;
-    public float x;
-    public float y;
+    public class Teleporter : MonoBehaviour {
 
-    private Transform teleportPosition;
+        public bool isUsingCoordinates;
 
-    void Start() {
-        teleportPosition = transform.GetChild(0);
-    }
+        public float x;
 
-    void OnTriggerEnter2D(Collider2D collision) {
-        if (isUsingCoordinates) {
-            collision.transform.position = new Vector3(x, y, 0f);
-        } else {
-            collision.transform.position = teleportPosition.position;
+        public float y;
+
+        private Transform teleportPosition;
+
+        void Start() {
+            teleportPosition = transform.GetChild(0);
+        }
+
+        void OnTriggerEnter2D(Collider2D collision) {
+            if (isUsingCoordinates) {
+                collision.transform.position = new Vector3(x, y, 0f);
+            } else {
+                collision.transform.position = teleportPosition.position;
+            }
         }
     }
+
 }

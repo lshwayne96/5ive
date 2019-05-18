@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 
-public class ModelManager : MonoBehaviour, IModel {
+namespace Main.Model {
 
-	private RestorableMonoBehaviour[] restorables;
+	public class ModelManager : MonoBehaviour, IModel {
 
-	private void Start() {
-		restorables = GetComponentsInChildren<RestorableMonoBehaviour>();
+		private RestorableMonoBehaviour[] restorables;
+
+		private void Start() {
+			restorables = GetComponentsInChildren<RestorableMonoBehaviour>();
+		}
+
+		public RestorableMonoBehaviour[] GetRestorableMonoBehaviours() {
+			return restorables;
+		}
+
+		public void RestoreRestorableMonoBehaviours() {
+			throw new System.NotImplementedException();
+		}
 	}
 
-	public RestorableMonoBehaviour[] GetRestorableMonoBehaviours() {
-		return restorables;
-	}
-
-	public void RestoreRestorableMonoBehaviours() {
-		throw new System.NotImplementedException();
-	}
 }
