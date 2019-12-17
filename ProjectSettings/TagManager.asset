@@ -28,6 +28,9 @@ TagManager:
   - LoadButton
   - Ball
   - Menu
+  - PauseControl
+  - StartGame
+  - Game Controller
   layers:
   - Default
   - TransparentFX

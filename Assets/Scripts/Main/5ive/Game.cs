@@ -18,11 +18,6 @@ namespace Main._5ive {
             this.storage = storage;
         }
 
-        public void Awake() {
-            DontDestroyOnLoad(gameObject);
-        }
-
-
         public void Start() {
             if (storage.DoesGameExist()) {
                 gameState = (GameState) storage.FetchGame();
