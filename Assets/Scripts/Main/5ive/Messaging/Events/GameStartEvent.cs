@@ -2,7 +2,7 @@ namespace Main._5ive.Messaging.Events {
 
     public class GameStartEvent : IEvent {
         public GameStartEvent() {
-            Topic = new Topic("GameRestart");
+            Topic = new Topic("GameStart");
         }
 
         public Topic Topic { get; }

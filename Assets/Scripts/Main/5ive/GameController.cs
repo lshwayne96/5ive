@@ -14,7 +14,7 @@ namespace Main._5ive {
         private EventsCentre eventsCentre;
 
         private void Awake() {
-            DontDestroyOnLoad(this);
+            DontDestroyOnLoad(gameObject);
 
             game = GetComponent<Game>();
             level = GetComponent<Level>();
