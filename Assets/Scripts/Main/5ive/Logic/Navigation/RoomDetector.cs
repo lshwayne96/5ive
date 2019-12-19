@@ -30,11 +30,11 @@ namespace Main._5ive.Logic.Navigation {
 		}
 
 		/*
-		
+
 		public LayerMask roomLayerMask;
 
 		private Transform currentRoomTransform;
-		
+
 		private Vector3 currentRoomPosition;
 
 		private void Start() {
@@ -50,9 +50,9 @@ namespace Main._5ive.Logic.Navigation {
 		private Bounds GetCurrentRoomBounds() {
 			Collider2D currentRoomCollider = Physics2D.OverlapPoint(transform.position, roomLayerMask);
 			currentRoomTransform = currentRoomCollider.transform;
-			
+
 			Vector3 currentRoomCenter = GetRoomCenter(currentRoomTransform);
-			
+
 			BoxCollider2D bc = currentRoomTransform.GetComponent<BoxCollider2D>();
 			Vector3 currentRoomSize = GetRoomSize(bc);
 
@@ -73,24 +73,24 @@ namespace Main._5ive.Logic.Navigation {
 		public Transform GetCurrentRoomTransform() {
 			return currentRoomTransform;
 		}
-		
+
 		public Vector3 GetCurrentRoomPosition() {
 			return currentRoomPosition;
 		}
-		
+
 		private void OnTriggerExit2D(Collider2D collision) {
 			currentRoomPosition = DetectCurrentRoom();
 			print("new room");
 		}
-		
+
 		*/
 
 		/*
-		
+
 		public LayerMask roomLayerMask;
-		
+
 		public Transform CurrentRoomTf { get; private set; }
-		
+
 		private Transform playerCamTf;
 
 		private void Start() {
@@ -142,7 +142,7 @@ namespace Main._5ive.Logic.Navigation {
 		private void OnTriggerExit2D(Collider2D collision) {
 			MoveToRoom();
 		}
-		
+
 		*/
 	}
 

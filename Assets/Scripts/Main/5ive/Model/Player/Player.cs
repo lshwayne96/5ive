@@ -2,6 +2,8 @@
 using Main._5ive.Commons;
 using Main._5ive.Logic.Navigation;
 using Main._5ive.Logic.Navigation.Cameras;
+using Main._5ive.Messaging;
+using Main._5ive.Messaging.Events;
 using UnityEngine;
 
 namespace Main._5ive.Model.Player {
@@ -10,7 +12,7 @@ namespace Main._5ive.Model.Player {
 	/// </summary>
 	public class Player : PersistentObject, IPausable {
 		private Rigidbody2D rigidBody;
-		private PlayerCamera mainCamera;
+		private MainCamera mainCamera;
 		private RoomDetector roomDetector;
 
 		/// <summary>
@@ -20,7 +22,12 @@ namespace Main._5ive.Model.Player {
 
 		private void Start() {
 			rigidBody = GetComponent<Rigidbody2D>();
-			mainCamera = GameObject.FindWithTag(Tags.MainCamera).GetComponent<PlayerCamera>();
+			mainCamera = GameObject.FindWithTag(Tags.MainCamera).GetComponent<MainCamera>();
+			roomDetector = GetComponent<RoomDetector>();
+		}
+
+		public Transform GetCurrentRoomTransform() {
+			return roomDetector.GetCurrentRoomTransform();
 		}
 
 		public override State Save() {
@@ -46,14 +53,10 @@ namespace Main._5ive.Model.Player {
 			rigidBody.WakeUp();
 		}
 
-		public Transform GetCurrentRoomTransform() {
-			return roomDetector.GetCurrentRoomTransform();
-		}
-
-		private void OnTriggerExit2D(Collider2D other) {
+		private void OnTriggerEnter2D(Collider2D other) {
 			if (other.gameObject.layer == (int) Layer.Room) {
 				Vector3 newPosition = roomDetector.GetCurrentRoomPosition();
-				mainCamera.SetPosition(newPosition);
+				EventsCentre.GetInstance().Publish(new RoomChangeEvent(newPosition));
 			}
 		}
 

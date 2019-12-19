@@ -1,5 +1,7 @@
 ﻿using System;
 using Main._5ive.Commons;
+using Main._5ive.Messaging;
+using Main._5ive.Messaging.Events;
 using Main._5ive.Model;
 using UnityEngine;
 
@@ -8,20 +10,23 @@ namespace Main._5ive.Logic.Navigation.Cameras {
 	/// <summary>
 	/// This script represents the camera pointing at the player.
 	/// </summary>
-	public class PlayerCamera : PersistentObject {
-
-		private Transform playerTransform;
-
-		private BoxCollider2D currentRoomCollider;
-
-		private RoomDetector roomDetector;
-
-		private Vector3 offset;
-
-		public void SetPosition(Vector3 newPosition) {
-			transform.position = new Vector3(newPosition.x, newPosition.y, CameraDimension.Depth);
+	public class MainCamera : PersistentObject, ISubscriberDefault {
+		private EventsCentre eventsCentre;
+		private void Awake() {
+			eventsCentre = EventsCentre.GetInstance();
+			eventsCentre.Subscribe(new Topic("RoomChange"), this);
 		}
-		
+
+		private void Start() {
+			Vector3 playerPosition = GameObject.FindWithTag(Tags.Player).transform.position;
+			focusOnPlayer(playerPosition);
+		}
+
+		private void focusOnPlayer(Vector3 playerPosition) {
+			Vector3 newPosition = new Vector3(playerPosition.x, playerPosition.y, CameraDimension.Depth);
+			transform.position = newPosition;
+		}
+
 		public override State Save() {
 			return new PlayerCameraState(this);
 		}
@@ -32,16 +37,20 @@ namespace Main._5ive.Logic.Navigation.Cameras {
 			transform.position = playerCameraState.prevPosition;
 		}
 
-		public class PlayerCameraState : State {
+		public void Notify(IEvent @event) {
+			RoomChangeEvent roomChangeEvent = (RoomChangeEvent) @event;
+			focusOnPlayer(roomChangeEvent.Position);
+		}
 
+		private class PlayerCameraState : State {
 			[NonSerialized]
 			public Vector3 prevPosition;
 			private readonly float x;
 			private readonly float y;
 			private readonly float z;
 
-			public PlayerCameraState(PlayerCamera playerCamera) {
-				prevPosition = playerCamera.transform.position;
+			public PlayerCameraState(MainCamera mainCamera) {
+				prevPosition = mainCamera.transform.position;
 				x = prevPosition.x;
 				y = prevPosition.y;
 				z = prevPosition.z;
@@ -132,7 +141,7 @@ namespace Main._5ive.Logic.Navigation.Cameras {
 
 			return futurePos;
 		}
-		
+
 		*/
 	}
 
