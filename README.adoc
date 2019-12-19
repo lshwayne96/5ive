@@ -14,3 +14,9 @@ represents each stage of grief, and the level is designed to reflect that.
 The above overview is meant to be the ideal version of the game. However,
 this game is still a work in progress, and depending on the situation, might
 not be completed.
+
+== Game Mechanic
+The main game mechanic is the use of a ball by the player to teleport to
+areas where straight-up access is not possible or difficult. When the
+player teleports, the player and ball switch places. This allows for some
+interesting levels to be built.
