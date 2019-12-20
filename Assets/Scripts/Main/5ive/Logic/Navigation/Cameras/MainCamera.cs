@@ -12,14 +12,20 @@ namespace Main._5ive.Logic.Navigation.Cameras {
 	/// </summary>
 	public class MainCamera : PersistentObject, ISubscriberDefault {
 		private EventsCentre eventsCentre;
+		private GameObject playerGameObject;
 		private void Awake() {
 			eventsCentre = EventsCentre.GetInstance();
 			eventsCentre.Subscribe(new Topic("RoomChange"), this);
+			playerGameObject = GameObject.FindWithTag(Tags.Player);
 		}
-
+		/*
 		private void Start() {
-			Vector3 playerPosition = GameObject.FindWithTag(Tags.Player).transform.position;
-			focusOnPlayer(playerPosition);
+			focusOnPlayer(playerGameObject.transform.position);
+		}
+		*/
+		private void Update()
+		{
+			focusOnPlayer(playerGameObject.transform.position);
 		}
 
 		private void focusOnPlayer(Vector3 playerPosition) {
@@ -39,7 +45,7 @@ namespace Main._5ive.Logic.Navigation.Cameras {
 
 		public void Notify(IEvent @event) {
 			RoomChangeEvent roomChangeEvent = (RoomChangeEvent) @event;
-			focusOnPlayer(roomChangeEvent.Position);
+			//focusOnPlayer(roomChangeEvent.Position);
 		}
 
 		private class PlayerCameraState : State {
