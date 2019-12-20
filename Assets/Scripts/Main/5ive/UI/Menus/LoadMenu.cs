@@ -25,8 +25,8 @@ namespace Main._5ive.UI.Menus {
 			base.Init();
 
 			loadButton = GameObject.FindWithTag(Tags.LoadButton).GetComponent<Button>();
-			deleteButton = GameObject.FindWithTag(Tags.DeleteButton).GetComponent<Button>();
-			deleteAllButton = GameObject.FindWithTag(Tags.DeleteAllButton).GetComponent<Button>();
+			deleteButton = transform.Find(Tags.DeleteButton).GetComponent<Button>();
+			deleteAllButton = transform.Find(Tags.DeleteAllButton).GetComponent<Button>();
 
 			loadButton.interactable = false;
 			deleteButton.interactable = false;

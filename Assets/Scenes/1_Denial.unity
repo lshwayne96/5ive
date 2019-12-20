@@ -2085,6 +2085,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1669212821}
     m_Modifications:
+    - target: {fileID: 1015893295218222, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+      propertyPath: m_TagString
+      value: LoadButton
+      objectReference: {fileID: 0}
     - target: {fileID: 1793364799832366, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
       propertyPath: m_Name
       value: InGameMenu
@@ -2107,6 +2111,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: SaveLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 114987390108775162, guid: aa52628f60681477d8b2e2a0b84c2178,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114987390108775162, guid: aa52628f60681477d8b2e2a0b84c2178,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 224127966392718372, guid: aa52628f60681477d8b2e2a0b84c2178,
         type: 3}
@@ -2399,7 +2413,13 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114629798127502470, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+    - {fileID: 114117748444615594, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+    - {fileID: 114804720144221722, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+    - {fileID: 114600831058937528, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+    - {fileID: 114122762743631804, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
+    - {fileID: 114019689435667622, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: aa52628f60681477d8b2e2a0b84c2178, type: 3}
 --- !u!1 &351994022
 GameObject:

@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 6149602686681029295}
   - component: {fileID: 6149602686681029294}
   - component: {fileID: 6149602686681029293}
-  - component: {fileID: 6149602686681027922}
+  - component: {fileID: 7004508096167346858}
   - component: {fileID: 6984696344679393742}
   m_Layer: 12
   m_Name: Ball
@@ -97,6 +97,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -108,6 +109,7 @@ SpriteRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -140,7 +142,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 6149602686681027921}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 8be6341e1ce3f4cec9902bc34f72d20a, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -168,7 +170,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6149602686681027922
+--- !u!114 &7004508096167346858
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,7 +179,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6149602686681027921}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c2d61135cd00493ea5130e766166e26, type: 3}
+  m_Script: {fileID: 11500000, guid: 86082f04bed5a48f2969e22027332ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
